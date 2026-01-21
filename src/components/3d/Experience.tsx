@@ -90,6 +90,7 @@ import {
   ProjectsSection,
   ExperienceSection,
   ContactSection,
+  VanDinhSection,
 } from '@/components/sections';
 
 // Camera controller for smooth navigation
@@ -209,6 +210,7 @@ function Experience() {
         <ProjectsSection />
         <ExperienceSection />
         <ContactSection />
+        <VanDinhSection />
       </Physics>
 
       {/* Visual World Content (no physics) */}

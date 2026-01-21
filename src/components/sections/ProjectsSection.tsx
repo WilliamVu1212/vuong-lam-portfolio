@@ -171,8 +171,6 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
       <group
         ref={islandRef}
         position={position}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
       >
         {/* Physics collider for landing */}
         <RigidBody type="fixed" colliders={false}>
@@ -215,27 +213,27 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
           />
         </mesh>
 
-        {/* Project crystal */}
-        <mesh ref={crystalRef} position={[0, 10, 0]}>
+        {/* Project crystal - clickable */}
+        <mesh
+          ref={crystalRef}
+          position={[0, 10, 0]}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          scale={(hovered || isOpen) ? 1.3 : 1}
+        >
           <octahedronGeometry args={[2, 0]} />
           <meshStandardMaterial
             color={project.color}
             emissive={project.color}
-            emissiveIntensity={1}
+            emissiveIntensity={(hovered || isOpen) ? 2 : 1}
             metalness={0.8}
             roughness={0.1}
             transparent
             opacity={0.9}
-          />
-        </mesh>
-
-        {/* Glow sphere around crystal */}
-        <mesh position={[0, 10, 0]} scale={(hovered || isOpen) ? 1.8 : 1.5}>
-          <sphereGeometry args={[2, 16, 16]} />
-          <meshBasicMaterial
-            color={project.color}
-            transparent
-            opacity={(hovered || isOpen) ? 0.3 : 0.15}
           />
         </mesh>
 
@@ -265,42 +263,10 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
           />
         ))}
 
-        {/* Glow Orb - always visible */}
-        <Html
-          position={[0, 14, 0]}
-          center
-          style={{
-            pointerEvents: 'auto',
-            userSelect: 'none',
-          }}
-        >
-          <div
-            className="cursor-pointer transition-all duration-300"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }}
-            style={{
-              transform: hovered ? 'scale(1.15)' : 'scale(1)',
-            }}
-          >
-            <div
-              className="w-10 h-10 rounded-full"
-              style={{
-                background: `radial-gradient(circle at 30% 30%, ${project.color}, ${project.color}80 40%, ${project.color}40 70%, transparent)`,
-                boxShadow: (hovered || isOpen)
-                  ? `0 0 30px ${project.color}, 0 0 60px ${project.color}80, inset 0 0 20px ${project.color}60`
-                  : `0 0 15px ${project.color}80, 0 0 30px ${project.color}40, inset 0 0 10px ${project.color}40`,
-                border: `2px solid ${project.color}`,
-              }}
-            />
-          </div>
-        </Html>
-
         {/* Detail panel - only show when clicked */}
         {isOpen && (
           <Html
-            position={[0, 22, 0]}
+            position={[0, 18, 0]}
             center
             style={{
               pointerEvents: 'auto',

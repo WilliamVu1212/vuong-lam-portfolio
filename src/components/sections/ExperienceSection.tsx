@@ -291,8 +291,6 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
       <group
         ref={monumentRef}
         position={position}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
       >
         {/* Base */}
         <mesh position={[0, 1, 0]} castShadow receiveShadow>
@@ -326,54 +324,31 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
           />
         </mesh>
 
-        {/* Top ornament */}
-        <mesh position={[0, 11, 0]}>
+        {/* Top ornament - clickable */}
+        <mesh
+          position={[0, 11, 0]}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          scale={(hovered || isOpen) ? 1.4 : 1}
+        >
           <octahedronGeometry args={[1, 0]} />
           <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={(hovered || isOpen) ? 1.5 : 1}
+            emissiveIntensity={(hovered || isOpen) ? 2 : 1}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
 
-        {/* Glow Orb - always visible */}
-        <Html
-          position={[0, 13, 0]}
-          center
-          style={{
-            pointerEvents: 'auto',
-            userSelect: 'none',
-          }}
-        >
-          <div
-            className="cursor-pointer transition-all duration-300"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }}
-            style={{
-              transform: hovered ? 'scale(1.15)' : 'scale(1)',
-            }}
-          >
-            <div
-              className="w-10 h-10 rounded-full"
-              style={{
-                background: `radial-gradient(circle at 30% 30%, ${color}, ${color}80 40%, ${color}40 70%, transparent)`,
-                boxShadow: (hovered || isOpen)
-                  ? `0 0 30px ${color}, 0 0 60px ${color}80, inset 0 0 20px ${color}60`
-                  : `0 0 15px ${color}80, 0 0 30px ${color}40, inset 0 0 10px ${color}40`,
-                border: `2px solid ${color}`,
-              }}
-            />
-          </div>
-        </Html>
-
         {/* Detail panel - only show when clicked */}
         {isOpen && (
           <Html
-            position={[0, 22, 0]}
+            position={[0, 16, 0]}
             center
             style={{
               pointerEvents: 'auto',
@@ -404,14 +379,6 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
 
               {/* Header */}
               <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
-                <div
-                  className="w-8 h-8 rounded-full flex-shrink-0"
-                  style={{
-                    background: `radial-gradient(circle at 30% 30%, ${color}, ${color}60 50%, transparent)`,
-                    boxShadow: `0 0 15px ${color}80, inset 0 0 8px ${color}40`,
-                    border: `2px solid ${color}`,
-                  }}
-                />
                 <div>
                   <p className="text-xs" style={{ color: color }}>{experience.period}</p>
                   <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
@@ -499,11 +466,7 @@ function CertificationStone({ certification, position, index }: CertificationSto
 
   return (
     <Float speed={1.5} floatIntensity={0.3}>
-      <group
-        position={position}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
+      <group position={position}>
         {/* Stone base */}
         <mesh ref={stoneRef} position={[0, 2.5, 0]} castShadow>
           <dodecahedronGeometry args={[3, 0]} />
@@ -517,54 +480,31 @@ function CertificationStone({ certification, position, index }: CertificationSto
           />
         </mesh>
 
-        {/* Seal/Badge on top */}
-        <mesh position={[0, 5.5, 0]}>
+        {/* Seal/Badge on top - clickable */}
+        <mesh
+          position={[0, 5.5, 0]}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          scale={(hovered || isOpen) ? 1.3 : 1}
+        >
           <cylinderGeometry args={[1.5, 1.5, 0.3, 6]} />
           <meshStandardMaterial
             color="#FFD700"
             emissive="#FFD700"
-            emissiveIntensity={(hovered || isOpen) ? 1 : 0.5}
+            emissiveIntensity={(hovered || isOpen) ? 1.5 : 0.5}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
 
-        {/* Glow Orb - always visible */}
-        <Html
-          position={[0, 7, 0]}
-          center
-          style={{
-            pointerEvents: 'auto',
-            userSelect: 'none',
-          }}
-        >
-          <div
-            className="cursor-pointer transition-all duration-300"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }}
-            style={{
-              transform: hovered ? 'scale(1.15)' : 'scale(1)',
-            }}
-          >
-            <div
-              className="w-9 h-9 rounded-full"
-              style={{
-                background: 'radial-gradient(circle at 30% 30%, #FFD700, #FFD70080 40%, #FFD70040 70%, transparent)',
-                boxShadow: (hovered || isOpen)
-                  ? '0 0 30px #FFD700, 0 0 60px #FFD70080, inset 0 0 20px #FFD70060'
-                  : '0 0 15px #FFD70080, 0 0 30px #FFD70040, inset 0 0 10px #FFD70040',
-                border: '2px solid #FFD700',
-              }}
-            />
-          </div>
-        </Html>
-
         {/* Detail panel - only show when clicked */}
         {isOpen && (
           <Html
-            position={[0, 14, 0]}
+            position={[0, 10, 0]}
             center
             style={{
               pointerEvents: 'auto',
@@ -593,21 +533,11 @@ function CertificationStone({ certification, position, index }: CertificationSto
               </button>
 
               {/* Header */}
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-8 h-8 rounded-full flex-shrink-0"
-                  style={{
-                    background: 'radial-gradient(circle at 30% 30%, #FFD700, #FFD70060 50%, transparent)',
-                    boxShadow: '0 0 15px #FFD70080, inset 0 0 8px #FFD70040',
-                    border: '2px solid #FFD700',
-                  }}
-                />
-                <div>
-                  <p className="text-xs" style={{ color: '#FFD700' }}>Chứng Chỉ</p>
-                  <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
-                    {certification.name}
-                  </h3>
-                </div>
+              <div className="mb-2">
+                <p className="text-xs" style={{ color: '#FFD700' }}>Chứng Chỉ</p>
+                <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
+                  {certification.name}
+                </h3>
               </div>
 
               <p className="text-xs text-center mt-2" style={{ color: '#C4A77D' }}>

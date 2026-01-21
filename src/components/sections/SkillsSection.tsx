@@ -281,9 +281,6 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
     <group
       ref={pillarRef}
       position={position}
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      onClick={handleClick}
     >
       {/* Clickable area - invisible but larger for easier clicking */}
       <mesh position={[0, 10, 0]} visible={false}>
@@ -313,56 +310,34 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
         />
       </mesh>
 
-      {/* Category icon orb - larger and brighter */}
+      {/* Category icon orb - clickable */}
       <Float speed={2} floatIntensity={0.3}>
-        <mesh ref={orbRef} position={[0, 19, 0]}>
+        <mesh
+          ref={orbRef}
+          position={[0, 19, 0]}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          scale={hovered || isOpen ? 1.3 : 1}
+        >
           <octahedronGeometry args={[2, 0]} />
           <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={hovered || isOpen ? 2 : 1.2}
+            emissiveIntensity={hovered || isOpen ? 2.5 : 1.2}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
       </Float>
 
-      {/* Glow Orb - click to show details */}
-      <Html
-        position={[0, 22, 0]}
-        center
-        style={{
-          pointerEvents: 'auto',
-          userSelect: 'none',
-        }}
-      >
-        <div
-          className="cursor-pointer transition-all duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsOpen(!isOpen);
-          }}
-          style={{
-            transform: hovered ? 'scale(1.15)' : 'scale(1)',
-          }}
-        >
-          <div
-            className="w-10 h-10 rounded-full"
-            style={{
-              background: `radial-gradient(circle at 30% 30%, ${color}, ${color}80 40%, ${color}40 70%, transparent)`,
-              boxShadow: hovered || isOpen
-                ? `0 0 30px ${color}, 0 0 60px ${color}80, inset 0 0 20px ${color}60`
-                : `0 0 15px ${color}80, 0 0 30px ${color}40, inset 0 0 10px ${color}40`,
-              border: `2px solid ${color}`,
-            }}
-          />
-        </div>
-      </Html>
-
       {/* Skills Detail Panel - CHỈ HIỆN KHI CLICK */}
       {isOpen && (
         <Html
-          position={[0, 32, 0]}
+          position={[0, 26, 0]}
           center
           style={{
             pointerEvents: 'auto',

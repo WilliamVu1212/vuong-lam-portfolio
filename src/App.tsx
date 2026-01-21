@@ -17,7 +17,8 @@ const SECTION_CAMERA_POSITIONS: Record<string, { position: [number, number, numb
   projects: { position: [0, 150, -250], lookAt: [0, 100, -300] },
   experience: { position: [0, 200, -400], lookAt: [0, 150, -450] },
   contact: { position: [0, 250, -500], lookAt: [0, 200, -550] },
-  overview: { position: [200, 300, 100], lookAt: [0, 100, -275] }, // Bird's eye view
+  vandinh: { position: [0, 310, -600], lookAt: [0, 260, -650] },
+  overview: { position: [200, 350, 100], lookAt: [0, 130, -325] }, // Bird's eye view
 };
 
 // Keyboard control map for drei's KeyboardControls
@@ -40,38 +41,39 @@ function HUD() {
   const isGrounded = useGameStore((state) => state.player.isGrounded);
 
   const levelNames: Record<string, string> = {
-    pham_nhan: 'Phàm Nhân',
-    luyen_khi: 'Luyện Khí',
-    truc_co: 'Trúc Cơ',
-    kim_dan: 'Kim Đan',
-    nguyen_anh: 'Nguyên Anh',
-    hoa_than: 'Hóa Thần',
-    dai_thua: 'Đại Thừa',
+    pham_nhan: 'Pham Nhan',
+    luyen_khi: 'Luyen Khi',
+    truc_co: 'Truc Co',
+    ket_dan: 'Ket Dan',
+    nguyen_anh: 'Nguyen Anh',
+    hoa_than: 'Hoa Than',
+    anh_bien: 'Anh Bien',
+    van_dinh: 'Van Dinh',
   };
 
   return (
     <div className="absolute top-4 left-4 space-y-2">
       {/* Cultivation Level */}
       <div className="glass rounded-lg px-4 py-2">
-        <p className="text-tho-kim text-xs">Tu Vi</p>
-        <p className="text-co-chi font-heading text-lg">{levelNames[cultivationLevel]}</p>
+        <p className="text-tho-kim text-xs font-accent">Tu Vi</p>
+        <p className="text-co-chi font-display text-lg">{levelNames[cultivationLevel]}</p>
       </div>
 
       {/* Transport Mode */}
       <div className="glass rounded-lg px-4 py-2">
-        <p className="text-tho-kim text-xs">Phương Thức</p>
-        <p className="text-co-chi">
-          {transportMode === 'cloud' && '☁️ Đạp Mây'}
-          {transportMode === 'sword' && '⚔️ Ngự Kiếm'}
-          {transportMode === 'beast' && '🔥 Phượng Hoàng'}
+        <p className="text-tho-kim text-xs font-accent">Phuong Thuc</p>
+        <p className="text-co-chi font-body">
+          {transportMode === 'cloud' && 'Dap May'}
+          {transportMode === 'sword' && 'Ngu Kiem'}
+          {transportMode === 'beast' && 'Phuong Hoang'}
         </p>
       </div>
 
       {/* Status */}
       <div className="glass rounded-lg px-4 py-2">
-        <p className="text-tho-kim text-xs">Trạng Thái</p>
-        <p className={`text-sm ${isGrounded ? 'text-green-400' : 'text-yellow-400'}`}>
-          {isGrounded ? '🦶 Trên Mặt Đất' : '💨 Đang Bay'}
+        <p className="text-tho-kim text-xs font-accent">Trang Thai</p>
+        <p className={`text-sm font-body ${isGrounded ? 'text-green-400' : 'text-yellow-400'}`}>
+          {isGrounded ? 'Tren Mat Dat' : 'Dang Bay'}
         </p>
       </div>
     </div>
@@ -81,13 +83,13 @@ function HUD() {
 function ControlsHelp() {
   return (
     <div className="absolute bottom-4 left-4 glass rounded-lg px-4 py-3">
-      <p className="text-tho-kim text-xs mb-2">Điều Khiển</p>
-      <div className="text-co-chi text-sm space-y-1 opacity-80">
-        <p><span className="text-hoa-quang">W A S D</span> - Di chuyển</p>
-        <p><span className="text-hoa-quang">Space</span> - Nhảy tại chỗ</p>
-        <p><span className="text-hoa-quang">Left Click</span> - Nhảy đến vị trí</p>
-        <p><span className="text-hoa-quang">Kéo chuột trái</span> - Xoay camera</p>
-        <p><span className="text-hoa-quang">Kéo chuột phải</span> - Di chuyển camera</p>
+      <p className="text-tho-kim text-xs mb-2 font-accent">Dieu Khien</p>
+      <div className="text-co-chi text-sm space-y-1 opacity-80 font-body">
+        <p><span className="text-hoa-quang">W A S D</span> - Di chuyen</p>
+        <p><span className="text-hoa-quang">Space</span> - Nhay tai cho</p>
+        <p><span className="text-hoa-quang">Left Click</span> - Nhay den vi tri</p>
+        <p><span className="text-hoa-quang">Keo chuot trai</span> - Xoay camera</p>
+        <p><span className="text-hoa-quang">Keo chuot phai</span> - Di chuyen camera</p>
         <p><span className="text-hoa-quang">Scroll</span> - Zoom</p>
       </div>
     </div>

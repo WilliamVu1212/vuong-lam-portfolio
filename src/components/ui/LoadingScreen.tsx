@@ -15,7 +15,7 @@ function LoadingScreen() {
       <motion.h1
         className="text-4xl md:text-6xl font-bold mb-2"
         style={{
-          fontFamily: "'Cinzel', 'Times New Roman', serif",
+          fontFamily: "'Cinzel', serif",
           background: 'linear-gradient(180deg, #FF8C00 0%, #FF4444 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -25,18 +25,18 @@ function LoadingScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        VƯƠNG LÂM
+        VUONG LAM
       </motion.h1>
 
       {/* Subtitle */}
       <motion.p
         className="text-xl md:text-2xl text-tho-kim mb-8 italic"
-        style={{ fontFamily: "'Cinzel', 'Georgia', serif" }}
+        style={{ fontFamily: "'Cormorant Garamond', 'Georgia', serif" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        Con Đường Tu Tiên · The Path of Cultivation
+        Con Duong Tu Tien · The Path of Cultivation
       </motion.p>
 
       {/* Loading Spinner */}
@@ -73,12 +73,12 @@ function LoadingScreen() {
 
       {/* Loading text */}
       <motion.p
-        className="mt-6 text-am-tho text-sm"
+        className="mt-6 text-am-tho text-sm font-accent"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       >
-        Đang nạp linh khí... Loading spiritual energy...
+        Dang nap linh khi... Loading spiritual energy...
       </motion.p>
 
       {/* Decorative elements */}

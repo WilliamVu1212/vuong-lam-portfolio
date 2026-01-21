@@ -4,46 +4,53 @@ interface LevelNavigatorProps {
   onNavigate?: (sectionId: string) => void;
 }
 
-// Level data with cultivation progression and techniques (highest level first - Đại Thừa on top)
+// Level data with cultivation progression and techniques (highest level first - Van Dinh on top)
 const levels = [
   {
+    id: 'vandinh',
+    name: 'Van Dinh',
+    key: 'van_dinh',
+    techniques: cultivationTechniques.van_dinh.techniques,
+    color: '#00CED1'
+  },
+  {
     id: 'contact',
-    name: 'Đại Thừa',
-    key: 'dai_thua',
-    techniques: cultivationTechniques.dai_thua.techniques,
+    name: 'Anh Bien',
+    key: 'anh_bien',
+    techniques: cultivationTechniques.anh_bien.techniques,
     color: '#9400D3'
   },
   {
     id: 'experience',
-    name: 'Hóa Thần',
+    name: 'Hoa Than',
     key: 'hoa_than',
     techniques: cultivationTechniques.hoa_than.techniques,
     color: '#FF4500'
   },
   {
     id: 'projects',
-    name: 'Nguyên Anh',
+    name: 'Nguyen Anh',
     key: 'nguyen_anh',
     techniques: cultivationTechniques.nguyen_anh.techniques,
     color: '#FF4444'
   },
   {
     id: 'skills',
-    name: 'Kim Đan',
-    key: 'kim_dan',
-    techniques: cultivationTechniques.kim_dan.techniques,
+    name: 'Ket Dan',
+    key: 'ket_dan',
+    techniques: cultivationTechniques.ket_dan.techniques,
     color: '#FFD700'
   },
   {
     id: 'about',
-    name: 'Trúc Cơ',
+    name: 'Truc Co',
     key: 'truc_co',
     techniques: cultivationTechniques.truc_co.techniques,
     color: '#FF8C00'
   },
   {
     id: 'intro',
-    name: 'Luyện Khí',
+    name: 'Luyen Khi',
     key: 'luyen_khi',
     techniques: cultivationTechniques.luyen_khi.techniques,
     color: '#C4A77D'
@@ -55,8 +62,8 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
     <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
       {/* Vertical timeline */}
       <div className="relative flex flex-col items-center">
-        {/* Connection line - gradient from top (Đại Thừa) to bottom (Luyện Khí) */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#9400D3] via-[#FFD700] to-[#C4A77D] opacity-50 -translate-x-1/2" />
+        {/* Connection line - gradient from top (Van Dinh) to bottom (Luyen Khi) */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#00CED1] via-[#FFD700] to-[#C4A77D] opacity-50 -translate-x-1/2" />
 
         {/* Level nodes */}
         <div className="relative flex flex-col gap-3">

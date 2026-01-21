@@ -82,13 +82,13 @@ export const cultivationTechniques = {
     ],
     color: '#FF8C00',
   },
-  // Kim Đan - Thần thông mạnh mẽ
-  kim_dan: {
-    name: 'Kim Đan',
+  // Kết Đan - Thần thông mạnh mẽ
+  ket_dan: {
+    name: 'Kết Đan',
     techniques: [
-      { name: 'Tế Thần Thuật', desc: 'Tế luyện thần hồn' },
-      { name: 'Ngũ Hành Quyết', desc: 'Khống chế ngũ hành' },
-      { name: 'Thiên Nhãn Thông', desc: 'Nhìn thấu vạn vật' },
+      { name: 'Te Than Thuat', desc: 'Te luyen than hon' },
+      { name: 'Ngu Hanh Quyet', desc: 'Khong che ngu hanh' },
+      { name: 'Thien Nhan Thong', desc: 'Nhin thau van vat' },
     ],
     color: '#FFD700',
   },
@@ -112,15 +112,25 @@ export const cultivationTechniques = {
     ],
     color: '#FF4500',
   },
-  // Đại Thừa - Tối thượng thần thông
-  dai_thua: {
-    name: 'Đại Thừa',
+  // Anh Biến - Tối thượng thần thông
+  anh_bien: {
+    name: 'Anh Biến',
     techniques: [
-      { name: 'Hỗn Độn Khai Thiên', desc: 'Khai thiên tịch địa' },
-      { name: 'Nhân Quả Luân Hồi', desc: 'Nhân quả tuần hoàn' },
-      { name: 'Vạn Pháp Quy Nhất', desc: 'Vạn pháp về một' },
+      { name: 'Hon Don Khai Thien', desc: 'Khai thien tich dia' },
+      { name: 'Nhan Qua Luan Hoi', desc: 'Nhan qua tuan hoan' },
+      { name: 'Van Phap Quy Nhat', desc: 'Van phap ve mot' },
     ],
     color: '#9400D3',
+  },
+  // Vấn Đỉnh - Đỉnh cao tu luyện
+  van_dinh: {
+    name: 'Vấn Đỉnh',
+    techniques: [
+      { name: 'Thien Dia Dong Tho', desc: 'Troi dat cung tho' },
+      { name: 'Vo Thuong Dai Dao', desc: 'Dai dao vo thuong' },
+      { name: 'Tien Gioi Chi Chu', desc: 'Lam chu tien gioi' },
+    ],
+    color: '#00CED1',
   },
 };
 
@@ -378,44 +388,51 @@ export const sectionZones: SectionZone[] = [
   {
     id: 'intro',
     name: 'Mortal Realm',
-    chineseName: 'Phàm Nhân',
+    chineseName: 'Pham Nhan',
     position: [0, 0, 0],
     radius: 50,
   },
   {
     id: 'about',
     name: 'Qi Refining',
-    chineseName: 'Luyện Khí',
+    chineseName: 'Luyen Khi',
     position: [0, 30, -100],
     radius: 80,
   },
   {
     id: 'skills',
     name: 'Foundation Building',
-    chineseName: 'Trúc Cơ',
+    chineseName: 'Truc Co',
     position: [0, 60, -200],
     radius: 100,
   },
   {
     id: 'projects',
-    name: 'Golden Core',
-    chineseName: 'Kim Đan',
+    name: 'Core Formation',
+    chineseName: 'Ket Dan',
     position: [0, 100, -300],
     radius: 150,
   },
   {
     id: 'experience',
     name: 'Spirit Severing',
-    chineseName: 'Hóa Thần',
+    chineseName: 'Hoa Than',
     position: [0, 150, -450],
     radius: 100,
   },
   {
     id: 'contact',
-    name: 'Mahayana',
-    chineseName: 'Đại Thừa',
+    name: 'Infant Transformation',
+    chineseName: 'Anh Bien',
     position: [0, 200, -550],
     radius: 60,
+  },
+  {
+    id: 'vandinh',
+    name: 'Questioning the Peak',
+    chineseName: 'Van Dinh',
+    position: [0, 260, -650],
+    radius: 80,
   },
 ];
 
@@ -423,45 +440,51 @@ export const sectionZones: SectionZone[] = [
 
 export const cultivationLevels = {
   pham_nhan: {
-    name: 'Phàm Nhân',
+    name: 'Pham Nhan',
     english: 'Mortal',
     section: 'intro',
     color: '#8B7355',
   },
   luyen_khi: {
-    name: 'Luyện Khí',
+    name: 'Luyen Khi',
     english: 'Qi Refining',
     section: 'about',
     color: '#C4A77D',
   },
   truc_co: {
-    name: 'Trúc Cơ',
+    name: 'Truc Co',
     english: 'Foundation Building',
     section: 'skills',
     color: '#FF8C00',
   },
-  kim_dan: {
-    name: 'Kim Đan',
-    english: 'Golden Core',
+  ket_dan: {
+    name: 'Ket Dan',
+    english: 'Core Formation',
     section: 'projects',
     color: '#FFD700',
   },
   nguyen_anh: {
-    name: 'Nguyên Anh',
+    name: 'Nguyen Anh',
     english: 'Nascent Soul',
     section: 'projects',
     color: '#FF6B35',
   },
   hoa_than: {
-    name: 'Hóa Thần',
+    name: 'Hoa Than',
     english: 'Spirit Severing',
     section: 'experience',
     color: '#FF4444',
   },
-  dai_thua: {
-    name: 'Đại Thừa',
-    english: 'Mahayana',
+  anh_bien: {
+    name: 'Anh Bien',
+    english: 'Infant Transformation',
     section: 'contact',
-    color: '#FF4500',
+    color: '#9400D3',
+  },
+  van_dinh: {
+    name: 'Van Dinh',
+    english: 'Questioning the Peak',
+    section: 'vandinh',
+    color: '#00CED1',
   },
 };

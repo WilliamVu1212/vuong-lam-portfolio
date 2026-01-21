@@ -27,8 +27,10 @@ export default {
         'am-tho': '#8B7355',        // Muted text
       },
       fontFamily: {
-        heading: ['Cinzel Decorative', 'Ma Shan Zheng', 'serif'],
-        body: ['Nunito', 'Noto Sans SC', 'sans-serif'],
+        heading: ['Cinzel Decorative', 'Cinzel', 'serif'],
+        display: ['Cinzel', 'serif'],
+        body: ['Crimson Pro', 'Cormorant Garamond', 'serif'],
+        accent: ['Cormorant Garamond', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       boxShadow: {
