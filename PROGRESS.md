@@ -11,7 +11,7 @@
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
 | **Current Phase** | Phase 5 - UI & Polish |
-| **Overall Progress** | 85% |
+| **Overall Progress** | 88% |
 
 ---
 
@@ -79,10 +79,11 @@
 | Task | Status | Notes |
 |------|--------|-------|
 | Đạp mây mechanics | ✅ Done | Cloud jumping working |
-| Ngự kiếm - Sword model | ⬜ Todo | |
-| Ngự kiếm - Flight controls | ⬜ Todo | |
-| Ngự kiếm - Trail effect | ⬜ Todo | |
-| Ngự kiếm - Unlock trigger | ⬜ Todo | Logic ready in store |
+| Ngự kiếm - Sword model | ✅ Done | FlyingSword.tsx with gold blade + trail |
+| Ngự kiếm - Flight controls | ✅ Done | WASD + Space/Q(up) + Shift/E(down) + F(toggle) |
+| Ngự kiếm - Trail effect | ✅ Done | 30 particles trail behind sword |
+| Ngự kiếm - Unlock trigger | ✅ Done | Proximity trigger at Trảm La Kiếm |
+| Ngự kiếm - Camera follow | ✅ Done | Smooth camera follow when flying |
 | Cưỡi linh thú - Phoenix model | ⬜ Todo | |
 | Cưỡi linh thú - Mount system | ⬜ Todo | |
 | Cưỡi linh thú - Flight controls | ⬜ Todo | |
@@ -219,7 +220,43 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 8 (Latest)
+### Session 2026-01-21 - Update 9 (Latest)
+```
+- Implement Ngự Kiếm (Sword Flying Mode):
+  - FlyingSword.tsx: Thanh kiếm vàng kim với 30 particle trail
+    - Main blade với central ridge và edge glow
+    - Guard (tsuba) với jade gems
+    - Handle với gold wrapping
+    - Energy aura cylinder
+    - Point lights cho hiệu ứng glow
+  - Player.tsx: Thêm sword flight physics
+    - WASD di chuyển ngang
+    - Space/Q bay lên, Shift/E bay xuống
+    - F toggle bay/đứng
+    - Smooth acceleration/deceleration
+    - World bounds clamping
+  - ExperienceSection.tsx: Proximity trigger unlock
+    - Đến gần Trảm La Kiếm (<20 units) hiện prompt
+    - Auto unlock khi <12 units
+    - HTML notification panels
+  - Experience.tsx: Camera follow mode khi bay
+    - Smooth lerp theo player
+    - Distance 8, height 3 (from constants)
+  - App.tsx: UI updates
+    - HUD hiển thị trạng thái bay
+    - ControlsHelp động theo mode
+    - Sword unlock indicator
+    - SwordUnlockTutorial popup khi unlock
+  - globals.css: Thêm animations
+    - animate-swordUnlock: scale + rotate animation
+    - animate-glowPulse: glow effect
+
+- Files changed: Player.tsx, FlyingSword.tsx (new), Experience.tsx,
+                 ExperienceSection.tsx, App.tsx, globals.css
+- Git commit: 9ac3baa
+```
+
+### Session 2026-01-21 - Update 8
 ```
 - Thêm Thần Phượng (Divine Phoenix) vào section Anh Biến:
   - Băng Phượng (Ice Phoenix) bên trái với màu cyan/xanh lơ

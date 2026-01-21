@@ -5,11 +5,19 @@ import type { RapierRigidBody } from '@react-three/rapier';
 import { Vector3, Raycaster, Vector2, Plane } from 'three';
 import { useGameStore } from '@/stores/gameStore';
 import { useControls } from '@/hooks/useKeyboardControls';
+import { FlyingSword } from './FlyingSword';
+import { PHYSICS, WORLD } from '@/utils/constants';
 
 const MOVE_SPEED = 8;
 const JUMP_FORCE = 12;
 const AIR_CONTROL = 0.3;
 const GRAVITY = 30; // Must match Rapier gravity (negative Y) in Experience.tsx
+
+// Sword flight constants
+const SWORD_MAX_SPEED = PHYSICS.sword.maxSpeed;
+const SWORD_ACCELERATION = PHYSICS.sword.acceleration;
+const SWORD_DECELERATION = PHYSICS.sword.deceleration;
+const SWORD_VERTICAL_SPEED = 25;
 
 export function Player() {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
@@ -19,13 +27,20 @@ export function Player() {
   const controls = useControls();
   const setPlayerPosition = useGameStore((state) => state.setPlayerPosition);
   const setPlayerGrounded = useGameStore((state) => state.setPlayerGrounded);
+  const setPlayerFlying = useGameStore((state) => state.setPlayerFlying);
+  const setPlayerVelocity = useGameStore((state) => state.setPlayerVelocity);
   const isGrounded = useGameStore((state) => state.player.isGrounded);
+  const isFlying = useGameStore((state) => state.player.isFlying);
+  const transportMode = useGameStore((state) => state.transportMode);
 
   // Movement vectors
   const moveDirection = useRef(new Vector3());
   const frontVector = useRef(new Vector3());
   const sideVector = useRef(new Vector3());
   const cameraDirection = useRef(new Vector3());
+
+  // Sword flight velocity (smooth acceleration)
+  const flightVelocity = useRef(new Vector3(0, 0, 0));
 
   // Click-to-move
   const [targetPosition, setTargetPosition] = useState<Vector3 | null>(null);
@@ -178,12 +193,116 @@ export function Player() {
     };
   }, [camera, gl, rapier, world]);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     if (!rigidBodyRef.current) return;
 
     const rb = rigidBodyRef.current;
     const velocity = rb.linvel();
     const position = rb.translation();
+
+    // ==========================================
+    // SWORD FLIGHT MODE
+    // ==========================================
+    if (isFlying && transportMode === 'sword') {
+      // Disable gravity effect by countering it
+      rb.setGravityScale(0, true);
+      rb.setLinearDamping(0);
+
+      // Get camera direction for flight
+      camera.getWorldDirection(cameraDirection.current);
+      const camDirHorizontal = new Vector3(cameraDirection.current.x, 0, cameraDirection.current.z).normalize();
+
+      // Calculate target velocity based on input
+      const targetVel = new Vector3(0, 0, 0);
+      const hasInput = controls.forward || controls.backward || controls.left || controls.right;
+
+      if (controls.forward) {
+        targetVel.add(camDirHorizontal.clone().multiplyScalar(-1));
+      }
+      if (controls.backward) {
+        targetVel.add(camDirHorizontal);
+      }
+      if (controls.left) {
+        const leftDir = new Vector3().crossVectors(new Vector3(0, 1, 0), camDirHorizontal);
+        targetVel.add(leftDir);
+      }
+      if (controls.right) {
+        const rightDir = new Vector3().crossVectors(camDirHorizontal, new Vector3(0, 1, 0));
+        targetVel.add(rightDir);
+      }
+
+      // Normalize and scale to max speed
+      if (targetVel.length() > 0) {
+        targetVel.normalize().multiplyScalar(SWORD_MAX_SPEED);
+      }
+
+      // Vertical movement (ascend/descend)
+      if (controls.ascend || controls.jump) {
+        targetVel.y = SWORD_VERTICAL_SPEED;
+      } else if (controls.descend) {
+        targetVel.y = -SWORD_VERTICAL_SPEED;
+      }
+
+      // Smoothly interpolate velocity (acceleration/deceleration)
+      const accelRate = hasInput || controls.ascend || controls.descend || controls.jump
+        ? SWORD_ACCELERATION
+        : SWORD_DECELERATION;
+
+      flightVelocity.current.lerp(targetVel, accelRate * delta);
+
+      // Clamp velocity
+      const horizontalSpeed = Math.sqrt(
+        flightVelocity.current.x ** 2 + flightVelocity.current.z ** 2
+      );
+      if (horizontalSpeed > SWORD_MAX_SPEED) {
+        const scale = SWORD_MAX_SPEED / horizontalSpeed;
+        flightVelocity.current.x *= scale;
+        flightVelocity.current.z *= scale;
+      }
+
+      // World bounds clamping
+      const nextX = position.x + flightVelocity.current.x * delta;
+      const nextY = position.y + flightVelocity.current.y * delta;
+      const nextZ = position.z + flightVelocity.current.z * delta;
+
+      if (nextX < WORLD.bounds.minX || nextX > WORLD.bounds.maxX) {
+        flightVelocity.current.x = 0;
+      }
+      if (nextY < WORLD.bounds.minY + 5 || nextY > WORLD.bounds.maxY) {
+        flightVelocity.current.y = 0;
+      }
+      if (nextZ < WORLD.bounds.minZ || nextZ > WORLD.bounds.maxZ) {
+        flightVelocity.current.z = 0;
+      }
+
+      // Apply velocity
+      rb.setLinvel(
+        {
+          x: flightVelocity.current.x,
+          y: flightVelocity.current.y,
+          z: flightVelocity.current.z,
+        },
+        true
+      );
+
+      // Update store
+      setPlayerPosition([position.x, position.y, position.z]);
+      setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
+
+      // Exit flight mode if descending and close to ground
+      if (controls.descend && position.y < 3) {
+        exitSwordFlight();
+      }
+
+      return; // Skip ground movement logic
+    }
+
+    // ==========================================
+    // GROUND MOVEMENT MODE (Original code)
+    // ==========================================
+
+    // Ensure gravity is enabled for ground mode
+    rb.setGravityScale(1, true);
 
     // Update grounded state
     const grounded = checkGrounded();
@@ -282,6 +401,51 @@ export function Player() {
     }
   });
 
+  // Function to enter sword flight mode
+  const enterSwordFlight = () => {
+    if (!rigidBodyRef.current) return;
+    const rb = rigidBodyRef.current;
+    const velocity = rb.linvel();
+
+    // Initialize flight velocity with current velocity
+    flightVelocity.current.set(velocity.x, Math.max(velocity.y, 10), velocity.z);
+
+    // Give initial upward boost
+    rb.setLinvel({ x: velocity.x, y: 15, z: velocity.z }, true);
+
+    setPlayerFlying(true);
+  };
+
+  // Function to exit sword flight mode
+  const exitSwordFlight = () => {
+    if (!rigidBodyRef.current) return;
+
+    // Reset flight velocity
+    flightVelocity.current.set(0, 0, 0);
+
+    // Re-enable gravity
+    rigidBodyRef.current.setGravityScale(1, true);
+    rigidBodyRef.current.setLinearDamping(0.5);
+
+    setPlayerFlying(false);
+  };
+
+  // Listen for sword mode toggle (F key when sword is unlocked)
+  useEffect(() => {
+    const handleToggleFlight = (e: KeyboardEvent) => {
+      if (e.code === 'KeyF' && transportMode === 'sword') {
+        if (isFlying) {
+          exitSwordFlight();
+        } else {
+          enterSwordFlight();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleToggleFlight);
+    return () => window.removeEventListener('keydown', handleToggleFlight);
+  }, [isFlying, transportMode]);
+
   return (
     <>
       <RigidBody
@@ -325,6 +489,9 @@ export function Player() {
           distance={10}
           position={[0, 0.5, 0]}
         />
+
+        {/* Flying Sword - renders under player when flying */}
+        <FlyingSword velocity={flightVelocity.current} />
       </RigidBody>
 
       {/* Target indicator - shows where player will land */}

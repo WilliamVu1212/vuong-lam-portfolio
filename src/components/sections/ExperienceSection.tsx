@@ -1,9 +1,10 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Sparkles, Html } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { experiences, certifications } from '@/data/content';
+import { useGameStore } from '@/stores/gameStore';
 import type { Experience, Certification } from '@/types';
 
 interface ExperienceSectionProps {
@@ -26,8 +27,8 @@ export function ExperienceSection({ position = [0, 150, -450] }: ExperienceSecti
       <CertificationStones />
 
       {/* Trảm La Kiếm - Soul Slaying Swords 2 bên */}
-      <SoulSlayingSword position={[-55, 0, 0]} side="left" />
-      <SoulSlayingSword position={[55, 0, 0]} side="right" />
+      <SoulSlayingSword position={[-55, 0, 0]} side="left" sectionPosition={position} />
+      <SoulSlayingSword position={[55, 0, 0]} side="right" sectionPosition={position} />
 
       {/* Ambient energy */}
       <Sparkles
@@ -571,13 +572,55 @@ function CertificationStone({ certification, position, index }: CertificationSto
 interface SoulSlayingSwordProps {
   position: [number, number, number];
   side: 'left' | 'right';
+  sectionPosition: [number, number, number];
 }
 
-function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
+function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) {
   const swordRef = useRef<THREE.Group>(null);
   const bladeRef = useRef<THREE.Group>(null);
   const particlesRef = useRef<THREE.Points>(null);
   const runesRef = useRef<THREE.Group>(null);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const playerPosition = useGameStore((state) => state.player.position);
+  const unlockedTransports = useGameStore((state) => state.unlockedTransports);
+  const unlockTransport = useGameStore((state) => state.unlockTransport);
+  const setTransportMode = useGameStore((state) => state.setTransportMode);
+
+  // Calculate world position of sword
+  const worldPosition: [number, number, number] = [
+    sectionPosition[0] + position[0],
+    sectionPosition[1] + position[1],
+    sectionPosition[2] + position[2],
+  ];
+
+  // Check if sword is already unlocked
+  useEffect(() => {
+    setIsUnlocked(unlockedTransports.includes('sword'));
+  }, [unlockedTransports]);
+
+  // Check proximity to player
+  useFrame(() => {
+    const dx = playerPosition[0] - worldPosition[0];
+    const dy = playerPosition[1] - worldPosition[1];
+    const dz = playerPosition[2] - worldPosition[2];
+    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    // Show prompt when player is within 20 units
+    if (distance < 20 && !isUnlocked) {
+      setShowPrompt(true);
+    } else {
+      setShowPrompt(false);
+    }
+
+    // Auto unlock when very close (within 12 units)
+    if (distance < 12 && !isUnlocked) {
+      unlockTransport('sword');
+      setTransportMode('sword');
+      setIsUnlocked(true);
+    }
+  });
 
   // Main colors - vàng kim như trong ảnh
   const goldColor = '#FFD700';
@@ -645,6 +688,53 @@ function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
 
   return (
     <group position={position}>
+      {/* Unlock Prompt */}
+      {showPrompt && (
+        <Html position={[0, 80, 0]} center distanceFactor={100}>
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(26,10,10,0.95) 0%, rgba(45,27,27,0.95) 100%)',
+              border: '2px solid #FFD700',
+              borderRadius: '12px',
+              padding: '16px 24px',
+              color: '#FFD700',
+              fontFamily: 'Cinzel, serif',
+              fontSize: '18px',
+              textAlign: 'center',
+              whiteSpace: 'nowrap',
+              boxShadow: '0 0 30px rgba(255,215,0,0.5)',
+              animation: 'pulse 2s ease-in-out infinite',
+            }}
+          >
+            <div style={{ marginBottom: '8px', fontSize: '22px' }}>⚔️ Trảm La Kiếm ⚔️</div>
+            <div style={{ color: '#F5E6D3', fontSize: '14px' }}>Đến gần để nhận Phi Kiếm</div>
+          </div>
+        </Html>
+      )}
+
+      {/* Unlocked notification */}
+      {isUnlocked && showPrompt && (
+        <Html position={[0, 80, 0]} center distanceFactor={100}>
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(0,100,0,0.95) 0%, rgba(0,50,0,0.95) 100%)',
+              border: '2px solid #00FF00',
+              borderRadius: '12px',
+              padding: '16px 24px',
+              color: '#00FF00',
+              fontFamily: 'Cinzel, serif',
+              fontSize: '18px',
+              textAlign: 'center',
+              whiteSpace: 'nowrap',
+              boxShadow: '0 0 30px rgba(0,255,0,0.5)',
+            }}
+          >
+            <div>✓ Đã khai mở Ngự Kiếm!</div>
+            <div style={{ color: '#90EE90', fontSize: '14px', marginTop: '8px' }}>Nhấn F để bay</div>
+          </div>
+        </Html>
+      )}
+
       {/* === BASE PEDESTAL === */}
       <mesh position={[0, 3, 0]} castShadow>
         <cylinderGeometry args={[5, 7, 6, 8]} />

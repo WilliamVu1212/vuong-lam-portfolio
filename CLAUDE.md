@@ -2,7 +2,7 @@
 
 ## CURRENT STATUS (2026-01-21)
 
-**Overall Progress: 85%** - Phase 5 (UI & Polish)
+**Overall Progress: 88%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -38,19 +38,19 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 8
+## Recent Update (2026-01-21) - Session 9
 
 ### Đã hoàn thành:
-- ✅ Thêm **Thần Phượng (Divine Phoenix)** vào section Anh Biến:
-  - **Băng Phượng (Ice Phoenix)** bên trái - màu cyan/xanh lơ
-  - **Hỏa Phượng (Fire Phoenix)** bên phải - màu cam/vàng/đỏ
-  - Cánh xòe rộng hoành tráng với 3 lớp lông (9+7+5 feathers)
-  - Vầng hào quang (Divine Halo) với 12 tia sáng
-  - Mào 7 lông cao + đuôi 11 lông xòe như quạt
-  - 150 particles + 180 sparkles mỗi con
-  - Đế với 8 cột rune xoay quanh
+- ✅ **Ngự Kiếm (Sword Flying Mode)** - Hoàn toàn có thể bay kiếm!
+  - **FlyingSword.tsx** - Thanh kiếm vàng kim với trail effect khi bay
+  - **Flight Physics** - Bay tự do 3D với WASD + Space(lên) + Shift(xuống)
+  - **Unlock System** - Đến gần Trảm La Kiếm ở Hóa Thần để unlock
+  - **Camera Follow** - Camera tự động theo sau khi bay
+  - **UI Updates** - HUD hiển thị trạng thái bay, hướng dẫn điều khiển
+  - **Controls**: F để bật/tắt bay, WASD di chuyển, Space/Q lên, Shift/E xuống
 
 ### Session trước:
+- ✅ **Thần Phượng (Divine Phoenix)** ở Anh Biến
 - ✅ **Cấm Phiên (Soul Banner)** ở Vấn Đỉnh
 - ✅ **Trảm La Kiếm (Soul Slaying Sword)** ở Hóa Thần
 
@@ -60,7 +60,6 @@
 
 ### Short-term:
 - Add sound/music integration
-- Implement sword flying mode (Ngự Kiếm)
 - Add mobile joystick controls
 
 ### Medium-term:
@@ -77,7 +76,8 @@ src/
 ├── components/
 │   ├── 3d/
 │   │   ├── Experience.tsx      # Main scene + CameraController
-│   │   ├── Player.tsx          # Player với physics
+│   │   ├── Player.tsx          # Player với physics + sword flight
+│   │   ├── FlyingSword.tsx     # Flying sword model + trail effects
 │   │   └── CloudPlatforms.tsx  # Cloud stepping
 │   ├── sections/
 │   │   ├── SkillsSection.tsx   # 4 pillars (clickable crystals)

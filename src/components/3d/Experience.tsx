@@ -80,8 +80,8 @@ const WaterfallMaterial = shaderMaterial(
 );
 
 extend({ WaterfallMaterial });
-import { WORLD } from '@/utils/constants';
-import { useUIStore } from '@/stores/gameStore';
+import { WORLD, CAMERA } from '@/utils/constants';
+import { useUIStore, useGameStore } from '@/stores/gameStore';
 import Player from './Player';
 import { IntroCloudPlatforms, SkillsCloudPlatforms, ProjectsCloudPlatforms, ExperienceCloudPlatforms } from './CloudPlatforms';
 import {
@@ -99,6 +99,11 @@ function CameraController() {
   const cameraTarget = useUIStore((state) => state.cameraTarget);
   const cameraLookAt = useUIStore((state) => state.cameraLookAt);
   const setCameraTarget = useUIStore((state) => state.setCameraTarget);
+
+  // Sword flight camera follow
+  const playerPosition = useGameStore((state) => state.player.position);
+  const isFlying = useGameStore((state) => state.player.isFlying);
+  const transportMode = useGameStore((state) => state.transportMode);
 
   const targetPosition = useRef(new THREE.Vector3());
   const targetLookAt = useRef(new THREE.Vector3());
@@ -136,6 +141,38 @@ function CameraController() {
   }, [cameraTarget, cameraLookAt]);
 
   useFrame(() => {
+    // ===== SWORD FLIGHT CAMERA FOLLOW =====
+    if (isFlying && transportMode === 'sword') {
+      const swordCam = CAMERA.follow.sword;
+
+      // Get current camera direction (horizontal only)
+      const camDir = new THREE.Vector3();
+      camera.getWorldDirection(camDir);
+      camDir.y = 0;
+      camDir.normalize();
+
+      // Calculate camera position behind player
+      const playerPos = new THREE.Vector3(...playerPosition);
+      const idealOffset = camDir.clone().multiplyScalar(swordCam.distance);
+      idealOffset.y = swordCam.height;
+
+      const idealPosition = playerPos.clone().add(idealOffset);
+
+      // Smoothly interpolate camera position
+      camera.position.lerp(idealPosition, swordCam.smoothing);
+
+      // Update OrbitControls target to follow player
+      if (controls) {
+        const orbitControls = controls as any;
+        if (orbitControls.target) {
+          orbitControls.target.lerp(playerPos, swordCam.smoothing * 2);
+        }
+      }
+
+      return; // Skip normal camera animation
+    }
+
+    // ===== NORMAL CAMERA ANIMATION =====
     if (isAnimating.current && cameraTarget) {
       // Smoothly interpolate camera position
       camera.position.lerp(targetPosition.current, 0.02);
