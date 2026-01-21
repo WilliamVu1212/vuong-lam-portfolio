@@ -2,7 +2,7 @@
 
 ## CURRENT STATUS (2026-01-21)
 
-**Overall Progress: 84%** - Phase 5 (UI & Polish)
+**Overall Progress: 85%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -27,9 +27,9 @@
 2. **About** (Luyện Khí) - Pagoda, InfoStones, Torii gates
 3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals + 2 thác nước
 4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals + 2 thác nước
-5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Phoenix Flames**
+5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Trảm La Kiếm (Soul Slaying Swords)**
 6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau
-7. **Vấn Đỉnh** - Peak platform, throne, celestial gates phía sau với title, William panel + câu nói Tiên Nghịch
+7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, William panel + **2 Cấm Phiên (Soul Banners)**
 
 ### Camera Controls:
 - OrbitControls với zoom/rotate/pan
@@ -38,19 +38,20 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 5
+## Recent Update (2026-01-21) - Session 6
 
 ### Đã hoàn thành:
-- ✅ Đổi tên VUONG LAM → William Vu (index.html, LoadingScreen)
-- ✅ Bỏ phần tiếng Anh ở Loading Screen
-- ✅ Thêm **Phoenix Flames (Phượng Hỏa)** vào section Hóa Thần:
-  - 2 phượng hoàng năng lượng 2 bên (tím trái, xanh lơ phải)
-  - Chi tiết: body, neck, head, beak, crown feathers, eyes
-  - Cánh: 5 primary feathers + 3 secondary feathers mỗi bên
-  - Đuôi: 7 lông đuôi dài xòe hình quạt với wave animation
-  - 100 particles thác lửa chảy từ đuôi xuống
-  - MeshPhysicalMaterial cho hiệu ứng sheen/glow
-  - Animation: đập cánh, lượn sóng đuôi, hover body
+- ✅ Thêm **Cấm Phiên (Soul Banner)** vào section Vấn Đỉnh:
+  - 2 cây phướn trấn yểm 2 bên, phát sáng đỏ
+  - Cột chính 60 units, thân phướn hình thang với viền vàng
+  - Tua dây, chuỗi xích với đồng xu vàng
+  - 150 particles lửa + animation đung đưa
+
+- ✅ Thay **Phoenix Flames** bằng **Trảm La Kiếm (Soul Slaying Sword)** ở Hóa Thần:
+  - 2 thanh kiếm vàng kim thẳng đứng 2 bên
+  - Lưỡi kiếm 8x55 units với ngọc bích (jade) xanh lơ
+  - Crossguard, chuôi kiếm với hoa văn
+  - 120 particles + 8 rune xoay quanh đế
 
 ---
 

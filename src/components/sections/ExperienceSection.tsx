@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Sparkles, Html } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -25,9 +25,9 @@ export function ExperienceSection({ position = [0, 150, -450] }: ExperienceSecti
       {/* Certification Stones */}
       <CertificationStones />
 
-      {/* Phoenix Flames - Phượng Hỏa 2 bên */}
-      <PhoenixFlame position={[-60, 0, 0]} color="#9932CC" secondaryColor="#DA70D6" side="left" />
-      <PhoenixFlame position={[60, 0, 0]} color="#00CED1" secondaryColor="#40E0D0" side="right" />
+      {/* Trảm La Kiếm - Soul Slaying Swords 2 bên */}
+      <SoulSlayingSword position={[-55, 0, 0]} side="left" />
+      <SoulSlayingSword position={[55, 0, 0]} side="right" />
 
       {/* Ambient energy */}
       <Sparkles
@@ -567,361 +567,474 @@ function CertificationStone({ certification, position, index }: CertificationSto
   );
 }
 
-// Phoenix Flame - Phượng Hỏa component với hình dáng phượng hoàng thật sự
-interface PhoenixFlameProps {
+// ==================== TRẢM LA KIẾM (SOUL SLAYING SWORD) ====================
+interface SoulSlayingSwordProps {
   position: [number, number, number];
-  color: string;
-  secondaryColor: string;
   side: 'left' | 'right';
 }
 
-function PhoenixFlame({ position, color, secondaryColor, side }: PhoenixFlameProps) {
-  const phoenixRef = useRef<THREE.Group>(null);
-  const leftWingRef = useRef<THREE.Group>(null);
-  const rightWingRef = useRef<THREE.Group>(null);
-  const tailRef = useRef<THREE.Group>(null);
-  const trailRef = useRef<THREE.Group>(null);
-  const bodyRef = useRef<THREE.Mesh>(null);
+function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
+  const swordRef = useRef<THREE.Group>(null);
+  const bladeRef = useRef<THREE.Group>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
+  const particlesRef = useRef<THREE.Points>(null);
+  const runesRef = useRef<THREE.Group>(null);
 
-  // Particle trail data - thác lửa từ đuôi
-  const trailCount = 100;
-  const trailData = useRef(
-    Array.from({ length: trailCount }, (_, i) => ({
-      y: (i / trailCount) * 60 - 30,
-      x: (Math.random() - 0.5) * 6,
-      z: (Math.random() - 0.5) * 6 - 5,
-      speed: 0.2 + Math.random() * 0.4,
-      size: 0.2 + Math.random() * 0.4,
-      offset: Math.random() * Math.PI * 2,
-    }))
-  );
+  // Main colors - vàng kim như trong ảnh
+  const goldColor = '#FFD700';
+  const brightGold = '#FFA500';
+  const paleGold = '#FFFACD';
+  const jadeColor = '#40E0D0'; // Ngọc bích trên kiếm
+
+  // Particle system
+  const particleCount = 120;
+  const particlePositions = useMemo(() => {
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 15;
+      positions[i * 3 + 1] = Math.random() * 80;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+    }
+    return positions;
+  }, []);
 
   useFrame((state) => {
-    const time = state.clock.elapsedTime;
+    const t = state.clock.elapsedTime;
 
-    // Phoenix body hover và bay nhẹ nhàng
-    if (phoenixRef.current) {
-      phoenixRef.current.position.y = 30 + Math.sin(time * 0.6) * 4;
-      const sway = side === 'left' ? Math.sin(time * 0.4) * 3 : Math.cos(time * 0.4) * 3;
-      phoenixRef.current.position.x = sway;
-      // Nghiêng theo hướng bay
-      phoenixRef.current.rotation.z = Math.sin(time * 0.4) * 0.1;
-      phoenixRef.current.rotation.x = Math.sin(time * 0.3) * 0.05;
+    // Sword hover animation - nhẹ nhàng
+    if (swordRef.current) {
+      swordRef.current.position.y = Math.sin(t * 0.5) * 2;
+      // Slight rotation
+      swordRef.current.rotation.y = Math.sin(t * 0.3) * 0.05;
     }
 
-    // Left wing flapping - đập cánh mượt mà
-    if (leftWingRef.current) {
-      const flapAngle = Math.sin(time * 2.5) * 0.4;
-      leftWingRef.current.rotation.z = 0.3 + flapAngle;
-      // Secondary motion cho cánh
-      leftWingRef.current.children.forEach((child, i) => {
+    // Blade glow pulse
+    if (bladeRef.current) {
+      bladeRef.current.children.forEach((child) => {
         if (child instanceof THREE.Mesh) {
-          child.rotation.y = Math.sin(time * 3 + i * 0.5) * 0.1;
-        }
-      });
-    }
-
-    // Right wing flapping
-    if (rightWingRef.current) {
-      const flapAngle = Math.sin(time * 2.5) * 0.4;
-      rightWingRef.current.rotation.z = -0.3 - flapAngle;
-      rightWingRef.current.children.forEach((child, i) => {
-        if (child instanceof THREE.Mesh) {
-          child.rotation.y = -Math.sin(time * 3 + i * 0.5) * 0.1;
-        }
-      });
-    }
-
-    // Tail wave animation - đuôi lượn sóng
-    if (tailRef.current) {
-      tailRef.current.children.forEach((child, i) => {
-        if (child instanceof THREE.Mesh) {
-          child.rotation.x = Math.sin(time * 2 + i * 0.8) * 0.15;
-          child.rotation.z = Math.sin(time * 1.5 + i * 0.5) * 0.1;
-        }
-      });
-    }
-
-    // Body pulse
-    if (bodyRef.current) {
-      const scale = 1 + Math.sin(time * 2) * 0.05;
-      bodyRef.current.scale.setScalar(scale);
-    }
-
-    // Trail particles - chảy xuống từ đuôi
-    if (trailRef.current) {
-      trailRef.current.children.forEach((child, i) => {
-        if (child instanceof THREE.Mesh) {
-          const data = trailData.current[i];
-
-          data.y -= data.speed;
-          if (data.y < -40) {
-            data.y = 30;
-            data.x = (Math.random() - 0.5) * 6;
-            data.z = (Math.random() - 0.5) * 6 - 5;
+          const mat = child.material as THREE.MeshStandardMaterial;
+          if (mat.emissiveIntensity !== undefined) {
+            mat.emissiveIntensity = 0.8 + Math.sin(t * 2) * 0.3;
           }
-
-          const swirl = Math.sin(time * 1.5 + data.offset) * (2 + Math.abs(data.y) * 0.03);
-          child.position.x = data.x + swirl;
-          child.position.y = data.y;
-          child.position.z = data.z + Math.cos(time * 1.5 + data.offset) * 1.5;
-
-          const material = child.material as THREE.MeshBasicMaterial;
-          const normalizedY = (data.y + 40) / 70;
-          material.opacity = 0.2 + normalizedY * 0.6;
-
-          const particleScale = data.size * (0.3 + normalizedY * 1.2);
-          child.scale.setScalar(particleScale);
         }
       });
+    }
+
+    // Main glow pulse
+    if (glowRef.current) {
+      const mat = glowRef.current.material as THREE.MeshBasicMaterial;
+      mat.opacity = 0.25 + Math.sin(t * 1.5) * 0.1;
+    }
+
+    // Runes rotation
+    if (runesRef.current) {
+      runesRef.current.rotation.y = t * 0.2;
+    }
+
+    // Particle animation - energy swirl
+    if (particlesRef.current) {
+      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+      for (let i = 0; i < particleCount; i++) {
+        // Spiral upward
+        positions[i * 3 + 1] += 0.2;
+        positions[i * 3] += Math.sin(t + i * 0.1) * 0.05;
+        positions[i * 3 + 2] += Math.cos(t + i * 0.1) * 0.03;
+
+        // Reset
+        if (positions[i * 3 + 1] > 85) {
+          positions[i * 3 + 1] = Math.random() * 10;
+          positions[i * 3] = (Math.random() - 0.5) * 15;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+        }
+      }
+      particlesRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
-  // Material cho phượng hoàng - sheen effect cho lông
-  const phoenixMaterial = (
-    <meshPhysicalMaterial
-      color={color}
-      emissive={color}
-      emissiveIntensity={1.5}
-      metalness={0.6}
-      roughness={0.3}
-      transparent
-      opacity={0.9}
-    />
-  );
-
-  const glowMaterial = (
-    <meshBasicMaterial color={secondaryColor} transparent opacity={0.7} />
-  );
-
   return (
     <group position={position}>
-      {/* Base pedestal */}
-      <mesh position={[0, 2, 0]} castShadow>
-        <cylinderGeometry args={[4, 6, 4, 8]} />
+      {/* === BASE PEDESTAL === */}
+      <mesh position={[0, 3, 0]} castShadow>
+        <cylinderGeometry args={[5, 7, 6, 8]} />
         <meshStandardMaterial
           color="#1A0A0A"
           roughness={0.5}
-          metalness={0.5}
-          emissive={color}
-          emissiveIntensity={0.3}
-        />
-      </mesh>
-
-      {/* Rune rings */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]}>
-        <ringGeometry args={[6, 8, 32]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.2, 0]}>
-        <ringGeometry args={[8, 9, 32]} />
-        <meshBasicMaterial color={secondaryColor} transparent opacity={0.3} />
-      </mesh>
-
-      {/* Fire pillar */}
-      <mesh position={[0, 12, 0]}>
-        <cylinderGeometry args={[2, 4, 16, 8]} />
-        <meshStandardMaterial
-          color="#2D1B1B"
-          roughness={0.4}
           metalness={0.6}
-          emissive={color}
-          emissiveIntensity={0.5}
+          emissive={goldColor}
+          emissiveIntensity={0.2}
         />
       </mesh>
 
-      {/* === PHOENIX BODY === */}
-      <group ref={phoenixRef} position={[0, 30, 0]}>
+      {/* Pedestal decorative rings */}
+      <mesh position={[0, 6, 0]}>
+        <torusGeometry args={[5.5, 0.3, 8, 32]} />
+        <meshStandardMaterial
+          color={goldColor}
+          emissive={goldColor}
+          emissiveIntensity={0.6}
+          metalness={0.9}
+          roughness={0.2}
+        />
+      </mesh>
 
-        {/* Main body - ellipsoid */}
-        <mesh ref={bodyRef} position={[0, 0, 0]} rotation={[0.2, 0, 0]}>
-          <sphereGeometry args={[3, 16, 12]} />
-          <meshPhysicalMaterial
-            color="#FFFFFF"
-            emissive={color}
-            emissiveIntensity={2}
-            metalness={0.7}
-            roughness={0.2}
-            transparent
-            opacity={0.95}
-          />
-        </mesh>
+      {/* Ground rune circle */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]}>
+        <ringGeometry args={[7, 10, 32]} />
+        <meshBasicMaterial color={goldColor} transparent opacity={0.4} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.15, 0]}>
+        <ringGeometry args={[10, 11, 32]} />
+        <meshBasicMaterial color={brightGold} transparent opacity={0.3} />
+      </mesh>
 
-        {/* Neck */}
-        <mesh position={[0, 3, 2]} rotation={[-0.5, 0, 0]}>
-          <cylinderGeometry args={[1, 1.5, 4, 8]} />
-          {phoenixMaterial}
-        </mesh>
-
-        {/* Head */}
-        <mesh position={[0, 5.5, 3.5]} rotation={[-0.3, 0, 0]}>
-          <sphereGeometry args={[1.8, 12, 10]} />
-          {phoenixMaterial}
-        </mesh>
-
-        {/* Beak */}
-        <mesh position={[0, 5.5, 5.5]} rotation={[-0.2, 0, 0]}>
-          <coneGeometry args={[0.5, 2.5, 4]} />
-          <meshStandardMaterial
-            color="#FFD700"
-            emissive="#FF8C00"
-            emissiveIntensity={1}
-            metalness={0.8}
-            roughness={0.2}
-          />
-        </mesh>
-
-        {/* Crown feathers - mào */}
-        {[-1, 0, 1].map((i) => (
-          <mesh key={`crown-${i}`} position={[i * 0.6, 7, 3]} rotation={[-0.5 + i * 0.1, 0, i * 0.2]}>
-            <coneGeometry args={[0.3, 2.5, 4]} />
-            <meshBasicMaterial color={secondaryColor} transparent opacity={0.8} />
+      {/* Rotating runes around base */}
+      <group ref={runesRef} position={[0, 1, 0]}>
+        {[...Array(8)].map((_, i) => (
+          <mesh
+            key={i}
+            position={[
+              Math.cos((Math.PI * 2 * i) / 8) * 9,
+              0.5,
+              Math.sin((Math.PI * 2 * i) / 8) * 9,
+            ]}
+            rotation={[-Math.PI / 2, 0, (Math.PI * 2 * i) / 8]}
+          >
+            <boxGeometry args={[1.5, 0.1, 0.4]} />
+            <meshBasicMaterial color={goldColor} transparent opacity={0.7} />
           </mesh>
         ))}
-
-        {/* Eyes - glowing */}
-        {[-0.7, 0.7].map((x, i) => (
-          <mesh key={`eye-${i}`} position={[x, 5.8, 4.8]}>
-            <sphereGeometry args={[0.3, 8, 8]} />
-            <meshBasicMaterial color="#FFFFFF" />
-          </mesh>
-        ))}
-
-        {/* === LEFT WING === */}
-        <group ref={leftWingRef} position={[-2, 0, 0]} rotation={[0, 0, 0.3]}>
-          {/* Primary feathers - lông cánh chính */}
-          {[0, 1, 2, 3, 4].map((i) => (
-            <mesh
-              key={`left-primary-${i}`}
-              position={[-3 - i * 2.5, -i * 0.8, -i * 0.3]}
-              rotation={[0, 0.3 + i * 0.1, 0.5 + i * 0.15]}
-            >
-              <boxGeometry args={[4 - i * 0.3, 0.3, 1.5 - i * 0.15]} />
-              <meshPhysicalMaterial
-                color={i % 2 === 0 ? color : secondaryColor}
-                emissive={i % 2 === 0 ? color : secondaryColor}
-                emissiveIntensity={1.2 - i * 0.15}
-                metalness={0.5}
-                roughness={0.4}
-                transparent
-                opacity={0.85 - i * 0.1}
-              />
-            </mesh>
-          ))}
-          {/* Secondary feathers */}
-          {[0, 1, 2].map((i) => (
-            <mesh
-              key={`left-secondary-${i}`}
-              position={[-2 - i * 1.5, 0.5, -i * 0.2]}
-              rotation={[0, 0.2, 0.3 + i * 0.1]}
-            >
-              <boxGeometry args={[3 - i * 0.4, 0.2, 1.2]} />
-              {glowMaterial}
-            </mesh>
-          ))}
-        </group>
-
-        {/* === RIGHT WING === */}
-        <group ref={rightWingRef} position={[2, 0, 0]} rotation={[0, 0, -0.3]}>
-          {/* Primary feathers */}
-          {[0, 1, 2, 3, 4].map((i) => (
-            <mesh
-              key={`right-primary-${i}`}
-              position={[3 + i * 2.5, -i * 0.8, -i * 0.3]}
-              rotation={[0, -0.3 - i * 0.1, -0.5 - i * 0.15]}
-            >
-              <boxGeometry args={[4 - i * 0.3, 0.3, 1.5 - i * 0.15]} />
-              <meshPhysicalMaterial
-                color={i % 2 === 0 ? color : secondaryColor}
-                emissive={i % 2 === 0 ? color : secondaryColor}
-                emissiveIntensity={1.2 - i * 0.15}
-                metalness={0.5}
-                roughness={0.4}
-                transparent
-                opacity={0.85 - i * 0.1}
-              />
-            </mesh>
-          ))}
-          {/* Secondary feathers */}
-          {[0, 1, 2].map((i) => (
-            <mesh
-              key={`right-secondary-${i}`}
-              position={[2 + i * 1.5, 0.5, -i * 0.2]}
-              rotation={[0, -0.2, -0.3 - i * 0.1]}
-            >
-              <boxGeometry args={[3 - i * 0.4, 0.2, 1.2]} />
-              {glowMaterial}
-            </mesh>
-          ))}
-        </group>
-
-        {/* === TAIL === */}
-        <group ref={tailRef} position={[0, -2, -3]}>
-          {/* Main tail feathers - 7 lông đuôi dài */}
-          {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
-            <mesh
-              key={`tail-${i}`}
-              position={[i * 1.2, -Math.abs(i) * 0.5, -4 - Math.abs(i) * 2]}
-              rotation={[0.8 + Math.abs(i) * 0.1, i * 0.05, i * 0.1]}
-            >
-              <boxGeometry args={[0.8, 0.2, 8 - Math.abs(i) * 0.8]} />
-              <meshPhysicalMaterial
-                color={Math.abs(i) % 2 === 0 ? color : secondaryColor}
-                emissive={Math.abs(i) % 2 === 0 ? color : secondaryColor}
-                emissiveIntensity={1.5 - Math.abs(i) * 0.15}
-                metalness={0.5}
-                roughness={0.3}
-                transparent
-                opacity={0.9 - Math.abs(i) * 0.08}
-              />
-            </mesh>
-          ))}
-          {/* Tail tip flames */}
-          {[-2, 0, 2].map((i) => (
-            <mesh key={`tail-tip-${i}`} position={[i * 1.2, -Math.abs(i) * 0.5 - 1, -12 - Math.abs(i)]}>
-              <coneGeometry args={[0.6, 2, 6]} />
-              <meshBasicMaterial color={secondaryColor} transparent opacity={0.6} />
-            </mesh>
-          ))}
-        </group>
-
-        {/* Body glow aura */}
-        <mesh position={[0, 0, 0]}>
-          <sphereGeometry args={[5, 16, 16]} />
-          <meshBasicMaterial color={color} transparent opacity={0.15} />
-        </mesh>
       </group>
 
-      {/* Particle trail - thác lửa từ đuôi */}
-      <group ref={trailRef} position={[0, 25, -8]}>
-        {trailData.current.map((data, i) => (
-          <mesh key={i} position={[data.x, data.y, data.z]}>
-            <sphereGeometry args={[data.size, 6, 6]} />
-            <meshBasicMaterial
-              color={i % 3 === 0 ? '#FFFFFF' : i % 2 === 0 ? color : secondaryColor}
+      {/* === MAIN SWORD === */}
+      <group ref={swordRef} position={[0, 8, 0]}>
+        {/* Sword blade group */}
+        <group ref={bladeRef}>
+          {/* Main blade body - wide rectangular like in image */}
+          <mesh position={[0, 35, 0]} castShadow>
+            <boxGeometry args={[8, 55, 1.5]} />
+            <meshPhysicalMaterial
+              color={goldColor}
+              emissive={brightGold}
+              emissiveIntensity={0.8}
+              metalness={0.95}
+              roughness={0.15}
+              clearcoat={1}
+              clearcoatRoughness={0.1}
+            />
+          </mesh>
+
+          {/* Blade edge glow - left */}
+          <mesh position={[-4.2, 35, 0]}>
+            <boxGeometry args={[0.5, 55, 1.8]} />
+            <meshBasicMaterial color={paleGold} transparent opacity={0.6} />
+          </mesh>
+
+          {/* Blade edge glow - right */}
+          <mesh position={[4.2, 35, 0]}>
+            <boxGeometry args={[0.5, 55, 1.8]} />
+            <meshBasicMaterial color={paleGold} transparent opacity={0.6} />
+          </mesh>
+
+          {/* === BLADE DECORATIONS === */}
+          {/* Central vertical line */}
+          <mesh position={[0, 35, 0.8]}>
+            <boxGeometry args={[0.4, 50, 0.2]} />
+            <meshStandardMaterial
+              color="#8B4513"
+              emissive={brightGold}
+              emissiveIntensity={0.4}
+            />
+          </mesh>
+
+          {/* Horizontal pattern lines */}
+          {[-15, -5, 5, 15, 25, 35, 45].map((y, i) => (
+            <mesh key={`hline-${i}`} position={[0, y + 10, 0.8]}>
+              <boxGeometry args={[6, 0.3, 0.15]} />
+              <meshStandardMaterial
+                color="#8B4513"
+                emissive={goldColor}
+                emissiveIntensity={0.3}
+              />
+            </mesh>
+          ))}
+
+          {/* Corner decorations - meander pattern */}
+          {[[-2.5, 20], [2.5, 20], [-2.5, 50], [2.5, 50]].map(([x, y], i) => (
+            <mesh key={`corner-${i}`} position={[x, y, 0.85]}>
+              <boxGeometry args={[1.5, 1.5, 0.1]} />
+              <meshStandardMaterial
+                color="#8B4513"
+                emissive={brightGold}
+                emissiveIntensity={0.5}
+              />
+            </mesh>
+          ))}
+
+          {/* Central medallion - top */}
+          <mesh position={[0, 52, 0.9]}>
+            <circleGeometry args={[2.5, 16]} />
+            <meshStandardMaterial
+              color={goldColor}
+              emissive={brightGold}
+              emissiveIntensity={1}
+              metalness={0.95}
+              roughness={0.1}
+            />
+          </mesh>
+          <mesh position={[0, 52, 1]}>
+            <ringGeometry args={[1, 2, 16]} />
+            <meshStandardMaterial
+              color="#8B4513"
+              emissive={goldColor}
+              emissiveIntensity={0.5}
+            />
+          </mesh>
+
+          {/* Central medallion - middle */}
+          <mesh position={[0, 35, 0.9]}>
+            <circleGeometry args={[3, 16]} />
+            <meshStandardMaterial
+              color={goldColor}
+              emissive={brightGold}
+              emissiveIntensity={1.2}
+              metalness={0.95}
+              roughness={0.1}
+            />
+          </mesh>
+          {/* Inner jade gem */}
+          <mesh position={[0, 35, 1.1]}>
+            <sphereGeometry args={[1.2, 16, 16]} />
+            <meshStandardMaterial
+              color={jadeColor}
+              emissive={jadeColor}
+              emissiveIntensity={1.5}
+              metalness={0.7}
+              roughness={0.2}
               transparent
-              opacity={0.6}
+              opacity={0.9}
+            />
+          </mesh>
+
+          {/* Side jade gems */}
+          {[-2.8, 2.8].map((x, i) => (
+            <group key={`jade-${i}`}>
+              <mesh position={[x, 35, 0.9]}>
+                <sphereGeometry args={[0.6, 12, 12]} />
+                <meshStandardMaterial
+                  color={jadeColor}
+                  emissive={jadeColor}
+                  emissiveIntensity={1.2}
+                  metalness={0.7}
+                  roughness={0.2}
+                />
+              </mesh>
+              <mesh position={[x, 25, 0.9]}>
+                <sphereGeometry args={[0.5, 12, 12]} />
+                <meshStandardMaterial
+                  color={jadeColor}
+                  emissive={jadeColor}
+                  emissiveIntensity={1}
+                  metalness={0.7}
+                  roughness={0.2}
+                />
+              </mesh>
+              <mesh position={[x, 45, 0.9]}>
+                <sphereGeometry args={[0.5, 12, 12]} />
+                <meshStandardMaterial
+                  color={jadeColor}
+                  emissive={jadeColor}
+                  emissiveIntensity={1}
+                  metalness={0.7}
+                  roughness={0.2}
+                />
+              </mesh>
+            </group>
+          ))}
+
+          {/* Blade tip - pointed */}
+          <mesh position={[0, 63, 0]}>
+            <coneGeometry args={[4, 6, 4]} />
+            <meshPhysicalMaterial
+              color={goldColor}
+              emissive={brightGold}
+              emissiveIntensity={1}
+              metalness={0.95}
+              roughness={0.1}
+            />
+          </mesh>
+
+          {/* === CROSSGUARD (TSUBA) === */}
+          <mesh position={[0, 7, 0]} rotation={[0, 0, 0]}>
+            <boxGeometry args={[14, 2, 3]} />
+            <meshPhysicalMaterial
+              color={goldColor}
+              emissive={brightGold}
+              emissiveIntensity={0.7}
+              metalness={0.95}
+              roughness={0.15}
+            />
+          </mesh>
+
+          {/* Crossguard ends - curved up */}
+          {[-7, 7].map((x, i) => (
+            <group key={`guard-${i}`}>
+              <mesh position={[x, 8, 0]} rotation={[0, 0, i === 0 ? 0.3 : -0.3]}>
+                <boxGeometry args={[2, 3, 2.5]} />
+                <meshPhysicalMaterial
+                  color={goldColor}
+                  emissive={brightGold}
+                  emissiveIntensity={0.6}
+                  metalness={0.95}
+                  roughness={0.15}
+                />
+              </mesh>
+              {/* Guard end ornament */}
+              <mesh position={[x * 1.15, 10, 0]}>
+                <sphereGeometry args={[1, 12, 12]} />
+                <meshStandardMaterial
+                  color={goldColor}
+                  emissive={goldColor}
+                  emissiveIntensity={0.8}
+                  metalness={0.9}
+                  roughness={0.2}
+                />
+              </mesh>
+            </group>
+          ))}
+
+          {/* Crossguard center jade */}
+          <mesh position={[0, 7, 1.6]}>
+            <sphereGeometry args={[1, 12, 12]} />
+            <meshStandardMaterial
+              color={jadeColor}
+              emissive={jadeColor}
+              emissiveIntensity={1.5}
+              metalness={0.7}
+              roughness={0.2}
+            />
+          </mesh>
+
+          {/* === HANDLE === */}
+          <mesh position={[0, 2, 0]}>
+            <cylinderGeometry args={[1.2, 1.5, 8, 8]} />
+            <meshStandardMaterial
+              color="#8B4513"
+              roughness={0.8}
+              metalness={0.3}
+              emissive={goldColor}
+              emissiveIntensity={0.2}
+            />
+          </mesh>
+
+          {/* Handle wrapping */}
+          {[...Array(5)].map((_, i) => (
+            <mesh key={`wrap-${i}`} position={[0, i * 1.5 - 1, 0]}>
+              <torusGeometry args={[1.3, 0.15, 8, 16]} />
+              <meshStandardMaterial
+                color={goldColor}
+                emissive={goldColor}
+                emissiveIntensity={0.4}
+                metalness={0.9}
+                roughness={0.2}
+              />
+            </mesh>
+          ))}
+
+          {/* Pommel */}
+          <mesh position={[0, -3, 0]}>
+            <sphereGeometry args={[1.8, 16, 16]} />
+            <meshPhysicalMaterial
+              color={goldColor}
+              emissive={brightGold}
+              emissiveIntensity={0.8}
+              metalness={0.95}
+              roughness={0.1}
+            />
+          </mesh>
+
+          {/* Pommel jade */}
+          <mesh position={[0, -3.5, 1]}>
+            <sphereGeometry args={[0.6, 12, 12]} />
+            <meshStandardMaterial
+              color={jadeColor}
+              emissive={jadeColor}
+              emissiveIntensity={1.2}
+              metalness={0.7}
+              roughness={0.2}
+            />
+          </mesh>
+        </group>
+
+        {/* === ENERGY EFFECTS === */}
+        {/* Main glow aura */}
+        <mesh ref={glowRef} position={[0, 35, 0]}>
+          <planeGeometry args={[20, 70]} />
+          <meshBasicMaterial
+            color={goldColor}
+            transparent
+            opacity={0.25}
+            side={THREE.DoubleSide}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+
+        {/* Energy streaks */}
+        {[-4, 4].map((x, i) => (
+          <mesh key={`streak-${i}`} position={[x, 35, 2]}>
+            <planeGeometry args={[0.5, 60]} />
+            <meshBasicMaterial
+              color={paleGold}
+              transparent
+              opacity={0.3}
+              blending={THREE.AdditiveBlending}
             />
           </mesh>
         ))}
       </group>
 
-      {/* Fire aura layers */}
-      {[0, 1, 2].map((i) => (
-        <mesh key={`aura-${i}`} position={[0, 30 + i * 3, 0]}>
-          <sphereGeometry args={[10 + i * 3, 16, 16]} />
-          <meshBasicMaterial color={color} transparent opacity={0.06 - i * 0.015} />
-        </mesh>
-      ))}
-
-      {/* Lights */}
-      <pointLight position={[0, 35, 0]} color={color} intensity={10} distance={100} />
-      <pointLight position={[0, 30, 5]} color={secondaryColor} intensity={5} distance={60} />
-      <pointLight position={[0, 15, 0]} color={color} intensity={3} distance={40} />
+      {/* === PARTICLES === */}
+      <points ref={particlesRef} position={[0, 5, 0]}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={particleCount}
+            array={particlePositions}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.6}
+          color={goldColor}
+          transparent
+          opacity={0.7}
+          blending={THREE.AdditiveBlending}
+          sizeAttenuation
+        />
+      </points>
 
       {/* Sparkles */}
-      <Sparkles count={120} scale={[25, 70, 25]} position={[0, 30, 0]} size={3} speed={2} color={color} />
-      <Sparkles count={80} scale={[20, 50, 20]} position={[0, 20, -5]} size={2} speed={1.5} color={secondaryColor} />
+      <Sparkles
+        count={100}
+        scale={[20, 80, 15]}
+        position={[0, 45, 0]}
+        size={2.5}
+        speed={0.8}
+        color={goldColor}
+      />
+      <Sparkles
+        count={50}
+        scale={[15, 60, 10]}
+        position={[0, 40, 0]}
+        size={1.5}
+        speed={0.5}
+        color={jadeColor}
+      />
+
+      {/* Lights */}
+      <pointLight position={[0, 50, 5]} color={goldColor} intensity={5} distance={60} />
+      <pointLight position={[0, 30, 3]} color={brightGold} intensity={3} distance={40} />
+      <pointLight position={[0, 15, 0]} color={goldColor} intensity={2} distance={30} />
+      <pointLight position={[0, 45, 0]} color={jadeColor} intensity={1.5} distance={25} />
     </group>
   );
 }

@@ -11,7 +11,7 @@
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
 | **Current Phase** | Phase 5 - UI & Polish |
-| **Overall Progress** | 82% |
+| **Overall Progress** | 85% |
 
 ---
 
@@ -219,7 +219,35 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 5 (Latest)
+### Session 2026-01-21 - Update 6 (Latest)
+```
+- Thêm Cấm Phiên (Soul Banner) vào section Vấn Đỉnh:
+  - 2 cây phướn trấn yểm 2 bên (vị trí [-55,0,10] và [55,0,10])
+  - Cột chính cao 60 units với quả cầu vàng trên đỉnh
+  - 3 vòng trang trí vàng (joints) dọc theo cột
+  - Thân phướn hình thang (rộng trên, hẹp dưới, nhọn đáy)
+  - Thanh ngang vàng với 2 quả cầu 2 đầu
+  - Viền vàng, huy hiệu tròn ở giữa với crystal đỏ phát sáng
+  - Tua dây (tassels) treo ở đáy và 2 đầu thanh ngang
+  - Chuỗi xích với đồng xu vàng 2 bên
+  - 150 particles lửa bay lên + sparkles
+  - Animation: phướn đung đưa, tua dây lay động, glow pulse
+
+- Thay thế Phoenix Flames bằng Trảm La Kiếm (Soul Slaying Sword) ở section Hóa Thần:
+  - 2 thanh kiếm vàng kim thẳng đứng 2 bên (vị trí [-55,0,0] và [55,0,0])
+  - Lưỡi kiếm rộng hình chữ nhật (8x55 units) với clearcoat
+  - Hoa văn: đường dọc giữa, 7 đường ngang, huy chương tròn
+  - Ngọc bích (jade) màu xanh lơ ở giữa và 2 bên
+  - Crossguard (Tsuba) rộng với 2 đầu uốn lên
+  - Chuôi kiếm bọc da với 5 vòng vàng, pommel hình cầu
+  - 120 particles năng lượng bay lên xoắn ốc
+  - 8 rune xoay quanh đế
+  - Animation: hover nhẹ, glow pulse, particles spiral
+
+- Files changed: VanDinhSection.tsx, ExperienceSection.tsx
+```
+
+### Session 2026-01-21 - Update 5
 ```
 - Đổi tên VUONG LAM thành William Vu (index.html, LoadingScreen.tsx)
 - Bỏ phần tiếng Anh ở Loading Screen
@@ -311,6 +339,7 @@
 
 ### Git Commits
 ```
+248595d - feat: Add Soul Banner to Van Dinh, replace Phoenix with Tram La Kiem
 29a74aa - feat: Add Phoenix Flames to Hoa Than section, rename to William Vu
 be6d1cf - feat: Move gates to back, add Dancing Script font for Vietnamese support
 78a9b6a - feat: Add Vietnamese diacritics, move contact form to Van Dinh
