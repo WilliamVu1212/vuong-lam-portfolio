@@ -11,7 +11,8 @@ export type CultivationLevel =
   | 'kim_dan'      // Kim Đan - Projects 1-3
   | 'nguyen_anh'   // Nguyên Anh - Projects 4-6
   | 'hoa_than'     // Hóa Thần - Experience
-  | 'dai_thua';    // Đại Thừa - Contact
+  | 'dai_thua'     // Đại Thừa - Contact
+  | 'van_dinh';    // Vấn Đỉnh - Peak
 
 export type TransportMode =
   | 'walking'      // Đi bộ
@@ -25,7 +26,8 @@ export type Section =
   | 'skills'
   | 'projects'
   | 'experience'
-  | 'contact';
+  | 'contact'
+  | 'vandinh';
 
 export interface GameState {
   currentSection: Section;

@@ -219,7 +219,34 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 6 (Latest)
+### Session 2026-01-21 - Update 7 (Latest)
+```
+- Bỏ bóng vàng (glow aura) xung quanh Trảm La Kiếm ở Hóa Thần:
+  - Xóa Main glow aura (plane 20x70)
+  - Xóa Energy streaks (2 đường sáng 2 bên)
+  - Giữ lại kiếm, particles và lights
+
+- Di chuyển 2 thác nước từ Kết Đan lên Nguyên Anh:
+  - Thác Tử Điện (tím): [-70, 90, -250] → [-70, 130, -320]
+  - Thác Kim Quang (vàng): [70, 90, -250] → [70, 130, -320]
+
+- Cập nhật công pháp theo nguyên tác Tiên Nghịch (Vương Lâm):
+  - Luyện Khí: Hấp Dẫn Thuật, Hỏa Cầu Thuật, Liệt Địa Thuật
+  - Trúc Cơ: Thổ Độn Thuật, Triệu Hồn Thuật, Huyết Luyện Thuật
+  - Kết Đan: Hoàng Tuyền Chỉ, Tịch Diệt Chỉ, Hóa Ma Chỉ
+  - Nguyên Anh: Thần Đạo, Đoạt Cơ Đại Pháp, Định Thân Thuật
+  - Hóa Thần: Tê Thiên, Cổ Thần Khôi Lỗi, Thiên Băng Địa Liệt
+  - Anh Biến: Hồn Phiên Tam Pháp, Mộng Về Viễn Cổ, Âm Nguyệt Đại Pháp
+  - Vấn Đỉnh: Sinh Tử Quy Tắc, Nhân Quả Quy Tắc, Bản Nguyên Lĩnh Ngộ
+
+- Thêm 'vandinh' vào Section type và 'van_dinh' vào CultivationLevel type
+- Sửa các lỗi TypeScript: paleGold, handleClick unused, vandinh mapping
+
+- Files changed: Experience.tsx, ExperienceSection.tsx, SkillsSection.tsx,
+                 content.ts, gameStore.ts, types/index.ts
+```
+
+### Session 2026-01-21 - Update 6
 ```
 - Thêm Cấm Phiên (Soul Banner) vào section Vấn Đỉnh:
   - 2 cây phướn trấn yểm 2 bên (vị trí [-55,0,10] và [55,0,10])

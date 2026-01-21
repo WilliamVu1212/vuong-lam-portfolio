@@ -273,10 +273,6 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
     }
   });
 
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <group
       ref={pillarRef}

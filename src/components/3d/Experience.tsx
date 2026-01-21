@@ -306,10 +306,10 @@ function WorldContent() {
       <Waterfall position={[-50, 40, -120]} height={35} width={10} color1="#FF2222" color2="#FF6600" />
       {/* Thác Thanh Lam - Xanh lam (phải) */}
       <Waterfall position={[50, 40, -120]} height={35} width={10} color1="#2266FF" color2="#66CCFF" />
-      {/* Thác Tử Điện - Tím (trái xa) */}
-      <Waterfall position={[-70, 90, -250]} height={40} width={12} color1="#8B00FF" color2="#DA70D6" />
-      {/* Thác Kim Quang - Vàng kim (phải xa) */}
-      <Waterfall position={[70, 90, -250]} height={40} width={12} color1="#FFD700" color2="#FFFACD" />
+      {/* Thác Tử Điện - Tím (trái xa) - Nguyên Anh */}
+      <Waterfall position={[-70, 130, -320]} height={40} width={12} color1="#8B00FF" color2="#DA70D6" />
+      {/* Thác Kim Quang - Vàng kim (phải xa) - Nguyên Anh */}
+      <Waterfall position={[70, 130, -320]} height={40} width={12} color1="#FFD700" color2="#FFFACD" />
 
       {/* Fire Particles */}
       <FireParticles />

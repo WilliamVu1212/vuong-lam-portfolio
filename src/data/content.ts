@@ -62,33 +62,33 @@ export const cultivationTechniques = {
     ],
     color: '#8B7355',
   },
-  // Luyện Khí - Thuật pháp sơ cấp
+  // Luyện Khí - Tam Giai Ngưng Khí (Ba thuật cơ bản)
   luyen_khi: {
     name: 'Luyện Khí',
     techniques: [
       { name: 'Hấp Dẫn Thuật', desc: 'Hút vật từ xa' },
-      { name: 'Ngưng Khí Quyết', desc: 'Ngưng tụ linh khí' },
-      { name: 'Phi Kiếm Thuật', desc: 'Điều khiển phi kiếm' },
+      { name: 'Hỏa Cầu Thuật', desc: 'Phóng cầu lửa' },
+      { name: 'Liệt Địa Thuật', desc: 'Chẻ đất nứt nẻ' },
     ],
     color: '#C4A77D',
   },
-  // Trúc Cơ - Ấn pháp và trận pháp cơ bản
+  // Trúc Cơ - Bắt đầu tu luyện chính thức
   truc_co: {
     name: 'Trúc Cơ',
     techniques: [
-      { name: 'Trục Địa Ấn', desc: 'Ấn pháp trấn áp' },
-      { name: 'Lôi Điện Thuật', desc: 'Triệu hồi sấm sét' },
       { name: 'Thổ Độn Thuật', desc: 'Ẩn mình trong đất' },
+      { name: 'Triệu Hồn Thuật', desc: 'Triệu hồi linh hồn' },
+      { name: 'Huyết Luyện Thuật', desc: 'Luyện huyết cường hóa' },
     ],
     color: '#FF8C00',
   },
-  // Kết Đan - Thần thông mạnh mẽ
+  // Kết Đan - Hoàng Tuyền Thăng Thiên Công
   ket_dan: {
     name: 'Kết Đan',
     techniques: [
-      { name: 'Tế Thần Thuật', desc: 'Tế luyện thần hồn' },
-      { name: 'Ngũ Hành Quyết', desc: 'Khống chế ngũ hành' },
-      { name: 'Thiên Nhãn Thông', desc: 'Nhìn thấu vạn vật' },
+      { name: 'Hoàng Tuyền Chỉ', desc: 'Chỉ pháp Hoàng Tuyền' },
+      { name: 'Tịch Diệt Chỉ', desc: 'Chỉ pháp tịch diệt' },
+      { name: 'Hóa Ma Chỉ', desc: 'Chỉ pháp hóa ma' },
     ],
     color: '#FFD700',
   },
@@ -96,39 +96,39 @@ export const cultivationTechniques = {
   nguyen_anh: {
     name: 'Nguyên Anh',
     techniques: [
-      { name: 'Nguyên Anh Tự Bạo', desc: 'Tự hủy Nguyên Anh' },
-      { name: 'Thiên Địa Ấn', desc: 'Đại ấn trời đất' },
-      { name: 'Hư Không Trảm', desc: 'Chém xuyên không gian' },
+      { name: 'Thần Đạo', desc: 'Đại thần thông thần đạo' },
+      { name: 'Đoạt Cơ Đại Pháp', desc: 'Đoạt căn cơ người khác' },
+      { name: 'Định Thân Thuật', desc: 'Định thân bất động' },
     ],
     color: '#FF4444',
   },
-  // Hóa Thần - Đại thần thông
+  // Hóa Thần - Đại thần thông, ngộ Đạo
   hoa_than: {
     name: 'Hóa Thần',
     techniques: [
-      { name: 'Sinh Tử Luân Hồi', desc: 'Luân hồi sinh tử' },
-      { name: 'Thiên Mệnh Chuyển Di', desc: 'Chuyển dời thiên mệnh' },
-      { name: 'Diệt Thế Chi Ấn', desc: 'Ấn diệt thế gian' },
+      { name: 'Tê Thiên', desc: 'Xé rách bầu trời' },
+      { name: 'Cổ Thần Khôi Lỗi', desc: 'Búp bê Cổ Thần' },
+      { name: 'Thiên Băng Địa Liệt', desc: 'Trời băng đất nứt' },
     ],
     color: '#FF4500',
   },
-  // Anh Biến - Tối thượng thần thông
+  // Anh Biến - Nguyên Anh biến hóa
   anh_bien: {
     name: 'Anh Biến',
     techniques: [
-      { name: 'Hỗn Độn Khai Thiên', desc: 'Khai thiên tịch địa' },
-      { name: 'Nhân Quả Luân Hồi', desc: 'Nhân quả tuần hoàn' },
-      { name: 'Vạn Pháp Quy Nhất', desc: 'Vạn pháp về một' },
+      { name: 'Hồn Phiên Tam Pháp', desc: 'Ba pháp lật hồn' },
+      { name: 'Mộng Về Viễn Cổ', desc: 'Mơ về thời cổ đại' },
+      { name: 'Âm Nguyệt Đại Pháp', desc: 'Đại pháp trăng âm' },
     ],
     color: '#9400D3',
   },
-  // Vấn Đỉnh - Đỉnh cao tu luyện
+  // Vấn Đỉnh - Lĩnh ngộ Quy Tắc
   van_dinh: {
     name: 'Vấn Đỉnh',
     techniques: [
-      { name: 'Thiên Địa Đồng Thọ', desc: 'Trời đất cùng thọ' },
-      { name: 'Vô Thượng Đại Đạo', desc: 'Đại đạo vô thượng' },
-      { name: 'Tiên Giới Chi Chủ', desc: 'Làm chủ tiên giới' },
+      { name: 'Sinh Tử Quy Tắc', desc: 'Quy tắc sinh tử' },
+      { name: 'Nhân Quả Quy Tắc', desc: 'Quy tắc nhân quả' },
+      { name: 'Bản Nguyên Lĩnh Ngộ', desc: 'Lĩnh ngộ bản nguyên' },
     ],
     color: '#00CED1',
   },

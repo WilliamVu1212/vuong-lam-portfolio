@@ -576,14 +576,12 @@ interface SoulSlayingSwordProps {
 function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
   const swordRef = useRef<THREE.Group>(null);
   const bladeRef = useRef<THREE.Group>(null);
-  const glowRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
   const runesRef = useRef<THREE.Group>(null);
 
   // Main colors - vàng kim như trong ảnh
   const goldColor = '#FFD700';
   const brightGold = '#FFA500';
-  const paleGold = '#FFFACD';
   const jadeColor = '#40E0D0'; // Ngọc bích trên kiếm
 
   // Particle system
@@ -618,12 +616,6 @@ function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
           }
         }
       });
-    }
-
-    // Main glow pulse
-    if (glowRef.current) {
-      const mat = glowRef.current.material as THREE.MeshBasicMaterial;
-      mat.opacity = 0.25 + Math.sin(t * 1.5) * 0.1;
     }
 
     // Runes rotation
@@ -726,13 +718,13 @@ function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
           {/* Blade edge glow - left */}
           <mesh position={[-4.2, 35, 0]}>
             <boxGeometry args={[0.5, 55, 1.8]} />
-            <meshBasicMaterial color={paleGold} transparent opacity={0.6} />
+            <meshBasicMaterial color={'#FFFACD'} transparent opacity={0.6} />
           </mesh>
 
           {/* Blade edge glow - right */}
           <mesh position={[4.2, 35, 0]}>
             <boxGeometry args={[0.5, 55, 1.8]} />
-            <meshBasicMaterial color={paleGold} transparent opacity={0.6} />
+            <meshBasicMaterial color={'#FFFACD'} transparent opacity={0.6} />
           </mesh>
 
           {/* === BLADE DECORATIONS === */}
@@ -965,31 +957,6 @@ function SoulSlayingSword({ position }: SoulSlayingSwordProps) {
           </mesh>
         </group>
 
-        {/* === ENERGY EFFECTS === */}
-        {/* Main glow aura */}
-        <mesh ref={glowRef} position={[0, 35, 0]}>
-          <planeGeometry args={[20, 70]} />
-          <meshBasicMaterial
-            color={goldColor}
-            transparent
-            opacity={0.25}
-            side={THREE.DoubleSide}
-            blending={THREE.AdditiveBlending}
-          />
-        </mesh>
-
-        {/* Energy streaks */}
-        {[-4, 4].map((x, i) => (
-          <mesh key={`streak-${i}`} position={[x, 35, 2]}>
-            <planeGeometry args={[0.5, 60]} />
-            <meshBasicMaterial
-              color={paleGold}
-              transparent
-              opacity={0.3}
-              blending={THREE.AdditiveBlending}
-            />
-          </mesh>
-        ))}
       </group>
 
       {/* === PARTICLES === */}

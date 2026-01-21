@@ -101,6 +101,7 @@ export const useGameStore = create<GameStore>()(
           projects: 'kim_dan',
           experience: 'hoa_than',
           contact: 'dai_thua',
+          vandinh: 'van_dinh',
         };
         set({ cultivationLevel: sectionToLevel[section] });
       }
