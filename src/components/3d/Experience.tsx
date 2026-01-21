@@ -1,9 +1,8 @@
-import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useMemo, useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import {
   Stars,
   Float,
-  Cloud,
   Sparkles,
   OrbitControls,
 } from '@react-three/drei';
@@ -27,6 +26,52 @@ import {
   ContactSection,
 } from '@/components/sections';
 
+// Camera controller for smooth navigation
+function CameraController() {
+  const { camera, controls } = useThree();
+  const cameraTarget = useUIStore((state) => state.cameraTarget);
+  const cameraLookAt = useUIStore((state) => state.cameraLookAt);
+  const setCameraTarget = useUIStore((state) => state.setCameraTarget);
+
+  const targetPosition = useRef(new THREE.Vector3());
+  const targetLookAt = useRef(new THREE.Vector3());
+  const isAnimating = useRef(false);
+
+  useEffect(() => {
+    if (cameraTarget) {
+      targetPosition.current.set(...cameraTarget);
+      if (cameraLookAt) {
+        targetLookAt.current.set(...cameraLookAt);
+      }
+      isAnimating.current = true;
+    }
+  }, [cameraTarget, cameraLookAt]);
+
+  useFrame(() => {
+    if (isAnimating.current && cameraTarget) {
+      // Smoothly interpolate camera position
+      camera.position.lerp(targetPosition.current, 0.02);
+
+      // Update OrbitControls target if lookAt is specified
+      if (cameraLookAt && controls) {
+        const orbitControls = controls as any;
+        if (orbitControls.target) {
+          orbitControls.target.lerp(targetLookAt.current, 0.02);
+        }
+      }
+
+      // Check if animation is complete
+      const distance = camera.position.distanceTo(targetPosition.current);
+      if (distance < 1) {
+        isAnimating.current = false;
+        setCameraTarget(null, null);
+      }
+    }
+  });
+
+  return null;
+}
+
 function Experience() {
   const isDebugMode = useUIStore((state) => state.isDebugMode);
 
@@ -35,19 +80,23 @@ function Experience() {
       {/* Debug */}
       {isDebugMode && <Perf position="top-left" />}
 
-      {/* Orbit Controls - Mouse to rotate/zoom */}
+      {/* Camera Controller for smooth navigation */}
+      <CameraController />
+
+      {/* Orbit Controls - Mouse to rotate/zoom/pan */}
       <OrbitControls
         makeDefault
         enableDamping
         dampingFactor={0.05}
         minDistance={5}
-        maxDistance={300}
-        maxPolarAngle={Math.PI * 0.85}
-        minPolarAngle={0.1}
-        rotateSpeed={-0.5}
-        zoomSpeed={1}
-        panSpeed={0.5}
-        enablePan={false}
+        maxDistance={800}
+        maxPolarAngle={Math.PI * 0.9}
+        minPolarAngle={0.05}
+        rotateSpeed={0.8}
+        zoomSpeed={1.5}
+        panSpeed={1}
+        enablePan={true}
+        screenSpacePanning={true}
       />
 
       {/* Environment */}
@@ -340,6 +389,7 @@ function SmallRock({ position, scale }: { position: [number, number, number]; sc
   );
 }
 
+/* Moon component - removed as per user request
 function Moon() {
   const moonRef = useRef<THREE.Mesh>(null);
   const haloRef = useRef<THREE.Mesh>(null);
@@ -375,34 +425,49 @@ function Moon() {
     </group>
   );
 }
+*/
 
 function CloudSea() {
+  // Using simple fog-like meshes instead of Cloud component to avoid rendering issues
   return (
     <group position={[0, -30, 0]}>
-      {[...Array(15)].map((_, i) => (
-        <Cloud
+      {[...Array(20)].map((_, i) => (
+        <mesh
           key={i}
-          position={[(Math.random() - 0.5) * 300, Math.random() * 10 - 20, (Math.random() - 0.5) * 400 - 100]}
-          speed={0.1 + Math.random() * 0.1}
-          opacity={0.3 + Math.random() * 0.2}
-          width={30 + Math.random() * 20}
-          depth={5}
-          segments={20}
-          color="#2D1B1B"
-        />
+          position={[
+            (Math.random() - 0.5) * 300,
+            Math.random() * 10 - 20,
+            (Math.random() - 0.5) * 400 - 100
+          ]}
+          scale={[30 + Math.random() * 20, 3 + Math.random() * 2, 15 + Math.random() * 10]}
+        >
+          <sphereGeometry args={[1, 8, 8]} />
+          <meshBasicMaterial
+            color="#2D1B1B"
+            transparent
+            opacity={0.3 + Math.random() * 0.2}
+          />
+        </mesh>
       ))}
 
-      {[...Array(8)].map((_, i) => (
-        <Cloud
+      {/* Glowing cloud layer */}
+      {[...Array(10)].map((_, i) => (
+        <mesh
           key={`glow-${i}`}
-          position={[(Math.random() - 0.5) * 200, Math.random() * 5 - 25, (Math.random() - 0.5) * 300 - 50]}
-          speed={0.05}
-          opacity={0.15}
-          width={40 + Math.random() * 30}
-          depth={3}
-          segments={15}
-          color="#FF4444"
-        />
+          position={[
+            (Math.random() - 0.5) * 200,
+            Math.random() * 5 - 25,
+            (Math.random() - 0.5) * 300 - 50
+          ]}
+          scale={[40 + Math.random() * 30, 2 + Math.random() * 2, 20 + Math.random() * 15]}
+        >
+          <sphereGeometry args={[1, 8, 8]} />
+          <meshBasicMaterial
+            color="#FF4444"
+            transparent
+            opacity={0.1 + Math.random() * 0.1}
+          />
+        </mesh>
       ))}
     </group>
   );

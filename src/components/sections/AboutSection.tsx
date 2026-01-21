@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float, Text3D, Center, Sparkles } from '@react-three/drei';
+import { Float, Sparkles } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
-import { profile } from '@/data/content';
+// Content data not currently used but kept for future reference
 
 interface AboutSectionProps {
   position?: [number, number, number];
@@ -308,8 +308,7 @@ interface InfoStoneProps {
   index: number;
 }
 
-function InfoStone({ position, rotation, contentType, index }: InfoStoneProps) {
-  const stoneRef = useRef<THREE.Group>(null);
+function InfoStone({ position, rotation, index }: InfoStoneProps) {
   const glowRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -319,26 +318,9 @@ function InfoStone({ position, rotation, contentType, index }: InfoStoneProps) {
     }
   });
 
-  const getContent = () => {
-    switch (contentType) {
-      case 'name':
-        return { title: '道号', text: profile.name };
-      case 'title':
-        return { title: '称号', text: profile.title };
-      case 'bio':
-        return { title: '简介', text: 'Creative Developer' };
-      case 'journey':
-        return { title: '修行', text: '数字修炼者' };
-      default:
-        return { title: '', text: '' };
-    }
-  };
-
-  const content = getContent();
-
   return (
     <Float speed={1.5} floatIntensity={0.2}>
-      <group ref={stoneRef} position={position} rotation={[0, rotation, 0]}>
+      <group position={position} rotation={[0, rotation, 0]}>
         {/* Stone base */}
         <mesh castShadow receiveShadow>
           <boxGeometry args={[6, 8, 1]} />

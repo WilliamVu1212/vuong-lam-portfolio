@@ -50,7 +50,81 @@ Chuyên về Frontend Development với focus vào interactive experiences,
   ],
 };
 
-// -------------------- Skills --------------------
+// -------------------- Võ Công theo Cảnh Giới (Tiên Nghịch) --------------------
+// Hệ thống võ công của Vương Lâm theo từng tầng tu luyện
+
+export const cultivationTechniques = {
+  // Phàm Nhân - Chưa tu luyện, chỉ có căn cơ
+  pham_nhan: {
+    name: 'Phàm Nhân',
+    techniques: [
+      { name: 'Căn Cơ Phàm Trần', desc: 'Nền tảng ban đầu' },
+    ],
+    color: '#8B7355',
+  },
+  // Luyện Khí - Thuật pháp sơ cấp
+  luyen_khi: {
+    name: 'Luyện Khí',
+    techniques: [
+      { name: 'Hấp Dẫn Thuật', desc: 'Hút vật từ xa' },
+      { name: 'Ngưng Khí Quyết', desc: 'Ngưng tụ linh khí' },
+      { name: 'Phi Kiếm Thuật', desc: 'Điều khiển phi kiếm' },
+    ],
+    color: '#C4A77D',
+  },
+  // Trúc Cơ - Ấn pháp và trận pháp cơ bản
+  truc_co: {
+    name: 'Trúc Cơ',
+    techniques: [
+      { name: 'Trục Địa Ấn', desc: 'Ấn pháp trấn áp' },
+      { name: 'Lôi Điện Thuật', desc: 'Triệu hồi sấm sét' },
+      { name: 'Thổ Độn Thuật', desc: 'Ẩn mình trong đất' },
+    ],
+    color: '#FF8C00',
+  },
+  // Kim Đan - Thần thông mạnh mẽ
+  kim_dan: {
+    name: 'Kim Đan',
+    techniques: [
+      { name: 'Tế Thần Thuật', desc: 'Tế luyện thần hồn' },
+      { name: 'Ngũ Hành Quyết', desc: 'Khống chế ngũ hành' },
+      { name: 'Thiên Nhãn Thông', desc: 'Nhìn thấu vạn vật' },
+    ],
+    color: '#FFD700',
+  },
+  // Nguyên Anh - Thần thông cấp cao
+  nguyen_anh: {
+    name: 'Nguyên Anh',
+    techniques: [
+      { name: 'Nguyên Anh Tự Bạo', desc: 'Tự hủy Nguyên Anh' },
+      { name: 'Thiên Địa Ấn', desc: 'Đại ấn trời đất' },
+      { name: 'Hư Không Trảm', desc: 'Chém xuyên không gian' },
+    ],
+    color: '#FF4444',
+  },
+  // Hóa Thần - Đại thần thông
+  hoa_than: {
+    name: 'Hóa Thần',
+    techniques: [
+      { name: 'Sinh Tử Luân Hồi', desc: 'Luân hồi sinh tử' },
+      { name: 'Thiên Mệnh Chuyển Di', desc: 'Chuyển dời thiên mệnh' },
+      { name: 'Diệt Thế Chi Ấn', desc: 'Ấn diệt thế gian' },
+    ],
+    color: '#FF4500',
+  },
+  // Đại Thừa - Tối thượng thần thông
+  dai_thua: {
+    name: 'Đại Thừa',
+    techniques: [
+      { name: 'Hỗn Độn Khai Thiên', desc: 'Khai thiên tịch địa' },
+      { name: 'Nhân Quả Luân Hồi', desc: 'Nhân quả tuần hoàn' },
+      { name: 'Vạn Pháp Quy Nhất', desc: 'Vạn pháp về một' },
+    ],
+    color: '#9400D3',
+  },
+};
+
+// -------------------- Skills (mapping với võ công) --------------------
 
 export const skillCategories: SkillCategory[] = [
   {
@@ -99,12 +173,14 @@ export const skillCategories: SkillCategory[] = [
 ];
 
 // -------------------- Projects --------------------
+// Võ công theo phong cách Tiên Nghịch - Vương Lâm
 
 export const projects: Project[] = [
+  // ===== Luyện Khí - Võ công sơ cấp =====
   {
     id: 1,
-    name: 'E-Commerce 3D Store',
-    category: 'Web Application',
+    name: 'Hấp Dẫn Thuật',
+    category: 'Luyện Khí',
     description: `Full-stack e-commerce platform với 3D product viewer.
 Khách hàng có thể xem sản phẩm 360°, zoom chi tiết,
 và customize màu sắc trước khi mua.`,
@@ -120,12 +196,12 @@ và customize màu sắc trước khi mua.`,
       github: 'https://github.com/example',
     },
     image: '/images/projects/ecommerce-3d.jpg',
-    color: '#FF6B35',
+    color: '#8B7355',
   },
   {
     id: 2,
-    name: 'Real-time Dashboard',
-    category: 'Web Application',
+    name: 'Ngưng Khí Quyết',
+    category: 'Luyện Khí',
     description: `Analytics dashboard với real-time data visualization.
 Hiển thị metrics, charts, và alerts cho business intelligence.`,
     tech: ['React', 'D3.js', 'WebSocket', 'PostgreSQL', 'Redis'],
@@ -140,12 +216,13 @@ Hiển thị metrics, charts, và alerts cho business intelligence.`,
       github: 'https://github.com/example',
     },
     image: '/images/projects/dashboard.jpg',
-    color: '#FF4444',
+    color: '#C4A77D',
   },
+  // ===== Trúc Cơ - Võ công nền tảng =====
   {
     id: 3,
-    name: 'AI Chat Application',
-    category: 'Full-stack',
+    name: 'Trục Địa Ấn',
+    category: 'Trúc Cơ',
     description: `Chatbot application tích hợp AI cho customer support.
 Sử dụng OpenAI API với custom training data.`,
     tech: ['Next.js', 'OpenAI API', 'Node.js', 'MongoDB', 'Socket.io'],
@@ -162,10 +239,11 @@ Sử dụng OpenAI API với custom training data.`,
     image: '/images/projects/ai-chat.jpg',
     color: '#FF8C00',
   },
+  // ===== Kim Đan - Võ công thành tựu =====
   {
     id: 4,
-    name: 'Mobile Fitness App',
-    category: 'Mobile',
+    name: 'Tế Thần Thuật',
+    category: 'Kim Đan',
     description: `Workout tracker app với personalized training plans.
 Track progress, set goals, và connect với community.`,
     tech: ['React Native', 'Firebase', 'Node.js', 'TensorFlow Lite'],
@@ -182,10 +260,11 @@ Track progress, set goals, và connect với community.`,
     image: '/images/projects/fitness-app.jpg',
     color: '#FFD700',
   },
+  // ===== Nguyên Anh - Võ công cao cấp =====
   {
     id: 5,
-    name: 'Interactive Data Globe',
-    category: 'Data Visualization',
+    name: 'Nguyên Anh Tự Bạo',
+    category: 'Nguyên Anh',
     description: `3D globe visualization hiển thị global data.
 Interactive exploration với real-time data updates.`,
     tech: ['Three.js', 'D3.js', 'React', 'REST APIs'],
@@ -200,12 +279,13 @@ Interactive exploration với real-time data updates.`,
       github: 'https://github.com/example',
     },
     image: '/images/projects/data-globe.jpg',
-    color: '#FF4500',
+    color: '#FF4444',
   },
+  // ===== Hóa Thần - Võ công tối thượng =====
   {
     id: 6,
-    name: 'This Portfolio',
-    category: 'Creative Development',
+    name: 'Sinh Tử Luân Hồi',
+    category: 'Hóa Thần',
     description: `Portfolio website bạn đang xem! Một thế giới 3D tiên hiệp
 interactive với đạp mây, ngự kiếm, và cưỡi linh thú.`,
     tech: ['React Three Fiber', 'Three.js', 'GSAP', 'Rapier Physics', 'TypeScript'],
@@ -220,7 +300,7 @@ interactive với đạp mây, ngự kiếm, và cưỡi linh thú.`,
       github: 'https://github.com/example',
     },
     image: '/images/projects/portfolio.jpg',
-    color: '#FF4444',
+    color: '#FF4500',
   },
 ];
 

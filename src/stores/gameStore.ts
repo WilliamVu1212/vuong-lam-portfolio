@@ -197,6 +197,10 @@ interface UIStore {
   // Debug
   isDebugMode: boolean;
 
+  // Camera target for navigation
+  cameraTarget: [number, number, number] | null;
+  cameraLookAt: [number, number, number] | null;
+
   // Actions
   openModal: (type: UIStore['modalType'], data?: unknown) => void;
   closeModal: () => void;
@@ -204,6 +208,7 @@ interface UIStore {
   setPaused: (paused: boolean) => void;
   setLoading: (loading: boolean, progress?: number) => void;
   toggleDebug: () => void;
+  setCameraTarget: (position: [number, number, number] | null, lookAt?: [number, number, number] | null) => void;
 }
 
 export const useUIStore = create<UIStore>()((set) => ({
@@ -216,6 +221,8 @@ export const useUIStore = create<UIStore>()((set) => ({
   isLoading: true,
   loadingProgress: 0,
   isDebugMode: true,
+  cameraTarget: null,
+  cameraLookAt: null,
 
   // Actions
   openModal: (type, data) =>
@@ -249,6 +256,12 @@ export const useUIStore = create<UIStore>()((set) => ({
     }),
 
   toggleDebug: () => set((state) => ({ isDebugMode: !state.isDebugMode })),
+
+  setCameraTarget: (position, lookAt = null) =>
+    set({
+      cameraTarget: position,
+      cameraLookAt: lookAt,
+    }),
 }));
 
 // ==========================================

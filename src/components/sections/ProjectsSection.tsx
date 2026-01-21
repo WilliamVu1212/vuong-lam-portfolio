@@ -1,11 +1,14 @@
 import { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Float, Sparkles, Html } from '@react-three/drei';
+import { useFrame, extend } from '@react-three/fiber';
+import { Float, Sparkles, Html, Line } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { projects } from '@/data/content';
 import { useGameStore, useUIStore } from '@/stores/gameStore';
 import type { Project } from '@/types';
+
+// Extend THREE.Line to avoid JSX conflicts
+extend({ Line_: THREE.Line });
 
 interface ProjectsSectionProps {
   position?: [number, number, number];
@@ -261,34 +264,34 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
           />
         ))}
 
-        {/* HTML info card on hover */}
-        {hovered && (
-          <Html
-            position={[0, 15, 0]}
-            center
+        {/* Simple project name label - always visible */}
+        <Html
+          position={[0, 14, 0]}
+          center
+          style={{
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+        >
+          <div
+            className="text-center cursor-pointer transition-all duration-200"
             style={{
-              pointerEvents: 'none',
-              userSelect: 'none',
+              transform: hovered ? 'scale(1.1)' : 'scale(1)',
             }}
           >
-            <div className="glass px-4 py-3 rounded-lg text-center max-w-[200px]">
-              <p className="text-co-chi font-heading font-bold">{project.name}</p>
-              <p className="text-tho-kim text-xs mt-1">{project.category}</p>
-              <div className="flex flex-wrap gap-1 mt-2 justify-center">
-                {project.tech.slice(0, 3).map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-xs px-2 py-0.5 rounded"
-                    style={{ backgroundColor: `${project.color}33`, color: project.color }}
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <p className="text-am-tho text-xs mt-2">Click để xem chi tiết</p>
+            <div
+              className="font-bold text-sm whitespace-nowrap px-3 py-1.5 rounded-lg"
+              style={{
+                color: '#F5E6D3',
+                backgroundColor: 'rgba(26, 10, 10, 0.9)',
+                border: `2px solid ${project.color}`,
+                boxShadow: hovered ? `0 0 20px ${project.color}` : `0 0 8px ${project.color}50`,
+              }}
+            >
+              {project.name}
             </div>
-          </Html>
-        )}
+          </div>
+        </Html>
 
         {/* Island sparkles */}
         <Sparkles
@@ -353,19 +356,6 @@ interface ConnectionBeamsProps {
 }
 
 function ConnectionBeams({ positions, color }: ConnectionBeamsProps) {
-  const beamsRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (beamsRef.current) {
-      beamsRef.current.children.forEach((child, i) => {
-        if (child instanceof THREE.Line) {
-          const material = child.material as THREE.LineBasicMaterial;
-          material.opacity = 0.2 + Math.sin(state.clock.elapsedTime * 2 + i) * 0.1;
-        }
-      });
-    }
-  });
-
   // Create connections between islands
   const connections: [number, number][] = [
     [0, 1],
@@ -374,18 +364,22 @@ function ConnectionBeams({ positions, color }: ConnectionBeamsProps) {
   ];
 
   return (
-    <group ref={beamsRef}>
+    <group>
       {connections.map(([from, to], index) => {
-        const points = [
-          new THREE.Vector3(...positions[from]).add(new THREE.Vector3(0, 8, 0)),
-          new THREE.Vector3(...positions[to]).add(new THREE.Vector3(0, 8, 0)),
+        const points: [number, number, number][] = [
+          [positions[from][0], positions[from][1] + 8, positions[from][2]],
+          [positions[to][0], positions[to][1] + 8, positions[to][2]],
         ];
-        const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
         return (
-          <line key={index} geometry={geometry}>
-            <lineBasicMaterial color={color} transparent opacity={0.3} />
-          </line>
+          <Line
+            key={index}
+            points={points}
+            color={color}
+            lineWidth={2}
+            transparent
+            opacity={0.3}
+          />
         );
       })}
     </group>
@@ -479,28 +473,22 @@ interface EnergyConnectionProps {
 }
 
 function EnergyConnection({ start, end, color }: EnergyConnectionProps) {
-  const lineRef = useRef<THREE.Line>(null);
-
   // Create curved path
   const curve = new THREE.QuadraticBezierCurve3(
     new THREE.Vector3(...start),
     new THREE.Vector3((start[0] + end[0]) / 2, start[1] + 10, (start[2] + end[2]) / 2),
     new THREE.Vector3(...end)
   );
-  const points = curve.getPoints(20);
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-  useFrame((state) => {
-    if (lineRef.current) {
-      const material = lineRef.current.material as THREE.LineBasicMaterial;
-      material.opacity = 0.3 + Math.sin(state.clock.elapsedTime * 3) * 0.15;
-    }
-  });
+  const points = curve.getPoints(20).map(p => [p.x, p.y, p.z] as [number, number, number]);
 
   return (
-    <line ref={lineRef} geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.4} />
-    </line>
+    <Line
+      points={points}
+      color={color}
+      lineWidth={2}
+      transparent
+      opacity={0.4}
+    />
   );
 }
 

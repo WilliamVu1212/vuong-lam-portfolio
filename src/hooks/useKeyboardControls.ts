@@ -10,7 +10,7 @@ export function useKeyboardControls() {
 
   const getControlFromKey = useCallback((code: string): ControlKey | null => {
     for (const [control, keys] of Object.entries(CONTROLS.keyboard)) {
-      if (keys.includes(code)) {
+      if ((keys as readonly string[]).includes(code)) {
         return control as ControlKey;
       }
     }

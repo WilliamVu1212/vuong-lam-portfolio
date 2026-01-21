@@ -1,12 +1,24 @@
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Preload, KeyboardControls } from '@react-three/drei';
 import Experience from './components/3d/Experience';
 import LoadingScreen from './components/ui/LoadingScreen';
 import ProjectModal from './components/ui/ProjectModal';
+import LevelNavigator from './components/ui/LevelNavigator';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
 import { useUIStore, useGameStore } from './stores/gameStore';
 import { CAMERA, COLORS } from './utils/constants';
+
+// Section positions for camera navigation
+const SECTION_CAMERA_POSITIONS: Record<string, { position: [number, number, number]; lookAt: [number, number, number] }> = {
+  intro: { position: [0, 30, 50], lookAt: [0, 0, 0] },
+  about: { position: [0, 60, -50], lookAt: [0, 30, -100] },
+  skills: { position: [0, 100, -150], lookAt: [0, 60, -200] },
+  projects: { position: [0, 150, -250], lookAt: [0, 100, -300] },
+  experience: { position: [0, 200, -400], lookAt: [0, 150, -450] },
+  contact: { position: [0, 250, -500], lookAt: [0, 200, -550] },
+  overview: { position: [200, 300, 100], lookAt: [0, 100, -275] }, // Bird's eye view
+};
 
 // Keyboard control map for drei's KeyboardControls
 const keyboardMap = [
@@ -23,7 +35,6 @@ function GameController() {
 }
 
 function HUD() {
-  const currentSection = useGameStore((state) => state.currentSection);
   const cultivationLevel = useGameStore((state) => state.cultivationLevel);
   const transportMode = useGameStore((state) => state.transportMode);
   const isGrounded = useGameStore((state) => state.player.isGrounded);
@@ -74,8 +85,9 @@ function ControlsHelp() {
       <div className="text-co-chi text-sm space-y-1 opacity-80">
         <p><span className="text-hoa-quang">W A S D</span> - Di chuyển</p>
         <p><span className="text-hoa-quang">Space</span> - Nhảy tại chỗ</p>
-        <p><span className="text-hoa-quang">Click</span> - Nhảy đến vị trí</p>
-        <p><span className="text-hoa-quang">Kéo chuột</span> - Xoay camera</p>
+        <p><span className="text-hoa-quang">Left Click</span> - Nhảy đến vị trí</p>
+        <p><span className="text-hoa-quang">Kéo chuột trái</span> - Xoay camera</p>
+        <p><span className="text-hoa-quang">Kéo chuột phải</span> - Di chuyển camera</p>
         <p><span className="text-hoa-quang">Scroll</span> - Zoom</p>
       </div>
     </div>
@@ -85,6 +97,7 @@ function ControlsHelp() {
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const setUILoading = useUIStore((state) => state.setLoading);
+  const setCameraTarget = useUIStore((state) => state.setCameraTarget);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -94,6 +107,14 @@ function App() {
 
     return () => clearTimeout(timer);
   }, [setUILoading]);
+
+  // Handle navigation from LevelNavigator
+  const handleNavigate = useCallback((sectionId: string) => {
+    const cameraConfig = SECTION_CAMERA_POSITIONS[sectionId];
+    if (cameraConfig) {
+      setCameraTarget(cameraConfig.position, cameraConfig.lookAt);
+    }
+  }, [setCameraTarget]);
 
   return (
     <>
@@ -136,6 +157,7 @@ function App() {
         <div className="ui-overlay">
           <HUD />
           <ControlsHelp />
+          <LevelNavigator onNavigate={handleNavigate} />
         </div>
       )}
 
