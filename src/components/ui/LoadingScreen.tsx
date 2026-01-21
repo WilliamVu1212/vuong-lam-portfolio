@@ -36,7 +36,7 @@ function LoadingScreen() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        Con Duong Tu Tien · The Path of Cultivation
+        Con Đường Tu Tiên · The Path of Cultivation
       </motion.p>
 
       {/* Loading Spinner */}
@@ -78,7 +78,7 @@ function LoadingScreen() {
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       >
-        Dang nap linh khi... Loading spiritual energy...
+        Đang nạp linh khí... Loading spiritual energy...
       </motion.p>
 
       {/* Decorative elements */}

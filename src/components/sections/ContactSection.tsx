@@ -5,6 +5,8 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { contactInfo } from '@/data/content';
 
+// Note: Contact form moved to VanDinhSection
+
 interface ContactSectionProps {
   position?: [number, number, number];
 }
@@ -15,8 +17,8 @@ export function ContactSection({ position = [0, 200, -550] }: ContactSectionProp
       {/* Cloud Palace Platform */}
       <CloudPalace />
 
-      {/* Contact Form Altar */}
-      <ContactAltar position={[0, 1, 0]} />
+      {/* Central Crystal (decorative, no form) */}
+      <CentralCrystal position={[0, 1, 0]} />
 
       {/* Social Links Pillars */}
       <SocialPillars />
@@ -113,23 +115,27 @@ function CloudPalace() {
   );
 }
 
-interface ContactAltarProps {
+interface CentralCrystalProps {
   position: [number, number, number];
 }
 
-function ContactAltar({ position }: ContactAltarProps) {
-  const altarRef = useRef<THREE.Group>(null);
+function CentralCrystal({ position }: CentralCrystalProps) {
   const crystalRef = useRef<THREE.Mesh>(null);
+  const runeRingRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
     if (crystalRef.current) {
       crystalRef.current.rotation.y = state.clock.elapsedTime * 0.3;
       crystalRef.current.position.y = 15 + Math.sin(state.clock.elapsedTime) * 0.5;
     }
+    if (runeRingRef.current) {
+      runeRingRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+      runeRingRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+    }
   });
 
   return (
-    <group ref={altarRef} position={position}>
+    <group position={position}>
       {/* Main altar base */}
       <mesh position={[0, 1.5, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[6, 8, 3, 8]} />
@@ -168,7 +174,7 @@ function ContactAltar({ position }: ContactAltarProps) {
         />
       </mesh>
 
-      {/* Communication crystal */}
+      {/* Floating crystal */}
       <Float speed={2} floatIntensity={0.5}>
         <mesh ref={crystalRef} position={[0, 15, 0]}>
           <icosahedronGeometry args={[2.5, 0]} />
@@ -191,10 +197,26 @@ function ContactAltar({ position }: ContactAltarProps) {
       </mesh>
 
       {/* Rotating rune ring around crystal */}
-      <RuneRing position={[0, 12, 0]} />
-
-      {/* Contact form display */}
-      <ContactFormDisplay position={[0, 8, 4]} />
+      <group ref={runeRingRef} position={[0, 12, 0]}>
+        {[...Array(8)].map((_, i) => (
+          <mesh
+            key={i}
+            position={[
+              Math.cos((Math.PI * 2 * i) / 8) * 5,
+              0,
+              Math.sin((Math.PI * 2 * i) / 8) * 5,
+            ]}
+            rotation={[0, -(Math.PI * 2 * i) / 8, 0]}
+          >
+            <boxGeometry args={[0.3, 1.5, 0.1]} />
+            <meshBasicMaterial
+              color={['#FF4444', '#FF8C00', '#FFD700', '#FF6B35'][i % 4]}
+              transparent
+              opacity={0.8}
+            />
+          </mesh>
+        ))}
+      </group>
 
       {/* Altar lights */}
       <pointLight position={[0, 15, 0]} color="#FFD700" intensity={3} distance={40} />
@@ -209,127 +231,6 @@ function ContactAltar({ position }: ContactAltarProps) {
         speed={0.8}
         color="#FFD700"
       />
-    </group>
-  );
-}
-
-interface RuneRingProps {
-  position: [number, number, number];
-}
-
-function RuneRing({ position }: RuneRingProps) {
-  const ringRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (ringRef.current) {
-      ringRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-      ringRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
-    }
-  });
-
-  return (
-    <group ref={ringRef} position={position}>
-      {[...Array(8)].map((_, i) => (
-        <mesh
-          key={i}
-          position={[
-            Math.cos((Math.PI * 2 * i) / 8) * 5,
-            0,
-            Math.sin((Math.PI * 2 * i) / 8) * 5,
-          ]}
-          rotation={[0, -(Math.PI * 2 * i) / 8, 0]}
-        >
-          <boxGeometry args={[0.3, 1.5, 0.1]} />
-          <meshBasicMaterial
-            color={['#FF4444', '#FF8C00', '#FFD700', '#FF6B35'][i % 4]}
-            transparent
-            opacity={0.8}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-interface ContactFormDisplayProps {
-  position: [number, number, number];
-}
-
-function ContactFormDisplay({ position }: ContactFormDisplayProps) {
-  const [formHovered, setFormHovered] = useState(false);
-
-  return (
-    <group
-      position={position}
-      onPointerEnter={() => setFormHovered(true)}
-      onPointerLeave={() => setFormHovered(false)}
-    >
-      {/* Display panel */}
-      <mesh castShadow>
-        <boxGeometry args={[8, 6, 0.5]} />
-        <meshStandardMaterial
-          color="#1A0A0A"
-          roughness={0.4}
-          metalness={0.6}
-          emissive="#FF8C00"
-          emissiveIntensity={formHovered ? 0.3 : 0.1}
-        />
-      </mesh>
-
-      {/* Panel glow */}
-      <mesh position={[0, 0, 0.26]}>
-        <planeGeometry args={[7.5, 5.5]} />
-        <meshBasicMaterial
-          color="#FFD700"
-          transparent
-          opacity={formHovered ? 0.4 : 0.2}
-        />
-      </mesh>
-
-      {/* HTML Contact Form */}
-      <Html
-        position={[0, 0, 0.3]}
-        center
-        transform
-        occlude
-        style={{
-          width: '280px',
-          pointerEvents: formHovered ? 'auto' : 'none',
-        }}
-      >
-        <div className="glass p-4 rounded-lg">
-          <h3 className="text-hoang-kim font-heading text-center mb-3">Liên Hệ</h3>
-          <form className="space-y-2">
-            <input
-              type="text"
-              placeholder="Tên của bạn"
-              className="w-full px-3 py-2 bg-huyet-da/50 border border-xich-viem/30 rounded text-co-chi text-sm focus:border-hoa-quang focus:outline-none"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-3 py-2 bg-huyet-da/50 border border-xich-viem/30 rounded text-co-chi text-sm focus:border-hoa-quang focus:outline-none"
-            />
-            <select className="w-full px-3 py-2 bg-huyet-da/50 border border-xich-viem/30 rounded text-co-chi text-sm focus:border-hoa-quang focus:outline-none">
-              <option value="">Chọn chủ đề</option>
-              <option value="project">Hợp tác dự án</option>
-              <option value="job">Cơ hội việc làm</option>
-              <option value="other">Khác</option>
-            </select>
-            <textarea
-              placeholder="Tin nhắn..."
-              rows={3}
-              className="w-full px-3 py-2 bg-huyet-da/50 border border-xich-viem/30 rounded text-co-chi text-sm focus:border-hoa-quang focus:outline-none resize-none"
-            />
-            <button
-              type="submit"
-              className="w-full py-2 bg-gradient-to-r from-xich-viem to-hoa-quang rounded text-co-chi font-bold hover:opacity-90 transition-opacity"
-            >
-              Gửi Tin Nhắn
-            </button>
-          </form>
-        </div>
-      </Html>
     </group>
   );
 }

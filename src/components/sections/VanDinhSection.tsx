@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Sparkles, Html } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -17,8 +17,8 @@ export function VanDinhSection({ position = [0, 260, -650] }: VanDinhSectionProp
       {/* Central Throne */}
       <ImmortalThrone position={[0, 1, 0]} />
 
-      {/* Floating Dao Tablets */}
-      <DaoTablets />
+      {/* Contact Form */}
+      <ContactAltar position={[0, 1, 25]} />
 
       {/* Celestial Gates */}
       <CelestialGates />
@@ -311,12 +311,9 @@ function ImmortalThrone({ position }: ImmortalThroneProps) {
             boxShadow: '0 0 40px #00CED180',
           }}
         >
-          <h2 className="text-xl font-bold mb-1" style={{ color: '#00CED1', fontFamily: 'Cinzel, serif' }}>
-            Van Dinh
+          <h2 className="text-2xl font-bold" style={{ color: '#00CED1', fontFamily: 'Cinzel, serif' }}>
+            Vấn Đỉnh
           </h2>
-          <p className="text-sm" style={{ color: '#FFD700', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic' }}>
-            Questioning the Peak
-          </p>
         </div>
       </Html>
 
@@ -337,90 +334,195 @@ function ImmortalThrone({ position }: ImmortalThroneProps) {
   );
 }
 
-function DaoTablets() {
-  const tabletPositions: [number, number, number][] = [
-    [-25, 5, 20],
-    [25, 5, 20],
-    [-30, 5, -15],
-    [30, 5, -15],
-  ];
-
-  const wisdoms = [
-    { title: 'Dao', subtitle: 'The Way of Code' },
-    { title: 'De', subtitle: 'Virtue in Creation' },
-    { title: 'Wu', subtitle: 'Mastery through Practice' },
-    { title: 'Wei', subtitle: 'Action without Force' },
-  ];
-
-  return (
-    <>
-      {tabletPositions.map((pos, index) => (
-        <DaoTablet
-          key={index}
-          position={pos}
-          wisdom={wisdoms[index]}
-          index={index}
-        />
-      ))}
-    </>
-  );
-}
-
-interface DaoTabletProps {
+interface ContactAltarProps {
   position: [number, number, number];
-  wisdom: { title: string; subtitle: string };
-  index: number;
 }
 
-function DaoTablet({ position, wisdom, index }: DaoTabletProps) {
-  const tabletRef = useRef<THREE.Mesh>(null);
-  const colors = ['#00CED1', '#FFD700', '#9400D3', '#FF4444'];
-  const color = colors[index % colors.length];
+function ContactAltar({ position }: ContactAltarProps) {
+  const [formHovered, setFormHovered] = useState(false);
+  const crystalRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (tabletRef.current) {
-      const material = tabletRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = 0.2 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.1;
+    if (crystalRef.current) {
+      crystalRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+      crystalRef.current.position.y = 12 + Math.sin(state.clock.elapsedTime) * 0.3;
     }
   });
 
   return (
-    <Float speed={1.5} floatIntensity={0.3}>
-      <group position={position}>
-        {/* Tablet stone */}
-        <mesh ref={tabletRef} castShadow>
-          <boxGeometry args={[6, 10, 1]} />
+    <group position={position}>
+      {/* Altar base */}
+      <mesh position={[0, 1.5, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[5, 6, 3, 8]} />
+        <meshStandardMaterial
+          color="#0a1520"
+          roughness={0.5}
+          metalness={0.5}
+          emissive="#00CED1"
+          emissiveIntensity={0.15}
+        />
+      </mesh>
+
+      {/* Altar pedestal */}
+      <mesh position={[0, 4, 0]} castShadow>
+        <cylinderGeometry args={[3.5, 5, 2, 8]} />
+        <meshStandardMaterial
+          color="#1a2a3a"
+          roughness={0.4}
+          metalness={0.6}
+          emissive="#FFD700"
+          emissiveIntensity={0.1}
+        />
+      </mesh>
+
+      {/* Communication crystal */}
+      <Float speed={2} floatIntensity={0.3}>
+        <mesh ref={crystalRef} position={[0, 12, 0]}>
+          <octahedronGeometry args={[1.5, 0]} />
           <meshStandardMaterial
-            color="#1a2a3a"
-            roughness={0.7}
-            metalness={0.3}
-            emissive={color}
-            emissiveIntensity={0.2}
+            color="#00CED1"
+            emissive="#00CED1"
+            emissiveIntensity={2}
+            metalness={0.9}
+            roughness={0.1}
+            transparent
+            opacity={0.9}
+          />
+        </mesh>
+      </Float>
+
+      {/* Crystal glow */}
+      <mesh position={[0, 12, 0]} scale={1.3}>
+        <sphereGeometry args={[1.5, 16, 16]} />
+        <meshBasicMaterial color="#00CED1" transparent opacity={0.2} />
+      </mesh>
+
+      {/* Contact form display */}
+      <group
+        position={[0, 7, 3]}
+        onPointerEnter={() => setFormHovered(true)}
+        onPointerLeave={() => setFormHovered(false)}
+      >
+        {/* Display panel */}
+        <mesh castShadow>
+          <boxGeometry args={[8, 7, 0.5]} />
+          <meshStandardMaterial
+            color="#0a1520"
+            roughness={0.4}
+            metalness={0.6}
+            emissive="#00CED1"
+            emissiveIntensity={formHovered ? 0.3 : 0.1}
           />
         </mesh>
 
-        {/* Glow panel */}
-        <mesh position={[0, 0, 0.51]}>
-          <planeGeometry args={[5, 9]} />
-          <meshBasicMaterial color={color} transparent opacity={0.15} />
+        {/* Panel glow */}
+        <mesh position={[0, 0, 0.26]}>
+          <planeGeometry args={[7.5, 6.5]} />
+          <meshBasicMaterial
+            color="#00CED1"
+            transparent
+            opacity={formHovered ? 0.3 : 0.15}
+          />
         </mesh>
 
-        {/* Wisdom text */}
-        <Html position={[0, 0, 0.6]} center style={{ pointerEvents: 'none' }}>
-          <div className="text-center">
-            <p className="text-2xl font-bold mb-1" style={{ color: color, fontFamily: 'Cinzel, serif' }}>
-              {wisdom.title}
-            </p>
-            <p className="text-xs" style={{ color: '#C4A77D', fontFamily: 'Cormorant Garamond, serif' }}>
-              {wisdom.subtitle}
-            </p>
+        {/* HTML Contact Form */}
+        <Html
+          position={[0, 0, 0.3]}
+          center
+          transform
+          occlude
+          style={{
+            width: '280px',
+            pointerEvents: formHovered ? 'auto' : 'none',
+          }}
+        >
+          <div
+            className="p-4 rounded-lg"
+            style={{
+              backgroundColor: 'rgba(10, 21, 32, 0.95)',
+              border: '1px solid #00CED1',
+              boxShadow: '0 0 20px #00CED140',
+            }}
+          >
+            <h3
+              className="text-center mb-3 text-lg font-bold"
+              style={{ color: '#00CED1', fontFamily: 'Cinzel, serif' }}
+            >
+              Liên Hệ Vương Lâm VN
+            </h3>
+            <form className="space-y-2">
+              <input
+                type="text"
+                placeholder="Tên của bạn"
+                className="w-full px-3 py-2 rounded text-sm focus:outline-none"
+                style={{
+                  backgroundColor: 'rgba(0, 206, 209, 0.1)',
+                  border: '1px solid rgba(0, 206, 209, 0.3)',
+                  color: '#E0E0E0',
+                }}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full px-3 py-2 rounded text-sm focus:outline-none"
+                style={{
+                  backgroundColor: 'rgba(0, 206, 209, 0.1)',
+                  border: '1px solid rgba(0, 206, 209, 0.3)',
+                  color: '#E0E0E0',
+                }}
+              />
+              <select
+                className="w-full px-3 py-2 rounded text-sm focus:outline-none"
+                style={{
+                  backgroundColor: 'rgba(10, 21, 32, 0.95)',
+                  border: '1px solid rgba(0, 206, 209, 0.3)',
+                  color: '#E0E0E0',
+                }}
+              >
+                <option value="">Chọn chủ đề</option>
+                <option value="project">Hợp tác dự án</option>
+                <option value="job">Cơ hội việc làm</option>
+                <option value="other">Khác</option>
+              </select>
+              <textarea
+                placeholder="Tin nhắn..."
+                rows={3}
+                className="w-full px-3 py-2 rounded text-sm focus:outline-none resize-none"
+                style={{
+                  backgroundColor: 'rgba(0, 206, 209, 0.1)',
+                  border: '1px solid rgba(0, 206, 209, 0.3)',
+                  color: '#E0E0E0',
+                }}
+              />
+              <button
+                type="submit"
+                className="w-full py-2 rounded font-bold transition-opacity hover:opacity-90"
+                style={{
+                  background: 'linear-gradient(90deg, #00CED1, #FFD700)',
+                  color: '#0a1520',
+                }}
+              >
+                Gửi Tin Nhắn
+              </button>
+            </form>
           </div>
         </Html>
-
-        {/* Light */}
-        <pointLight position={[0, 0, 2]} color={color} intensity={0.5} distance={10} />
       </group>
-    </Float>
+
+      {/* Altar lights */}
+      <pointLight position={[0, 12, 0]} color="#00CED1" intensity={2} distance={25} />
+      <pointLight position={[0, 5, 0]} color="#FFD700" intensity={0.5} distance={15} />
+
+      {/* Energy sparkles */}
+      <Sparkles
+        count={40}
+        scale={[10, 15, 10]}
+        position={[0, 8, 0]}
+        size={1.5}
+        speed={0.8}
+        color="#00CED1"
+      />
+    </group>
   );
 }
 

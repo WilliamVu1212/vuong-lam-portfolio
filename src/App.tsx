@@ -41,14 +41,14 @@ function HUD() {
   const isGrounded = useGameStore((state) => state.player.isGrounded);
 
   const levelNames: Record<string, string> = {
-    pham_nhan: 'Pham Nhan',
-    luyen_khi: 'Luyen Khi',
-    truc_co: 'Truc Co',
-    ket_dan: 'Ket Dan',
-    nguyen_anh: 'Nguyen Anh',
-    hoa_than: 'Hoa Than',
-    anh_bien: 'Anh Bien',
-    van_dinh: 'Van Dinh',
+    pham_nhan: 'Phàm Nhân',
+    luyen_khi: 'Luyện Khí',
+    truc_co: 'Trúc Cơ',
+    ket_dan: 'Kết Đan',
+    nguyen_anh: 'Nguyên Anh',
+    hoa_than: 'Hóa Thần',
+    anh_bien: 'Anh Biến',
+    van_dinh: 'Vấn Đỉnh',
   };
 
   return (
@@ -61,19 +61,19 @@ function HUD() {
 
       {/* Transport Mode */}
       <div className="glass rounded-lg px-4 py-2">
-        <p className="text-tho-kim text-xs font-accent">Phuong Thuc</p>
+        <p className="text-tho-kim text-xs font-accent">Phương Thức</p>
         <p className="text-co-chi font-body">
-          {transportMode === 'cloud' && 'Dap May'}
-          {transportMode === 'sword' && 'Ngu Kiem'}
-          {transportMode === 'beast' && 'Phuong Hoang'}
+          {transportMode === 'cloud' && 'Đạp Mây'}
+          {transportMode === 'sword' && 'Ngự Kiếm'}
+          {transportMode === 'beast' && 'Phượng Hoàng'}
         </p>
       </div>
 
       {/* Status */}
       <div className="glass rounded-lg px-4 py-2">
-        <p className="text-tho-kim text-xs font-accent">Trang Thai</p>
+        <p className="text-tho-kim text-xs font-accent">Trạng Thái</p>
         <p className={`text-sm font-body ${isGrounded ? 'text-green-400' : 'text-yellow-400'}`}>
-          {isGrounded ? 'Tren Mat Dat' : 'Dang Bay'}
+          {isGrounded ? 'Trên Mặt Đất' : 'Đang Bay'}
         </p>
       </div>
     </div>
@@ -83,13 +83,13 @@ function HUD() {
 function ControlsHelp() {
   return (
     <div className="absolute bottom-4 left-4 glass rounded-lg px-4 py-3">
-      <p className="text-tho-kim text-xs mb-2 font-accent">Dieu Khien</p>
+      <p className="text-tho-kim text-xs mb-2 font-accent">Điều Khiển</p>
       <div className="text-co-chi text-sm space-y-1 opacity-80 font-body">
-        <p><span className="text-hoa-quang">W A S D</span> - Di chuyen</p>
-        <p><span className="text-hoa-quang">Space</span> - Nhay tai cho</p>
-        <p><span className="text-hoa-quang">Left Click</span> - Nhay den vi tri</p>
-        <p><span className="text-hoa-quang">Keo chuot trai</span> - Xoay camera</p>
-        <p><span className="text-hoa-quang">Keo chuot phai</span> - Di chuyen camera</p>
+        <p><span className="text-hoa-quang">W A S D</span> - Di chuyển</p>
+        <p><span className="text-hoa-quang">Space</span> - Nhảy tại chỗ</p>
+        <p><span className="text-hoa-quang">Left Click</span> - Nhảy đến vị trí</p>
+        <p><span className="text-hoa-quang">Kéo chuột trái</span> - Xoay camera</p>
+        <p><span className="text-hoa-quang">Kéo chuột phải</span> - Di chuyển camera</p>
         <p><span className="text-hoa-quang">Scroll</span> - Zoom</p>
       </div>
     </div>

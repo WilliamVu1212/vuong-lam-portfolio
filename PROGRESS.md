@@ -11,7 +11,7 @@
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
 | **Current Phase** | Phase 5 - UI & Polish |
-| **Overall Progress** | 70% |
+| **Overall Progress** | 80% |
 
 ---
 
@@ -217,34 +217,67 @@
 
 ---
 
-## 📝 Recent Changes
+## Recent Changes
 
-### Session 2026-01-21 (Latest)
+### Session 2026-01-21 - Update 3 (Latest)
 ```
-- ✅ Added Waterfall component with custom GLSL shader for animated water effect
-- ✅ Added 4 waterfalls with distinct colors (Fire, Water, Lightning, Gold)
-- ✅ Converted SkillsSection labels to clickable icons with detail panels
-- ✅ Converted ProjectsSection labels to clickable icons with detail panels
-- ✅ Converted ExperienceSection labels to clickable icons with detail panels
-- ✅ Converted CertificationStone labels to clickable icons with detail panels
-- ✅ Added fadeIn animation for popup panels
-- ✅ Added LevelNavigator component with cultivation levels
-- ✅ Each level shows techniques from Tiên Nghịch novel on hover
-- ✅ Smooth camera navigation with lerp interpolation
-- ✅ Updated project names to Vietnamese martial arts theme
-- ✅ Fixed Cloud component rendering issues (removed)
-- ✅ Fixed multiple TypeScript errors
-- ✅ Replaced Chinese text with Vietnamese in LoadingScreen
-- ✅ Changed font to Cinzel for better Vietnamese diacritics
-- ✅ Disabled debug mode (r3f-perf) by default
-- ✅ Improved OrbitControls for panoramic viewing
-- ✅ REPLACED SVG icons with Glow Orbs (CSS radial-gradient + box-shadow)
-- ✅ DELETED XianxiaIcons.tsx - không phù hợp phong cách 3D minimalist
-- ✅ Updated SkillsSection, ProjectsSection, ExperienceSection với glow orbs
-- ✅ Sắp xếp lại ExperienceMonuments theo hình tam giác đều (bán kính 30)
-- ✅ Sắp xếp lại CertificationStones đối xứng hai bên ([-38,0,0] và [38,0,0])
-- ✅ Camera: Thêm event listener để dừng animation khi user tương tác (zoom/rotate/pan)
-- ✅ User có thể tự do điều khiển camera mà không bị reset
+- Cập nhật tất cả text tiếng Việt có dấu đầy đủ (Vietnamese diacritics)
+  - content.ts: cultivation techniques, sectionZones, cultivationLevels
+  - LoadingScreen.tsx: "Con Đường Tu Tiên", "Đang nạp linh khí..."
+  - LevelNavigator.tsx: All 7 realm names (Phàm Nhân, Luyện Khí, Trúc Cơ...)
+  - App.tsx: HUD levelNames và ControlsHelp
+- Xóa các text không cần thiết ở Vấn Đỉnh (DaoTablets)
+- Di chuyển Contact Form từ Anh Biến lên Vấn Đỉnh
+- Thiết kế lại Contact Form với cyan theme (#00CED1)
+  - Tiêu đề: "Liên Hệ Vương Lâm VN"
+  - Fields: Tên, Email, Chủ đề (dropdown), Tin nhắn
+  - Button: "Gửi Tin Nhắn" với gradient cyan-gold
+- ContactSection giờ chỉ còn CentralCrystal (decorative) và SocialPillars
+```
+
+### Session 2026-01-21 - Update 2
+```
+- Added Xianxia-style fonts (Cinzel, Cormorant Garamond, Crimson Pro)
+- Renamed cultivation realms: Kim Dan -> Ket Dan, Dai Thua -> Anh Bien
+- Added new highest realm: Van Dinh (Questioning the Peak) with cyan theme (#00CED1)
+- Created VanDinhSection.tsx with:
+  - Peak Platform (octagonal base)
+  - Immortal Throne (multi-tier pedestal + Dao Core)
+  - Dao Tablets (4 wisdom stones)
+  - Celestial Gates (3 portal gates)
+- Removed all Vietnamese diacritics from UI text (now using non-diacritic Vietnamese)
+- Removed glow orb spheres - crystals are now directly clickable
+- Updated LevelNavigator with 7 cultivation levels
+- Updated camera positions for new Van Dinh section
+- Updated HUD, ControlsHelp, LoadingScreen with new fonts
+```
+
+### Session 2026-01-21 - Update 1
+```
+- Added Waterfall component with custom GLSL shader for animated water effect
+- Added 4 waterfalls with distinct colors (Fire, Water, Lightning, Gold)
+- Converted SkillsSection labels to clickable icons with detail panels
+- Converted ProjectsSection labels to clickable icons with detail panels
+- Converted ExperienceSection labels to clickable icons with detail panels
+- Converted CertificationStone labels to clickable icons with detail panels
+- Added fadeIn animation for popup panels
+- Added LevelNavigator component with cultivation levels
+- Each level shows techniques from Tien Nghich novel on hover
+- Smooth camera navigation with lerp interpolation
+- Updated project names to Vietnamese martial arts theme
+- Fixed Cloud component rendering issues (removed)
+- Fixed multiple TypeScript errors
+- Replaced Chinese text with Vietnamese in LoadingScreen
+- Changed font to Cinzel for better Vietnamese diacritics
+- Disabled debug mode (r3f-perf) by default
+- Improved OrbitControls for panoramic viewing
+- REPLACED SVG icons with Glow Orbs (CSS radial-gradient + box-shadow)
+- DELETED XianxiaIcons.tsx - khong phu hop phong cach 3D minimalist
+- Updated SkillsSection, ProjectsSection, ExperienceSection voi glow orbs
+- Sap xep lai ExperienceMonuments theo hinh tam giac deu (ban kinh 30)
+- Sap xep lai CertificationStones doi xung hai ben ([-38,0,0] va [38,0,0])
+- Camera: Them event listener de dung animation khi user tuong tac (zoom/rotate/pan)
+- User co the tu do dieu khien camera ma khong bi reset
 ```
 
 ### Git Commits
@@ -325,7 +358,8 @@ src/
 │   │   ├── ProjectsSection.tsx # Projects (glow orbs)
 │   │   ├── ExperienceSection.tsx # Experience (glow orbs)
 │   │   ├── AboutSection.tsx
-│   │   └── ContactSection.tsx
+│   │   ├── ContactSection.tsx
+│   │   └── VanDinhSection.tsx  # Đỉnh cao + Contact Form
 │   └── ui/
 │       ├── LevelNavigator.tsx  # Navigation với cultivation levels
 │       ├── LoadingScreen.tsx

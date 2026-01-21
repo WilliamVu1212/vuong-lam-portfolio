@@ -1,8 +1,8 @@
 # Project: Vuong Lam Portfolio
 
-## 🔥 CURRENT STATUS (2026-01-21)
+## CURRENT STATUS (2026-01-21)
 
-**Overall Progress: 70%** - Phase 5 (UI & Polish)
+**Overall Progress: 80%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -11,26 +11,44 @@
 
 ### Phong cách hiện tại:
 - 3D geometric minimalist
-- Glow orbs thay vì icons (CSS radial-gradient + box-shadow)
+- Crystals clickable trực tiếp (không còn glow orbs)
 - Dark theme (Xích Hỏa - Fire theme)
-- Colors: #FF4444, #FF8C00, #FFD700, #FF6B35
+- Colors: #FF4444, #FF8C00, #FFD700, #FF6B35, #00CED1 (Vấn Đỉnh)
 
-### Các section đã hoàn thành:
+### Font chữ Tiên Hiệp:
+- **Cinzel** - Display/heading chính
+- **Cinzel Decorative** - Heading trang trí
+- **Cormorant Garamond** - Body/accent (italic đẹp)
+- **Crimson Pro** - Body phụ
+
+### Các section đã hoàn thành (7 cảnh giới):
 1. **Intro** (Phàm Nhân) - Landing với rings, runes
 2. **About** (Luyện Khí) - Pagoda, InfoStones, Torii gates
-3. **Skills** (Trúc Cơ) - 4 pillars với glow orbs, click để xem chi tiết
-4. **Projects** (Kim Đan + Nguyên Anh) - 6 floating islands với glow orbs
-5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones (đã sắp xếp cân xứng)
-6. **Contact** (Đại Thừa) - Cloud palace style
+3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals
+4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals
+5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones
+6. **Contact** (Anh Biến) - Cloud palace, social links (không có form)
+7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, **Contact Form** - Cyan theme
 
 ### Camera Controls:
 - OrbitControls với zoom/rotate/pan
-- LevelNavigator để chuyển section
+- LevelNavigator để chuyển section (7 levels)
 - Camera animation tự dừng khi user tương tác
 
 ---
 
-## 🔮 Next Steps (chưa làm)
+## Recent Update (2026-01-21)
+
+### Đã hoàn thành:
+- ✅ Cập nhật tất cả text tiếng Việt có dấu đầy đủ
+- ✅ Xóa các text không cần thiết ở Vấn Đỉnh (Dao tablets)
+- ✅ Di chuyển Contact Form từ Anh Biến lên Vấn Đỉnh
+- ✅ Thiết kế lại Contact Form với theme cyan phù hợp
+- ✅ Tiêu đề form: "Liên Hệ Vương Lâm VN"
+
+---
+
+## Next Steps (chưa làm)
 
 ### Short-term:
 - Add sound/music integration
@@ -44,7 +62,7 @@
 
 ---
 
-## 📁 Key Files Structure
+## Key Files Structure
 
 ```
 src/
@@ -54,19 +72,35 @@ src/
 │   │   ├── Player.tsx          # Player với physics
 │   │   └── CloudPlatforms.tsx  # Cloud stepping
 │   ├── sections/
-│   │   ├── SkillsSection.tsx   # 4 pillars (glow orbs)
-│   │   ├── ProjectsSection.tsx # 6 islands (glow orbs)
-│   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones (tam giác đều)
+│   │   ├── SkillsSection.tsx   # 4 pillars (clickable crystals)
+│   │   ├── ProjectsSection.tsx # 6 islands (clickable crystals)
+│   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones
 │   │   ├── AboutSection.tsx
-│   │   └── ContactSection.tsx
+│   │   ├── ContactSection.tsx  # Social links only
+│   │   └── VanDinhSection.tsx  # Đỉnh cao + Contact Form
 │   └── ui/
-│       ├── LevelNavigator.tsx  # Navigation dọc
+│       ├── LevelNavigator.tsx  # Navigation dọc (7 levels)
 │       ├── LoadingScreen.tsx
 │       └── ProjectModal.tsx
 ├── stores/gameStore.ts         # Zustand (game, UI, audio)
-├── data/content.ts             # Content data
+├── data/content.ts             # Content data (7 cảnh giới)
 └── App.tsx                     # Main app
 ```
+
+---
+
+## Cảnh Giới Mapping
+
+| Level | Section | Color | English |
+|-------|---------|-------|---------|
+| Phàm Nhân | intro | #8B7355 | Mortal |
+| Luyện Khí | about | #C4A77D | Qi Refining |
+| Trúc Cơ | skills | #FF8C00 | Foundation Building |
+| Kết Đan | projects | #FFD700 | Core Formation |
+| Nguyên Anh | projects | #FF6B35 | Nascent Soul |
+| Hóa Thần | experience | #FF4444 | Spirit Severing |
+| Anh Biến | contact | #9400D3 | Infant Transformation |
+| Vấn Đỉnh | vandinh | #00CED1 | Questioning the Peak |
 
 ---
 

@@ -8,49 +8,49 @@ interface LevelNavigatorProps {
 const levels = [
   {
     id: 'vandinh',
-    name: 'Van Dinh',
+    name: 'Vấn Đỉnh',
     key: 'van_dinh',
     techniques: cultivationTechniques.van_dinh.techniques,
     color: '#00CED1'
   },
   {
     id: 'contact',
-    name: 'Anh Bien',
+    name: 'Anh Biến',
     key: 'anh_bien',
     techniques: cultivationTechniques.anh_bien.techniques,
     color: '#9400D3'
   },
   {
     id: 'experience',
-    name: 'Hoa Than',
+    name: 'Hóa Thần',
     key: 'hoa_than',
     techniques: cultivationTechniques.hoa_than.techniques,
     color: '#FF4500'
   },
   {
     id: 'projects',
-    name: 'Nguyen Anh',
+    name: 'Nguyên Anh',
     key: 'nguyen_anh',
     techniques: cultivationTechniques.nguyen_anh.techniques,
     color: '#FF4444'
   },
   {
     id: 'skills',
-    name: 'Ket Dan',
+    name: 'Kết Đan',
     key: 'ket_dan',
     techniques: cultivationTechniques.ket_dan.techniques,
     color: '#FFD700'
   },
   {
     id: 'about',
-    name: 'Truc Co',
+    name: 'Trúc Cơ',
     key: 'truc_co',
     techniques: cultivationTechniques.truc_co.techniques,
     color: '#FF8C00'
   },
   {
     id: 'intro',
-    name: 'Luyen Khi',
+    name: 'Luyện Khí',
     key: 'luyen_khi',
     techniques: cultivationTechniques.luyen_khi.techniques,
     color: '#C4A77D'
