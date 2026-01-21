@@ -488,8 +488,9 @@ export function Player() {
       );
     }
 
-    // Update player position in store
+    // Update player position and velocity in store
     setPlayerPosition([position.x, position.y, position.z]);
+    setPlayerVelocity([velocity.x, velocity.y, velocity.z]);
 
     // Clear target when reached (only when actually landed near target)
     if (targetPosition && grounded && !isJumpingToTarget) {

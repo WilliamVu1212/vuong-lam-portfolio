@@ -100,32 +100,55 @@ function CameraController() {
   const cameraLookAt = useUIStore((state) => state.cameraLookAt);
   const setCameraTarget = useUIStore((state) => state.setCameraTarget);
 
-  // Sword flight camera follow
+  // Player state for camera follow
   const playerPosition = useGameStore((state) => state.player.position);
+  const playerVelocity = useGameStore((state) => state.player.velocity);
   const isFlying = useGameStore((state) => state.player.isFlying);
   const transportMode = useGameStore((state) => state.transportMode);
 
   const targetPosition = useRef(new THREE.Vector3());
   const targetLookAt = useRef(new THREE.Vector3());
   const isAnimating = useRef(false);
+  const isUserInteracting = useRef(false);
+  const interactionTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastPlayerPos = useRef(new THREE.Vector3(0, 5, 0));
+  const isInitialized = useRef(false);
 
   // Stop animation when user interacts with controls (zoom, rotate, pan)
   useEffect(() => {
     if (controls) {
       const orbitControls = controls as any;
-      const handleUserInteraction = () => {
-        // User đang tương tác - dừng animation ngay lập tức
+
+      const handleUserInteractionStart = () => {
+        isUserInteracting.current = true;
+        // Clear any existing timeout
+        if (interactionTimeout.current) {
+          clearTimeout(interactionTimeout.current);
+        }
+        // Dừng animation nếu đang chạy
         if (isAnimating.current) {
           isAnimating.current = false;
           setCameraTarget(null, null);
         }
       };
 
-      // Lắng nghe sự kiện user bắt đầu tương tác
-      orbitControls.addEventListener('start', handleUserInteraction);
+      const handleUserInteractionEnd = () => {
+        // Delay để user có thời gian điều chỉnh camera
+        interactionTimeout.current = setTimeout(() => {
+          isUserInteracting.current = false;
+        }, 1000);
+      };
+
+      // Lắng nghe sự kiện user bắt đầu và kết thúc tương tác
+      orbitControls.addEventListener('start', handleUserInteractionStart);
+      orbitControls.addEventListener('end', handleUserInteractionEnd);
 
       return () => {
-        orbitControls.removeEventListener('start', handleUserInteraction);
+        orbitControls.removeEventListener('start', handleUserInteractionStart);
+        orbitControls.removeEventListener('end', handleUserInteractionEnd);
+        if (interactionTimeout.current) {
+          clearTimeout(interactionTimeout.current);
+        }
       };
     }
   }, [controls, setCameraTarget]);
@@ -141,43 +164,10 @@ function CameraController() {
   }, [cameraTarget, cameraLookAt]);
 
   useFrame(() => {
-    // ===== SWORD FLIGHT CAMERA FOLLOW =====
-    if (isFlying && transportMode === 'sword') {
-      const swordCam = CAMERA.follow.sword;
-
-      // Get current camera direction (horizontal only)
-      const camDir = new THREE.Vector3();
-      camera.getWorldDirection(camDir);
-      camDir.y = 0;
-      camDir.normalize();
-
-      // Calculate camera position behind player
-      const playerPos = new THREE.Vector3(...playerPosition);
-      const idealOffset = camDir.clone().multiplyScalar(swordCam.distance);
-      idealOffset.y = swordCam.height;
-
-      const idealPosition = playerPos.clone().add(idealOffset);
-
-      // Smoothly interpolate camera position
-      camera.position.lerp(idealPosition, swordCam.smoothing);
-
-      // Update OrbitControls target to follow player
-      if (controls) {
-        const orbitControls = controls as any;
-        if (orbitControls.target) {
-          orbitControls.target.lerp(playerPos, swordCam.smoothing * 2);
-        }
-      }
-
-      return; // Skip normal camera animation
-    }
-
-    // ===== NORMAL CAMERA ANIMATION =====
+    // ===== LEVEL NAVIGATOR CAMERA ANIMATION (highest priority) =====
     if (isAnimating.current && cameraTarget) {
-      // Smoothly interpolate camera position
       camera.position.lerp(targetPosition.current, 0.02);
 
-      // Update OrbitControls target if lookAt is specified
       if (cameraLookAt && controls) {
         const orbitControls = controls as any;
         if (orbitControls.target) {
@@ -185,13 +175,76 @@ function CameraController() {
         }
       }
 
-      // Check if animation is complete
       const distance = camera.position.distanceTo(targetPosition.current);
       if (distance < 1) {
         isAnimating.current = false;
         setCameraTarget(null, null);
       }
+      return;
     }
+
+    // Skip camera follow if user is actively interacting with orbit controls
+    if (isUserInteracting.current) {
+      return;
+    }
+
+    const playerPos = new THREE.Vector3(...playerPosition);
+
+    // Initialize on first frame
+    if (!isInitialized.current) {
+      lastPlayerPos.current.copy(playerPos);
+      isInitialized.current = true;
+      return;
+    }
+
+    // Check if player is actually moving (velocity-based)
+    const speed = Math.sqrt(
+      playerVelocity[0] * playerVelocity[0] +
+      playerVelocity[1] * playerVelocity[1] +
+      playerVelocity[2] * playerVelocity[2]
+    );
+    const isMoving = speed > 0.5 || isFlying;
+
+    // Only follow camera when player is moving or flying
+    if (!isMoving) {
+      lastPlayerPos.current.copy(playerPos);
+      return;
+    }
+
+    // Get current camera direction (horizontal only)
+    const camDir = new THREE.Vector3();
+    camera.getWorldDirection(camDir);
+    camDir.y = 0;
+    camDir.normalize();
+
+    // ===== DETERMINE CAMERA CONFIG BASED ON MODE =====
+    let camConfig;
+    if (isFlying && transportMode === 'sword') {
+      camConfig = CAMERA.follow.sword;
+    } else if (isFlying && transportMode === 'beast') {
+      camConfig = CAMERA.follow.beast;
+    } else {
+      camConfig = CAMERA.follow.walking;
+    }
+
+    // ===== CAMERA FOLLOW PLAYER =====
+    const idealOffset = camDir.clone().multiplyScalar(camConfig.distance);
+    idealOffset.y = camConfig.height;
+
+    const idealPosition = playerPos.clone().add(idealOffset);
+
+    // Smoothly interpolate camera position
+    camera.position.lerp(idealPosition, camConfig.smoothing);
+
+    // Update OrbitControls target to follow player
+    if (controls) {
+      const orbitControls = controls as any;
+      if (orbitControls.target) {
+        orbitControls.target.lerp(playerPos, camConfig.smoothing * 2);
+      }
+    }
+
+    lastPlayerPos.current.copy(playerPos);
   });
 
   return null;

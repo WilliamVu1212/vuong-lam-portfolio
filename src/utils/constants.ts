@@ -69,9 +69,10 @@ export const CAMERA = {
 
   // Follow camera offsets
   follow: {
+    walking: { distance: 15, height: 8, smoothing: 0.03 },
     cloud: { distance: 10, height: 5, smoothing: 0.1 },
-    sword: { distance: 8, height: 3, smoothing: 0.05 },
-    beast: { distance: 15, height: 8, smoothing: 0.08 },
+    sword: { distance: 12, height: 5, smoothing: 0.05 },
+    beast: { distance: 18, height: 10, smoothing: 0.08 },
   },
 } as const;
 
