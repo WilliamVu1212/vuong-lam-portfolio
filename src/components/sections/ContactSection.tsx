@@ -27,11 +27,11 @@ export function ContactSection({ position = [0, 200, -550] }: ContactSectionProp
       {/* Heavenly gates */}
       <HeavenlyGates />
 
-      {/* Thần Phượng - Divine Phoenix trấn yểm 2 bên */}
-      {/* Băng Phượng bên trái - Ice Phoenix */}
-      <DivinePhoenix position={[-60, 0, 0]} type="ice" />
-      {/* Hỏa Phượng bên phải - Fire Phoenix */}
-      <DivinePhoenix position={[60, 0, 0]} type="fire" />
+      {/* Thượng Cổ Đồng Chung - Ancient Divine Bell trấn yểm 2 bên */}
+      {/* Thanh Minh Chung bên trái - Cyan Bell */}
+      <AncientDivineBell position={[-60, 0, 0]} type="ice" />
+      {/* Hoàng Kim Chung bên phải - Golden Bell */}
+      <AncientDivineBell position={[60, 0, 0]} type="fire" />
 
       {/* Ambient clouds and particles */}
       <AmbientEffects />
@@ -527,24 +527,21 @@ function AmbientEffects() {
 }
 
 // ============================================================
-// THẦN PHƯỢNG - DIVINE PHOENIX
-// Phượng hoàng uy nghi với cánh xòe rộng, nhìn chính diện
-// Một con Băng Phượng (Ice), một con Hỏa Phượng (Fire)
+// THƯỢNG CỔ ĐỒNG CHUNG - ANCIENT DIVINE BELL
+// Pháp bảo thượng cổ hình chuông đồng phát sáng màu xanh lục
+// Một con bên trái (Băng - Ice), một con bên phải (Hỏa - Fire)
 // ============================================================
 
-interface DivinePhoenixProps {
+interface AncientDivineBellProps {
   position: [number, number, number];
   type: 'ice' | 'fire';
 }
 
-function DivinePhoenix({ position, type }: DivinePhoenixProps) {
-  const phoenixRef = useRef<THREE.Group>(null);
-  const leftWingRef = useRef<THREE.Group>(null);
-  const rightWingRef = useRef<THREE.Group>(null);
-  const auraRef = useRef<THREE.Group>(null);
-  const haloRef = useRef<THREE.Mesh>(null);
+function AncientDivineBell({ position, type }: AncientDivineBellProps) {
+  const bellRef = useRef<THREE.Group>(null);
+  const runeRingRef = useRef<THREE.Group>(null);
 
-  // Unlock trigger state - only fire phoenix can unlock
+  // Unlock trigger state - only fire bell can unlock
   const [showPrompt, setShowPrompt] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
@@ -557,77 +554,82 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
   const isIce = type === 'ice';
   const isFire = type === 'fire';
 
-  // Color scheme
+  // Color scheme - Xanh lục như trong ảnh
   const colors = isIce ? {
-    primary: '#00BFFF',      // Deep sky blue
-    secondary: '#00FFFF',    // Cyan
-    glow: '#87CEEB',         // Sky blue
-    accent: '#E0FFFF',       // Light cyan
-    body: '#B0E0E6',         // Powder blue
-    dark: '#1E90FF',         // Dodger blue
+    primary: '#00FF88',      // Bright green
+    secondary: '#00FFAA',    // Cyan-green
+    glow: '#66FFCC',         // Light green
+    accent: '#AAFFDD',       // Pale green
+    body: '#33CC77',         // Medium green
+    dark: '#006644',         // Dark green
+    rune: '#00FFFF',         // Cyan runes
   } : {
-    primary: '#FF4500',      // Orange red
-    secondary: '#FFD700',    // Gold
-    glow: '#FF8C00',         // Dark orange
-    accent: '#FFFF00',       // Yellow
-    body: '#FF6347',         // Tomato
-    dark: '#DC143C',         // Crimson
+    primary: '#44FF44',      // Lime green
+    secondary: '#88FF00',    // Yellow-green
+    glow: '#99FF66',         // Light lime
+    accent: '#CCFF99',       // Pale lime
+    body: '#66CC33',         // Medium lime
+    dark: '#336600',         // Dark lime
+    rune: '#FFFF00',         // Yellow runes
   };
 
   // Particles data
   const particles = useMemo(() => {
     const arr: { pos: [number, number, number]; speed: number; size: number; delay: number }[] = [];
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 100; i++) {
       arr.push({
         pos: [
-          (Math.random() - 0.5) * 80,
-          Math.random() * 60 - 10,
+          (Math.random() - 0.5) * 40,
+          Math.random() * 50 - 5,
           (Math.random() - 0.5) * 40
         ],
-        speed: 0.3 + Math.random() * 0.8,
-        size: 0.2 + Math.random() * 0.6,
+        speed: 0.2 + Math.random() * 0.5,
+        size: 0.15 + Math.random() * 0.4,
         delay: Math.random() * Math.PI * 2
       });
     }
     return arr;
   }, []);
 
+  // Ancient rune symbols on the bell
+  const runeSymbols = useMemo(() => {
+    const symbols: { angle: number; height: number; scale: number }[] = [];
+    // 3 rows of runes
+    for (let row = 0; row < 3; row++) {
+      const runeCount = 8 - row * 2;
+      for (let i = 0; i < runeCount; i++) {
+        symbols.push({
+          angle: (Math.PI * 2 * i) / runeCount + row * 0.2,
+          height: 12 + row * 8,
+          scale: 1 - row * 0.2
+        });
+      }
+    }
+    return symbols;
+  }, []);
+
   useFrame((state) => {
     const t = state.clock.elapsedTime;
 
-    // Body gentle hover
-    if (phoenixRef.current) {
-      phoenixRef.current.position.y = Math.sin(t * 0.5) * 2;
+    // Bell gentle hover and swing
+    if (bellRef.current) {
+      bellRef.current.position.y = Math.sin(t * 0.3) * 1.5;
+      bellRef.current.rotation.y = Math.sin(t * 0.15) * 0.05;
+      bellRef.current.rotation.z = Math.sin(t * 0.2) * 0.02;
     }
 
-    // Wings majestic flap - rất nhẹ nhàng
-    if (leftWingRef.current) {
-      leftWingRef.current.rotation.z = Math.PI / 4 + Math.sin(t * 1.2) * 0.08;
-      leftWingRef.current.rotation.y = Math.sin(t * 0.8) * 0.05;
-    }
-    if (rightWingRef.current) {
-      rightWingRef.current.rotation.z = -Math.PI / 4 - Math.sin(t * 1.2) * 0.08;
-      rightWingRef.current.rotation.y = -Math.sin(t * 0.8) * 0.05;
+    // Rune ring rotation
+    if (runeRingRef.current) {
+      runeRingRef.current.rotation.y = t * 0.3;
     }
 
-    // Aura rotation
-    if (auraRef.current) {
-      auraRef.current.rotation.y = t * 0.2;
-    }
-
-    // Halo pulse
-    if (haloRef.current) {
-      const scale = 1 + Math.sin(t * 2) * 0.1;
-      haloRef.current.scale.set(scale, scale, 1);
-    }
-
-    // ===== UNLOCK TRIGGER - Only Fire Phoenix can unlock =====
+    // ===== UNLOCK TRIGGER - Only Fire Bell can unlock =====
     if (isFire && !unlockedTransports.includes('beast')) {
-      // Calculate world position of phoenix (ContactSection is at [0, 200, -550])
+      // Calculate world position of bell (ContactSection is at [0, 200, -550])
       const worldPos = [
-        position[0], // -60 or 60
-        200 + position[1], // 200 + 0
-        -550 + position[2] // -550 + 0
+        position[0],
+        200 + position[1],
+        -550 + position[2]
       ];
 
       // Calculate distance to player
@@ -655,267 +657,205 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
 
   return (
     <group position={position}>
-      {/* Main phoenix body - nhìn chính diện về phía camera */}
-      <group ref={phoenixRef}>
+      {/* Main bell group */}
+      <group ref={bellRef}>
 
-        {/* ===== VẦNG HÀO QUANG (DIVINE HALO) ===== */}
-        <group ref={auraRef} position={[0, 25, -5]}>
-          {/* Main halo ring */}
-          <mesh ref={haloRef} rotation={[0, 0, 0]}>
-            <ringGeometry args={[18, 22, 64]} />
-            <meshBasicMaterial
-              color={colors.secondary}
-              transparent
-              opacity={0.6}
-              side={THREE.DoubleSide}
-            />
-          </mesh>
+        {/* ===== THÂN CHUÔNG (BELL BODY) ===== */}
+        {/* Main bell shape - hình chuông đồng cổ */}
+        <mesh position={[0, 20, 0]}>
+          {/* Bell body using lathe geometry for authentic bell shape */}
+          <cylinderGeometry args={[8, 14, 25, 32, 1, true]} />
+          <meshPhysicalMaterial
+            color={colors.body}
+            emissive={colors.primary}
+            emissiveIntensity={0.8}
+            metalness={0.7}
+            roughness={0.2}
+            transparent
+            opacity={0.85}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
 
-          {/* Inner glow */}
-          <mesh rotation={[0, 0, 0]}>
-            <circleGeometry args={[18, 64]} />
-            <meshBasicMaterial
-              color={colors.glow}
-              transparent
-              opacity={0.15}
-            />
-          </mesh>
+        {/* Bell top dome */}
+        <mesh position={[0, 33, 0]}>
+          <sphereGeometry args={[8, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <meshPhysicalMaterial
+            color={colors.body}
+            emissive={colors.primary}
+            emissiveIntensity={0.8}
+            metalness={0.7}
+            roughness={0.2}
+            transparent
+            opacity={0.85}
+          />
+        </mesh>
 
-          {/* Divine rays */}
-          {[...Array(12)].map((_, i) => {
-            const angle = (Math.PI * 2 * i) / 12;
-            return (
-              <mesh
-                key={i}
-                position={[Math.cos(angle) * 20, Math.sin(angle) * 20, 0]}
-                rotation={[0, 0, angle + Math.PI / 2]}
-              >
-                <planeGeometry args={[1.5, 15]} />
-                <meshBasicMaterial
-                  color={colors.accent}
-                  transparent
-                  opacity={0.4}
-                  side={THREE.DoubleSide}
-                />
-              </mesh>
-            );
-          })}
-        </group>
+        {/* Bell bottom rim - thick ring */}
+        <mesh position={[0, 7.5, 0]}>
+          <torusGeometry args={[14, 1.5, 16, 32]} />
+          <meshPhysicalMaterial
+            color={colors.secondary}
+            emissive={colors.glow}
+            emissiveIntensity={1.2}
+            metalness={0.8}
+            roughness={0.1}
+          />
+        </mesh>
 
-        {/* ===== THÂN PHƯỢNG (PHOENIX BODY) ===== */}
-        <group position={[0, 10, 0]}>
-          {/* Ngực/Bụng - oval lớn */}
-          <mesh scale={[1, 1.3, 0.8]}>
-            <sphereGeometry args={[5, 32, 32]} />
+        {/* Decorative rings around bell */}
+        {[15, 22, 28].map((height, i) => (
+          <mesh key={i} position={[0, height, 0]}>
+            <torusGeometry args={[9 - i * 0.8, 0.4, 12, 32]} />
             <meshPhysicalMaterial
-              color={colors.body}
-              emissive={colors.primary}
-              emissiveIntensity={0.5}
-              metalness={0.4}
-              roughness={0.3}
-              clearcoat={0.5}
-            />
-          </mesh>
-
-          {/* Lông ngực chi tiết */}
-          {[...Array(5)].map((_, i) => (
-            <mesh key={i} position={[0, -2 - i * 1.2, 3]} rotation={[-0.4, 0, 0]} scale={[1 - i * 0.1, 1, 1]}>
-              <coneGeometry args={[2.5 - i * 0.3, 3, 8]} />
-              <meshPhysicalMaterial
-                color={colors.secondary}
-                emissive={colors.glow}
-                emissiveIntensity={0.3 + i * 0.1}
-                metalness={0.5}
-                roughness={0.4}
-              />
-            </mesh>
-          ))}
-        </group>
-
-        {/* ===== CỔ PHƯỢNG (NECK) ===== */}
-        <group position={[0, 18, 2]}>
-          <mesh rotation={[0.3, 0, 0]}>
-            <cylinderGeometry args={[2, 3.5, 8, 16]} />
-            <meshPhysicalMaterial
-              color={colors.body}
-              emissive={colors.primary}
-              emissiveIntensity={0.4}
-              metalness={0.4}
-              roughness={0.3}
-            />
-          </mesh>
-
-          {/* Lông cổ */}
-          {[...Array(8)].map((_, i) => {
-            const angle = (Math.PI * 2 * i) / 8;
-            return (
-              <mesh
-                key={i}
-                position={[Math.cos(angle) * 2.5, -2, Math.sin(angle) * 2.5]}
-                rotation={[0.5, angle, 0]}
-              >
-                <coneGeometry args={[0.4, 2, 6]} />
-                <meshPhysicalMaterial
-                  color={colors.secondary}
-                  emissive={colors.glow}
-                  emissiveIntensity={0.5}
-                />
-              </mesh>
-            );
-          })}
-        </group>
-
-        {/* ===== ĐẦU PHƯỢNG (HEAD) ===== */}
-        <group position={[0, 26, 4]}>
-          {/* Đầu chính */}
-          <mesh scale={[1, 1.1, 0.9]}>
-            <sphereGeometry args={[3, 32, 32]} />
-            <meshPhysicalMaterial
-              color={colors.body}
-              emissive={colors.primary}
-              emissiveIntensity={0.5}
-              metalness={0.4}
-              roughness={0.3}
-              clearcoat={0.8}
-            />
-          </mesh>
-
-          {/* Mỏ */}
-          <mesh position={[0, 0, 3.5]} rotation={[-0.2, 0, 0]}>
-            <coneGeometry args={[0.8, 4, 8]} />
-            <meshStandardMaterial
               color={colors.secondary}
               emissive={colors.accent}
+              emissiveIntensity={0.8}
+              metalness={0.9}
+              roughness={0.1}
+            />
+          </mesh>
+        ))}
+
+        {/* ===== NÚM CHUÔNG (BELL CROWN/HANDLE) ===== */}
+        <group position={[0, 36, 0]}>
+          {/* Dragon/creature handle */}
+          <mesh position={[0, 3, 0]}>
+            <torusGeometry args={[3, 1.2, 16, 32]} />
+            <meshPhysicalMaterial
+              color={colors.secondary}
+              emissive={colors.glow}
               emissiveIntensity={1}
               metalness={0.8}
               roughness={0.2}
             />
           </mesh>
 
-          {/* Mắt trái */}
-          <mesh position={[-1.5, 0.8, 2]}>
-            <sphereGeometry args={[0.6, 16, 16]} />
+          {/* Crown ornament */}
+          <mesh position={[0, 0, 0]}>
+            <dodecahedronGeometry args={[2, 0]} />
             <meshStandardMaterial
               color={colors.accent}
               emissive={colors.accent}
-              emissiveIntensity={3}
+              emissiveIntensity={2}
+              metalness={0.9}
+              roughness={0.1}
             />
           </mesh>
 
-          {/* Mắt phải */}
-          <mesh position={[1.5, 0.8, 2]}>
-            <sphereGeometry args={[0.6, 16, 16]} />
+          {/* Top gem */}
+          <mesh position={[0, 6, 0]}>
+            <octahedronGeometry args={[1.5, 0]} />
             <meshStandardMaterial
-              color={colors.accent}
-              emissive={colors.accent}
+              color={colors.rune}
+              emissive={colors.rune}
               emissiveIntensity={3}
             />
           </mesh>
+        </group>
 
-          {/* MÀO PHƯỢNG - Crown (7 lông cao ngất) */}
-          {[-3, -2, -1, 0, 1, 2, 3].map((i) => {
-            const height = 8 - Math.abs(i) * 0.8;
-            const xOffset = i * 0.8;
-            return (
-              <group key={i} position={[xOffset, 3, -1]} rotation={[-0.4 + Math.abs(i) * 0.05, 0, i * 0.08]}>
-                {/* Lông chính */}
-                <mesh>
-                  <cylinderGeometry args={[0.1, 0.25, height, 8]} />
-                  <meshPhysicalMaterial
-                    color={colors.primary}
-                    emissive={colors.secondary}
-                    emissiveIntensity={1.2}
-                    metalness={0.6}
-                    roughness={0.2}
-                  />
-                </mesh>
-                {/* Đầu lông phát sáng */}
-                <mesh position={[0, height / 2 + 0.3, 0]}>
-                  <sphereGeometry args={[0.3, 12, 12]} />
+        {/* ===== CỔ VĂN (ANCIENT RUNES) trên thân chuông ===== */}
+        {runeSymbols.map((rune, i) => {
+          const radius = 9.5 - (rune.height - 12) * 0.15;
+          const x = Math.cos(rune.angle) * radius;
+          const z = Math.sin(rune.angle) * radius;
+          return (
+            <group key={i} position={[x, rune.height, z]} rotation={[0, -rune.angle + Math.PI / 2, 0]}>
+              {/* Rune glyph - vertical bar */}
+              <mesh>
+                <boxGeometry args={[0.3 * rune.scale, 3 * rune.scale, 0.2]} />
+                <meshStandardMaterial
+                  color={colors.rune}
+                  emissive={colors.rune}
+                  emissiveIntensity={2}
+                />
+              </mesh>
+              {/* Rune glyph - horizontal bars */}
+              {[0.8, -0.8].map((y, j) => (
+                <mesh key={j} position={[0, y * rune.scale, 0]}>
+                  <boxGeometry args={[0.8 * rune.scale, 0.25 * rune.scale, 0.2]} />
                   <meshStandardMaterial
-                    color={colors.accent}
-                    emissive={colors.accent}
-                    emissiveIntensity={3}
+                    color={colors.rune}
+                    emissive={colors.rune}
+                    emissiveIntensity={2}
                   />
                 </mesh>
-              </group>
+              ))}
+            </group>
+          );
+        })}
+
+        {/* ===== LÕI CHUÔNG (BELL CLAPPER/TONGUE) ===== */}
+        <group position={[0, 12, 0]}>
+          {/* Clapper rod */}
+          <mesh>
+            <cylinderGeometry args={[0.5, 0.5, 15, 8]} />
+            <meshStandardMaterial
+              color={colors.secondary}
+              emissive={colors.glow}
+              emissiveIntensity={0.5}
+              metalness={0.8}
+              roughness={0.3}
+            />
+          </mesh>
+          {/* Clapper ball */}
+          <mesh position={[0, -8, 0]}>
+            <sphereGeometry args={[2.5, 16, 16]} />
+            <meshPhysicalMaterial
+              color={colors.accent}
+              emissive={colors.glow}
+              emissiveIntensity={1.5}
+              metalness={0.7}
+              roughness={0.2}
+            />
+          </mesh>
+        </group>
+
+{/* Bỏ outer glow sphere và inner glow sphere */}
+
+        {/* ===== ENERGY EFFECTS ===== */}
+        {/* Rotating rune ring */}
+        <group ref={runeRingRef} position={[0, 20, 0]}>
+          {[...Array(12)].map((_, i) => {
+            const angle = (Math.PI * 2 * i) / 12;
+            return (
+              <mesh
+                key={i}
+                position={[Math.cos(angle) * 18, Math.sin(angle * 3) * 3, Math.sin(angle) * 18]}
+                rotation={[0, -angle, 0]}
+              >
+                <boxGeometry args={[0.4, 2, 0.2]} />
+                <meshBasicMaterial
+                  color={colors.rune}
+                  transparent
+                  opacity={0.8}
+                />
+              </mesh>
             );
           })}
         </group>
 
-        {/* ===== CÁNH TRÁI (LEFT WING) - XÒE RỘNG ===== */}
-        <group ref={leftWingRef} position={[-5, 15, 0]}>
-          <MajesticWing colors={colors} side="left" />
-        </group>
-
-        {/* ===== CÁNH PHẢI (RIGHT WING) - XÒE RỘNG ===== */}
-        <group ref={rightWingRef} position={[5, 15, 0]}>
-          <MajesticWing colors={colors} side="right" />
-        </group>
-
-        {/* ===== ĐUÔI PHƯỢNG (MAJESTIC TAIL) ===== */}
-        <group position={[0, 5, -8]}>
-          <MajesticTail colors={colors} />
-        </group>
-
-        {/* ===== CHÂN PHƯỢNG (LEGS) ===== */}
-        <group position={[0, 0, 0]}>
-          {/* Chân trái */}
-          <group position={[-2, 0, 2]}>
-            <mesh rotation={[0.3, 0, 0]}>
-              <cylinderGeometry args={[0.5, 0.7, 6, 8]} />
-              <meshStandardMaterial
-                color={colors.secondary}
-                emissive={colors.glow}
-                emissiveIntensity={0.3}
-                metalness={0.7}
-                roughness={0.3}
+        {/* Vertical energy beams */}
+        {[...Array(6)].map((_, i) => {
+          const angle = (Math.PI * 2 * i) / 6;
+          return (
+            <mesh
+              key={i}
+              position={[Math.cos(angle) * 16, 20, Math.sin(angle) * 16]}
+            >
+              <cylinderGeometry args={[0.2, 0.2, 40, 8]} />
+              <meshBasicMaterial
+                color={colors.glow}
+                transparent
+                opacity={0.3}
               />
             </mesh>
-            {/* Móng */}
-            {[-0.4, 0, 0.4].map((x, i) => (
-              <mesh key={i} position={[x, -4, 1]} rotation={[0.6, 0, (i - 1) * 0.15]}>
-                <coneGeometry args={[0.15, 1.5, 6]} />
-                <meshStandardMaterial
-                  color={colors.secondary}
-                  emissive={colors.accent}
-                  emissiveIntensity={0.5}
-                  metalness={0.8}
-                />
-              </mesh>
-            ))}
-          </group>
+          );
+        })}
 
-          {/* Chân phải */}
-          <group position={[2, 0, 2]}>
-            <mesh rotation={[0.3, 0, 0]}>
-              <cylinderGeometry args={[0.5, 0.7, 6, 8]} />
-              <meshStandardMaterial
-                color={colors.secondary}
-                emissive={colors.glow}
-                emissiveIntensity={0.3}
-                metalness={0.7}
-                roughness={0.3}
-              />
-            </mesh>
-            {/* Móng */}
-            {[-0.4, 0, 0.4].map((x, i) => (
-              <mesh key={i} position={[x, -4, 1]} rotation={[0.6, 0, (i - 1) * 0.15]}>
-                <coneGeometry args={[0.15, 1.5, 6]} />
-                <meshStandardMaterial
-                  color={colors.secondary}
-                  emissive={colors.accent}
-                  emissiveIntensity={0.5}
-                  metalness={0.8}
-                />
-              </mesh>
-            ))}
-          </group>
-        </group>
-
-        {/* ===== PARTICLES VÀ EFFECTS ===== */}
+        {/* ===== PARTICLES ===== */}
         {particles.map((p, i) => (
-          <PhoenixParticle
+          <BellParticle
             key={i}
             initialPos={p.pos}
             speed={p.speed}
@@ -926,45 +866,44 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
           />
         ))}
 
-        {/* Sparkles chung quanh */}
+        {/* Sparkles */}
         <Sparkles
-          count={100}
-          scale={[60, 50, 30]}
+          count={120}
+          scale={[40, 50, 40]}
           position={[0, 20, 0]}
           size={2}
-          speed={0.5}
+          speed={0.4}
           color={colors.secondary}
         />
         <Sparkles
           count={80}
-          scale={[70, 40, 25]}
-          position={[0, 15, 0]}
+          scale={[30, 40, 30]}
+          position={[0, 25, 0]}
           size={3}
-          speed={0.8}
+          speed={0.6}
           color={colors.accent}
         />
 
         {/* Lights */}
-        <pointLight position={[0, 30, 10]} color={colors.secondary} intensity={5} distance={80} />
-        <pointLight position={[-25, 20, 5]} color={colors.primary} intensity={3} distance={50} />
-        <pointLight position={[25, 20, 5]} color={colors.primary} intensity={3} distance={50} />
-        <pointLight position={[0, 10, 5]} color={colors.glow} intensity={4} distance={40} />
+        <pointLight position={[0, 35, 0]} color={colors.secondary} intensity={5} distance={60} />
+        <pointLight position={[0, 20, 0]} color={colors.glow} intensity={8} distance={50} />
+        <pointLight position={[0, 5, 0]} color={colors.accent} intensity={3} distance={30} />
       </group>
 
-      {/* ===== ĐẾ PHƯỢNG HOÀNG (PEDESTAL) ===== */}
-      <DivinePedestal colors={colors} />
+      {/* ===== ĐẾ CHUÔNG (BELL PEDESTAL) ===== */}
+      <BellPedestal colors={colors} />
 
-      {/* ===== UNLOCK PROMPT - Only for Fire Phoenix ===== */}
+      {/* ===== UNLOCK PROMPT - Only for Fire Bell ===== */}
       {isFire && showPrompt && (
-        <Html position={[0, 45, 0]} center>
+        <Html position={[0, 50, 0]} center>
           <div
             className="px-4 py-3 rounded-lg text-center whitespace-nowrap animate-fadeIn"
             style={{
               background: isUnlocked
                 ? 'linear-gradient(135deg, rgba(0,206,209,0.95), rgba(64,224,208,0.9))'
-                : 'linear-gradient(135deg, rgba(255,69,0,0.95), rgba(255,140,0,0.9))',
-              border: `2px solid ${isUnlocked ? '#00FFFF' : '#FFD700'}`,
-              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(0,255,255,0.5)' : 'rgba(255,140,0,0.5)'}`,
+                : 'linear-gradient(135deg, rgba(0,255,136,0.95), rgba(102,255,204,0.9))',
+              border: `2px solid ${isUnlocked ? '#00FFFF' : '#00FF88'}`,
+              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(0,255,255,0.5)' : 'rgba(0,255,136,0.5)'}`,
             }}
           >
             {isUnlocked ? (
@@ -979,9 +918,9 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
             ) : (
               <>
                 <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
-                  🔥 Hỏa Phượng
+                  🔔 Thượng Cổ Đồng Chung
                 </p>
-                <p className="text-yellow-100 text-sm mt-1">
+                <p className="text-green-100 text-sm mt-1">
                   Đến gần để khai mở Cưỡi Linh Thú
                 </p>
               </>
@@ -993,226 +932,17 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
   );
 }
 
-interface WingColors {
+interface BellColors {
   primary: string;
   secondary: string;
   glow: string;
   accent: string;
   body: string;
   dark: string;
+  rune: string;
 }
 
-function MajesticWing({ colors, side }: { colors: WingColors; side: 'left' | 'right' }) {
-  const isLeft = side === 'left';
-  const direction = isLeft ? -1 : 1;
-
-  // Cánh xòe rộng với nhiều lớp lông
-  return (
-    <group rotation={[0, 0, direction * Math.PI / 4]}>
-      {/* LAYER 1: Primary flight feathers - Lông bay chính (dài nhất) */}
-      {[...Array(9)].map((_, i) => {
-        const length = 35 - i * 2;
-        const spreadAngle = direction * (i * 0.12);
-        const yOffset = -i * 2;
-        const xOffset = direction * i * 3;
-
-        return (
-          <group key={`primary-${i}`} position={[xOffset, yOffset, i * 0.3]} rotation={[0.1 * i, spreadAngle, direction * 0.05 * i]}>
-            {/* Lông chính */}
-            <mesh rotation={[0, 0, direction * Math.PI / 2]}>
-              <coneGeometry args={[1.2 - i * 0.08, length, 8]} />
-              <meshPhysicalMaterial
-                color={colors.primary}
-                emissive={colors.glow}
-                emissiveIntensity={0.8 - i * 0.05}
-                metalness={0.5}
-                roughness={0.2}
-                transparent
-                opacity={0.95}
-              />
-            </mesh>
-            {/* Viền phát sáng */}
-            <mesh rotation={[0, 0, direction * Math.PI / 2]} scale={[1.15, 1.02, 1.15]}>
-              <coneGeometry args={[1.2 - i * 0.08, length, 8]} />
-              <meshBasicMaterial
-                color={colors.accent}
-                transparent
-                opacity={0.35}
-              />
-            </mesh>
-          </group>
-        );
-      })}
-
-      {/* LAYER 2: Secondary feathers - Lông phụ (ngắn hơn) */}
-      {[...Array(7)].map((_, i) => {
-        const length = 22 - i * 1.5;
-        const spreadAngle = direction * (i * 0.1 + 0.05);
-
-        return (
-          <group key={`secondary-${i}`} position={[direction * (i * 2 + 2), -i * 1.5 + 3, i * 0.2 - 1]} rotation={[0.05 * i, spreadAngle, direction * 0.03 * i]}>
-            <mesh rotation={[0, 0, direction * Math.PI / 2]}>
-              <coneGeometry args={[0.8 - i * 0.06, length, 6]} />
-              <meshPhysicalMaterial
-                color={colors.secondary}
-                emissive={colors.glow}
-                emissiveIntensity={0.6}
-                metalness={0.4}
-                roughness={0.3}
-                transparent
-                opacity={0.9}
-              />
-            </mesh>
-          </group>
-        );
-      })}
-
-      {/* LAYER 3: Covert feathers - Lông phủ (ngắn nhất, gần thân) */}
-      {[...Array(5)].map((_, i) => {
-        const length = 12 - i;
-
-        return (
-          <group key={`covert-${i}`} position={[direction * (i * 1.5 + 1), -i + 5, -2]} rotation={[0, direction * i * 0.08, direction * 0.1]}>
-            <mesh rotation={[0, 0, direction * Math.PI / 2]}>
-              <coneGeometry args={[0.6, length, 6]} />
-              <meshPhysicalMaterial
-                color={colors.body}
-                emissive={colors.primary}
-                emissiveIntensity={0.4}
-                metalness={0.3}
-                roughness={0.4}
-              />
-            </mesh>
-          </group>
-        );
-      })}
-
-      {/* Hiệu ứng năng lượng tỏa ra từ cánh */}
-      {[...Array(8)].map((_, i) => (
-        <mesh
-          key={`energy-${i}`}
-          position={[
-            direction * (8 + Math.random() * 20),
-            Math.random() * 15 - 10,
-            Math.random() * 8 - 4
-          ]}
-          rotation={[Math.random(), Math.random(), Math.random()]}
-        >
-          <tetrahedronGeometry args={[0.5 + Math.random() * 1, 0]} />
-          <meshBasicMaterial
-            color={colors.accent}
-            transparent
-            opacity={0.6}
-          />
-        </mesh>
-      ))}
-
-      {/* Wing glow aura */}
-      <mesh position={[direction * 15, -5, 0]} rotation={[0, direction * 0.3, direction * Math.PI / 4]}>
-        <planeGeometry args={[40, 35]} />
-        <meshBasicMaterial
-          color={colors.glow}
-          transparent
-          opacity={0.15}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-function MajesticTail({ colors }: { colors: WingColors }) {
-  const tailFeathers = 11;
-
-  return (
-    <group rotation={[-0.4, 0, 0]}>
-      {/* Lông đuôi chính - xòe như quạt */}
-      {[...Array(tailFeathers)].map((_, i) => {
-        const normalizedI = i - (tailFeathers - 1) / 2;
-        const spreadAngle = normalizedI * 0.15;
-        const length = 40 - Math.abs(normalizedI) * 3;
-        const heightOffset = Math.abs(normalizedI) * 0.5;
-
-        return (
-          <group
-            key={i}
-            position={[normalizedI * 1.5, heightOffset, 0]}
-            rotation={[heightOffset * 0.1, spreadAngle, 0]}
-          >
-            {/* Lông chính */}
-            <mesh position={[0, 0, -length / 2]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.2, 0.6, length, 8]} />
-              <meshPhysicalMaterial
-                color={colors.primary}
-                emissive={colors.glow}
-                emissiveIntensity={0.7}
-                metalness={0.5}
-                roughness={0.2}
-                transparent
-                opacity={0.9}
-              />
-            </mesh>
-
-            {/* Lông tơ hai bên */}
-            {[...Array(6)].map((_, j) => (
-              <group key={j}>
-                <mesh
-                  position={[-0.8, 0, -8 - j * 5]}
-                  rotation={[0, -0.4, 0]}
-                >
-                  <coneGeometry args={[0.25, 4 + j * 0.5, 6]} />
-                  <meshPhysicalMaterial
-                    color={colors.secondary}
-                    emissive={colors.glow}
-                    emissiveIntensity={0.5}
-                    transparent
-                    opacity={0.7}
-                  />
-                </mesh>
-                <mesh
-                  position={[0.8, 0, -8 - j * 5]}
-                  rotation={[0, 0.4, 0]}
-                >
-                  <coneGeometry args={[0.25, 4 + j * 0.5, 6]} />
-                  <meshPhysicalMaterial
-                    color={colors.secondary}
-                    emissive={colors.glow}
-                    emissiveIntensity={0.5}
-                    transparent
-                    opacity={0.7}
-                  />
-                </mesh>
-              </group>
-            ))}
-
-            {/* Đầu lông đuôi phát sáng */}
-            <mesh position={[0, 0, -length + 2]}>
-              <sphereGeometry args={[0.8, 12, 12]} />
-              <meshStandardMaterial
-                color={colors.accent}
-                emissive={colors.accent}
-                emissiveIntensity={2.5}
-              />
-            </mesh>
-          </group>
-        );
-      })}
-
-      {/* Glow aura cho đuôi */}
-      <mesh position={[0, 0, -25]} rotation={[Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[20, 32]} />
-        <meshBasicMaterial
-          color={colors.glow}
-          transparent
-          opacity={0.1}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-interface PhoenixParticleProps {
+interface BellParticleProps {
   initialPos: [number, number, number];
   speed: number;
   size: number;
@@ -1221,7 +951,7 @@ interface PhoenixParticleProps {
   isIce: boolean;
 }
 
-function PhoenixParticle({ initialPos, speed, size, delay, color, isIce }: PhoenixParticleProps) {
+function BellParticle({ initialPos, speed, size, delay, color, isIce }: BellParticleProps) {
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -1229,29 +959,25 @@ function PhoenixParticle({ initialPos, speed, size, delay, color, isIce }: Phoen
       const t = state.clock.elapsedTime * speed + delay;
 
       if (isIce) {
-        // Ice: particles rơi xuống và tan dần
-        ref.current.position.y = initialPos[1] - (t % 40) + 20;
-        ref.current.position.x = initialPos[0] + Math.sin(t * 0.3) * 3;
-        ref.current.position.z = initialPos[2] + Math.cos(t * 0.2) * 2;
+        // Ice bell: particles spiral down
+        ref.current.position.y = initialPos[1] - (t % 30) + 25;
+        ref.current.position.x = initialPos[0] + Math.sin(t * 0.5) * 5;
+        ref.current.position.z = initialPos[2] + Math.cos(t * 0.5) * 5;
       } else {
-        // Fire: particles bay lên
-        ref.current.position.y = initialPos[1] + (t % 35);
-        ref.current.position.x = initialPos[0] + Math.sin(t * 0.8) * 2;
-        ref.current.position.z = initialPos[2] + Math.cos(t * 0.6) * 1.5;
+        // Fire bell: particles spiral up
+        ref.current.position.y = initialPos[1] + (t % 30);
+        ref.current.position.x = initialPos[0] + Math.sin(t * 0.6) * 4;
+        ref.current.position.z = initialPos[2] + Math.cos(t * 0.6) * 4;
       }
 
-      ref.current.rotation.y = t;
-      ref.current.rotation.x = t * 0.5;
+      ref.current.rotation.y = t * 2;
+      ref.current.rotation.x = t;
     }
   });
 
   return (
     <mesh ref={ref} position={initialPos}>
-      {isIce ? (
-        <octahedronGeometry args={[size, 0]} />
-      ) : (
-        <tetrahedronGeometry args={[size, 0]} />
-      )}
+      <octahedronGeometry args={[size, 0]} />
       <meshStandardMaterial
         color={color}
         emissive={color}
@@ -1263,80 +989,80 @@ function PhoenixParticle({ initialPos, speed, size, delay, color, isIce }: Phoen
   );
 }
 
-function DivinePedestal({ colors }: { colors: WingColors }) {
+function BellPedestal({ colors }: { colors: BellColors }) {
   const ringRef = useRef<THREE.Mesh>(null);
   const runeRingRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
     if (ringRef.current) {
-      ringRef.current.rotation.z = state.clock.elapsedTime * 0.3;
+      ringRef.current.rotation.z = state.clock.elapsedTime * 0.2;
     }
     if (runeRingRef.current) {
-      runeRingRef.current.rotation.y = -state.clock.elapsedTime * 0.2;
+      runeRingRef.current.rotation.y = -state.clock.elapsedTime * 0.15;
     }
   });
 
   return (
     <group position={[0, -5, 0]}>
-      {/* Main platform */}
+      {/* Main platform - octagonal */}
       <mesh receiveShadow>
-        <cylinderGeometry args={[12, 15, 4, 8]} />
+        <cylinderGeometry args={[15, 18, 5, 8]} />
         <meshStandardMaterial
-          color="#1A0A0A"
+          color="#0A1A1A"
           roughness={0.5}
           metalness={0.5}
           emissive={colors.dark}
-          emissiveIntensity={0.3}
+          emissiveIntensity={0.4}
         />
       </mesh>
 
-      {/* Upper ring */}
-      <mesh position={[0, 2.5, 0]} receiveShadow>
-        <cylinderGeometry args={[10, 12, 1, 8]} />
+      {/* Upper tier */}
+      <mesh position={[0, 3, 0]} receiveShadow>
+        <cylinderGeometry args={[12, 15, 2, 8]} />
         <meshStandardMaterial
-          color={colors.primary}
-          emissive={colors.glow}
-          emissiveIntensity={0.5}
-          metalness={0.7}
+          color={colors.dark}
+          emissive={colors.primary}
+          emissiveIntensity={0.3}
+          metalness={0.6}
           roughness={0.3}
         />
       </mesh>
 
       {/* Rotating energy ring */}
-      <mesh ref={ringRef} position={[0, 3.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[8, 10, 64]} />
+      <mesh ref={ringRef} position={[0, 4.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[10, 12, 64]} />
         <meshBasicMaterial
-          color={colors.secondary}
+          color={colors.glow}
           transparent
-          opacity={0.6}
+          opacity={0.5}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Rune pillars xung quanh */}
+      {/* Corner pillars with gems */}
       <group ref={runeRingRef}>
         {[...Array(8)].map((_, i) => {
           const angle = (Math.PI * 2 * i) / 8;
           return (
-            <group key={i} position={[Math.cos(angle) * 14, 0, Math.sin(angle) * 14]}>
+            <group key={i} position={[Math.cos(angle) * 16, 0, Math.sin(angle) * 16]}>
               {/* Pillar */}
               <mesh>
-                <cylinderGeometry args={[0.5, 0.7, 8, 6]} />
+                <cylinderGeometry args={[0.8, 1, 10, 6]} />
                 <meshStandardMaterial
-                  color={colors.primary}
-                  emissive={colors.glow}
-                  emissiveIntensity={0.6}
+                  color={colors.dark}
+                  emissive={colors.primary}
+                  emissiveIntensity={0.5}
                   metalness={0.6}
                   roughness={0.3}
                 />
               </mesh>
-              {/* Rune on top */}
-              <mesh position={[0, 5, 0]}>
-                <octahedronGeometry args={[0.8, 0]} />
+              {/* Gem on top */}
+              <mesh position={[0, 6, 0]}>
+                <octahedronGeometry args={[1, 0]} />
                 <meshStandardMaterial
                   color={colors.accent}
                   emissive={colors.accent}
-                  emissiveIntensity={2}
+                  emissiveIntensity={2.5}
                 />
               </mesh>
             </group>
@@ -1345,17 +1071,17 @@ function DivinePedestal({ colors }: { colors: WingColors }) {
       </group>
 
       {/* Central glow */}
-      <mesh position={[0, 3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[8, 32]} />
+      <mesh position={[0, 4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[10, 32]} />
         <meshBasicMaterial
           color={colors.glow}
           transparent
-          opacity={0.25}
+          opacity={0.3}
         />
       </mesh>
 
-      {/* Platform light */}
-      <pointLight position={[0, 5, 0]} color={colors.secondary} intensity={3} distance={30} />
+      {/* Platform lights */}
+      <pointLight position={[0, 8, 0]} color={colors.glow} intensity={4} distance={35} />
     </group>
   );
 }

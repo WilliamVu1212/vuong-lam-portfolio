@@ -28,7 +28,7 @@
 3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals + 2 thác nước
 4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals + 2 thác nước
 5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Trảm La Kiếm (Soul Slaying Swords)**
-6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau + **2 Thần Phượng (Băng Phượng + Hỏa Phượng)**
+6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau + **2 Thượng Cổ Đồng Chung (Ancient Divine Bell)**
 7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, William panel + **2 Cấm Phiên (Soul Banners)**
 
 ### Camera Controls:
@@ -38,16 +38,20 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 11
+## Recent Update (2026-01-21) - Session 12
 
 ### Đã hoàn thành:
+- ✅ **Thượng Cổ Đồng Chung (Ancient Divine Bell)** - Thay thế Thần Phượng ở Anh Biến
+  - **AncientDivineBell component** - Chuông đồng cổ phát sáng xanh lục
+  - Thân chuông + mái vòm + vành đáy + 3 vòng trang trí
+  - Núm chuông (handle) + Lõi chuông (clapper)
+  - Cổ văn (ancient runes) 3 hàng khắc trên thân
+  - Vòng rune xoay + 6 tia năng lượng + 100 particles
+  - **BellPedestal** - Đế chuông với 8 cột rune xoay
+  - Bỏ outer/inner glow sphere cho chuông rõ hơn
+
+### Session 11:
 - ✅ **Cưỡi Linh Thú (Phoenix Mount System)** - Bay trên lưng Hỏa Phượng
-  - **RidingPhoenix.tsx** - Phoenix model với body, wings, tail, particles
-  - **Player.tsx** - Thêm beast flight mode (tốc độ 80, nhanh hơn kiếm!)
-  - **ContactSection.tsx** - Unlock trigger ở Hỏa Phượng (distance < 15)
-  - **App.tsx** - HUD & ControlsHelp cho phoenix mode + Tutorial popup
-  - **LevelNavigator.tsx** - Icon 🔥 nhấp nháy ở Anh Biến
-  - **globals.css** - Phoenix animations (phoenixUnlock, fireGlowPulse, mount/unmount)
 
 ### Session 10:
 - ✅ **UX: Sword Unlock Hint** - Người chơi biết có Ngự Kiếm ở Hóa Thần
@@ -56,7 +60,6 @@
 - ✅ **Ngự Kiếm (Sword Flying Mode)** - Bay kiếm hoàn chỉnh
 
 ### Session trước:
-- ✅ **Thần Phượng (Divine Phoenix)** ở Anh Biến
 - ✅ **Cấm Phiên (Soul Banner)** ở Vấn Đỉnh
 - ✅ **Trảm La Kiếm (Soul Slaying Sword)** ở Hóa Thần
 

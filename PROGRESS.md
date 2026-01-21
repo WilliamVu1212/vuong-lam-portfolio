@@ -220,7 +220,32 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 11 (Latest)
+### Session 2026-01-21 - Update 12 (Latest)
+```
+- Thay thế Thần Phượng (Divine Phoenix) bằng Thượng Cổ Đồng Chung (Ancient Divine Bell):
+  - Xóa DivinePhoenix component
+  - Tạo AncientDivineBell component mới:
+    - Thân chuông hình trụ thu hẹp (cylinderGeometry)
+    - Mái vòm trên đỉnh (sphereGeometry half)
+    - Vành đáy phát sáng (torusGeometry)
+    - 3 vòng trang trí dọc thân chuông
+    - Núm chuông (handle) với torus + dodecahedron + octahedron gem
+    - Lõi chuông (clapper) với rod + ball
+    - Cổ văn (ancient runes) 3 hàng khắc trên thân
+    - Vòng rune xoay quanh (12 elements)
+    - 6 tia năng lượng thẳng đứng
+    - 100 particles bay xoắn ốc
+    - BellPedestal với 8 cột rune xoay
+  - Màu sắc xanh lục như trong ảnh tham khảo:
+    - Thanh Minh Chung (trái): #00FF88, #00FFAA, #66FFCC
+    - Hoàng Kim Chung (phải): #44FF44, #88FF00, #99FF66
+  - Giữ nguyên unlock trigger cho Cưỡi Linh Thú ở chuông bên phải
+  - Bỏ outer glow sphere và inner glow sphere
+
+- Files changed: ContactSection.tsx
+```
+
+### Session 2026-01-21 - Update 11
 ```
 - Implement Cưỡi Linh Thú (Phoenix Mount System):
   - RidingPhoenix.tsx: Phoenix model cho player cưỡi khi bay
