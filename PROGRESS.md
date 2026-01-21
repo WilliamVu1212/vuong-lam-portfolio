@@ -220,7 +220,30 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 15 (Latest)
+### Session 2026-01-21 - Update 16 (Latest)
+```
+- Thêm tính năng Camera Follow Player khi di chuyển:
+  - Camera tự động follow player khi đang di chuyển (velocity > 0.5)
+  - Camera dừng follow khi player đứng yên
+  - Camera dừng follow khi user tương tác OrbitControls (zoom/rotate/pan)
+  - Sau 1 giây không tương tác + player di chuyển → camera tiếp tục follow
+
+- Thêm camera config cho walking mode:
+  - distance: 15 (khoảng cách phía sau player)
+  - height: 8 (độ cao so với player)
+  - smoothing: 0.03 (tốc độ lerp mượt)
+
+- Cập nhật camera config cho các mode khác:
+  - sword: distance 12, height 5, smoothing 0.05
+  - beast: distance 18, height 10, smoothing 0.08
+
+- Player velocity giờ được lưu vào gameStore để detect movement
+
+- Files changed: Experience.tsx, Player.tsx, constants.ts
+- Git commit: ac1462d
+```
+
+### Session 2026-01-21 - Update 15
 ```
 - Di chuyển vị trí 4 thác nước để phân bố hợp lý giữa Kết Đan và Nguyên Anh:
   - Thác Hỏa Viêm (đỏ): [-50, 40, -120] → [-100, 115, -260] (Kết Đan)

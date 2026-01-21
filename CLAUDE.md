@@ -38,13 +38,20 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 14
+## Recent Update (2026-01-21) - Session 16
 
 ### Đã hoàn thành:
-- ✅ **Di chuyển Ngự Kiếm unlock từ Kết Đan xuống Trúc Cơ**
-  - Trảm La Kiếm giờ ở AboutSection (Trúc Cơ) thay vì SkillsSection (Kết Đan)
-  - Vị trí: [-45, 0, 0] và [45, 0, 0] trong AboutSection
-  - LevelNavigator hint ⚔️ giờ hiện ở Trúc Cơ
+- ✅ **Camera Follow Player khi di chuyển**
+  - Camera tự động follow player khi đang di chuyển (WASD)
+  - Camera dừng follow khi đứng yên hoặc user xoay camera
+  - Config: distance 15, height 8, smoothing 0.03
+  - Player velocity lưu vào store để detect movement
+
+### Session 15:
+- ✅ Di chuyển vị trí 4 thác nước phân bố hợp lý
+
+### Session 14:
+- ✅ Di chuyển Ngự Kiếm unlock từ Kết Đan xuống Trúc Cơ
 
 ### Session 13:
 - ✅ Di chuyển vị trí unlock từ Kết Đan/Anh Biến sang vị trí mới
