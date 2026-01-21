@@ -5,7 +5,6 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { experiences, certifications } from '@/data/content';
 import type { Experience, Certification } from '@/types';
-import { ScrollIcon, SealIcon, SpiritStoneIcon, JadeIcon } from '@/components/ui/XianxiaIcons';
 
 interface ExperienceSectionProps {
   position?: [number, number, number];
@@ -244,10 +243,12 @@ function TimelinePath() {
 }
 
 function ExperienceMonuments() {
+  // Bố trí đều theo hình tam giác đều, bán kính 30 từ trung tâm
+  const radius = 30;
   const monumentPositions: [number, number, number][] = [
-    [25, 0, 20],
-    [-20, 0, 30],
-    [30, 0, -15],
+    [0, 0, radius],                                           // Phía trước (0°)
+    [radius * Math.sin((2 * Math.PI) / 3), 0, radius * Math.cos((2 * Math.PI) / 3)],   // Trái sau (120°)
+    [radius * Math.sin((4 * Math.PI) / 3), 0, radius * Math.cos((4 * Math.PI) / 3)],   // Phải sau (240°)
   ];
 
   return (
@@ -277,10 +278,6 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
   const glowRef = useRef<THREE.Mesh>(null);
   const colors = ['#FF4444', '#FF8C00', '#FFD700'];
   const color = colors[index % colors.length];
-
-  // Experience icons (SVG components)
-  const ExpIcons = [ScrollIcon, SealIcon, SpiritStoneIcon];
-  const ExpIcon = ExpIcons[index % ExpIcons.length];
 
   useFrame((state) => {
     if (glowRef.current) {
@@ -341,7 +338,7 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
           />
         </mesh>
 
-        {/* Icon button - always visible */}
+        {/* Glow Orb - always visible */}
         <Html
           position={[0, 13, 0]}
           center
@@ -357,19 +354,19 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
               setIsOpen(!isOpen);
             }}
             style={{
-              transform: hovered ? 'scale(1.2)' : 'scale(1)',
+              transform: hovered ? 'scale(1.15)' : 'scale(1)',
             }}
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center"
+              className="w-10 h-10 rounded-full"
               style={{
-                backgroundColor: 'rgba(26, 10, 10, 0.9)',
-                border: `3px solid ${color}`,
-                boxShadow: (hovered || isOpen) ? `0 0 25px ${color}, 0 0 50px ${color}50` : `0 0 10px ${color}50`,
+                background: `radial-gradient(circle at 30% 30%, ${color}, ${color}80 40%, ${color}40 70%, transparent)`,
+                boxShadow: (hovered || isOpen)
+                  ? `0 0 30px ${color}, 0 0 60px ${color}80, inset 0 0 20px ${color}60`
+                  : `0 0 15px ${color}80, 0 0 30px ${color}40, inset 0 0 10px ${color}40`,
+                border: `2px solid ${color}`,
               }}
-            >
-              <ExpIcon size={24} color={color} />
-            </div>
+            />
           </div>
         </Html>
 
@@ -408,14 +405,13 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
               {/* Header */}
               <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  className="w-8 h-8 rounded-full flex-shrink-0"
                   style={{
-                    backgroundColor: `${color}20`,
+                    background: `radial-gradient(circle at 30% 30%, ${color}, ${color}60 50%, transparent)`,
+                    boxShadow: `0 0 15px ${color}80, inset 0 0 8px ${color}40`,
                     border: `2px solid ${color}`,
                   }}
-                >
-                  <ExpIcon size={20} color={color} />
-                </div>
+                />
                 <div>
                   <p className="text-xs" style={{ color: color }}>{experience.period}</p>
                   <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
@@ -463,9 +459,10 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
 }
 
 function CertificationStones() {
+  // Bố trí đối xứng hai bên, giữa các monuments
   const stonePositions: [number, number, number][] = [
-    [-35, 0, -20],
-    [40, 0, 5],
+    [-38, 0, 0],   // Bên trái
+    [38, 0, 0],    // Bên phải
   ];
 
   return (
@@ -532,7 +529,7 @@ function CertificationStone({ certification, position, index }: CertificationSto
           />
         </mesh>
 
-        {/* Icon button - always visible */}
+        {/* Glow Orb - always visible */}
         <Html
           position={[0, 7, 0]}
           center
@@ -548,19 +545,19 @@ function CertificationStone({ certification, position, index }: CertificationSto
               setIsOpen(!isOpen);
             }}
             style={{
-              transform: hovered ? 'scale(1.2)' : 'scale(1)',
+              transform: hovered ? 'scale(1.15)' : 'scale(1)',
             }}
           >
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center"
+              className="w-9 h-9 rounded-full"
               style={{
-                backgroundColor: 'rgba(26, 10, 10, 0.9)',
-                border: '3px solid #FFD700',
-                boxShadow: (hovered || isOpen) ? '0 0 25px #FFD700, 0 0 50px #FFD70050' : '0 0 10px #FFD70050',
+                background: 'radial-gradient(circle at 30% 30%, #FFD700, #FFD70080 40%, #FFD70040 70%, transparent)',
+                boxShadow: (hovered || isOpen)
+                  ? '0 0 30px #FFD700, 0 0 60px #FFD70080, inset 0 0 20px #FFD70060'
+                  : '0 0 15px #FFD70080, 0 0 30px #FFD70040, inset 0 0 10px #FFD70040',
+                border: '2px solid #FFD700',
               }}
-            >
-              <JadeIcon size={20} color="#FFD700" />
-            </div>
+            />
           </div>
         </Html>
 
@@ -598,14 +595,13 @@ function CertificationStone({ certification, position, index }: CertificationSto
               {/* Header */}
               <div className="flex items-center gap-3 mb-2">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  className="w-8 h-8 rounded-full flex-shrink-0"
                   style={{
-                    backgroundColor: '#FFD70020',
+                    background: 'radial-gradient(circle at 30% 30%, #FFD700, #FFD70060 50%, transparent)',
+                    boxShadow: '0 0 15px #FFD70080, inset 0 0 8px #FFD70040',
                     border: '2px solid #FFD700',
                   }}
-                >
-                  <JadeIcon size={20} color="#FFD700" />
-                </div>
+                />
                 <div>
                   <p className="text-xs" style={{ color: '#FFD700' }}>Chứng Chỉ</p>
                   <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>

@@ -6,7 +6,6 @@ import * as THREE from 'three';
 import { skillCategories } from '@/data/content';
 import { SKILL_RANKS } from '@/utils/constants';
 import type { SkillCategory } from '@/types';
-import { SwordIcon, AlchemyIcon, FormationIcon, DivinePowerIcon } from '@/components/ui/XianxiaIcons';
 
 interface SkillsSectionProps {
   position?: [number, number, number];
@@ -265,9 +264,6 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
   const colors = ['#FF4444', '#FF8C00', '#FFD700', '#FF6B35'];
   const color = colors[index % colors.length];
 
-  // Category icons (SVG components)
-  const CategoryIcons = [SwordIcon, AlchemyIcon, FormationIcon, DivinePowerIcon];
-  const CategoryIcon = CategoryIcons[index % CategoryIcons.length];
   const categoryShortNames = ['Kiếm Pháp', 'Đan Pháp', 'Trận Pháp', 'Thần Thông'];
 
   useFrame((state) => {
@@ -331,7 +327,7 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
         </mesh>
       </Float>
 
-      {/* Icon only - click to show details */}
+      {/* Glow Orb - click to show details */}
       <Html
         position={[0, 22, 0]}
         center
@@ -347,19 +343,19 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
             setIsOpen(!isOpen);
           }}
           style={{
-            transform: hovered ? 'scale(1.2)' : 'scale(1)',
+            transform: hovered ? 'scale(1.15)' : 'scale(1)',
           }}
         >
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center"
+            className="w-10 h-10 rounded-full"
             style={{
-              backgroundColor: 'rgba(26, 10, 10, 0.9)',
-              border: `3px solid ${color}`,
-              boxShadow: hovered || isOpen ? `0 0 25px ${color}, 0 0 50px ${color}50` : `0 0 10px ${color}50`,
+              background: `radial-gradient(circle at 30% 30%, ${color}, ${color}80 40%, ${color}40 70%, transparent)`,
+              boxShadow: hovered || isOpen
+                ? `0 0 30px ${color}, 0 0 60px ${color}80, inset 0 0 20px ${color}60`
+                : `0 0 15px ${color}80, 0 0 30px ${color}40, inset 0 0 10px ${color}40`,
+              border: `2px solid ${color}`,
             }}
-          >
-            <CategoryIcon size={24} color={color} />
-          </div>
+          />
         </div>
       </Html>
 
@@ -399,14 +395,13 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
             {/* Header with category name */}
             <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center"
+                className="w-8 h-8 rounded-full"
                 style={{
-                  backgroundColor: `${color}20`,
+                  background: `radial-gradient(circle at 30% 30%, ${color}, ${color}60 50%, transparent)`,
+                  boxShadow: `0 0 15px ${color}80, inset 0 0 8px ${color}40`,
                   border: `2px solid ${color}`,
                 }}
-              >
-                <CategoryIcon size={20} color={color} />
-              </div>
+              />
               <div>
                 <h3 className="font-bold text-sm" style={{ color: color }}>
                   {categoryShortNames[index]}

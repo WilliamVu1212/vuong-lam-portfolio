@@ -238,8 +238,13 @@
 - ✅ Changed font to Cinzel for better Vietnamese diacritics
 - ✅ Disabled debug mode (r3f-perf) by default
 - ✅ Improved OrbitControls for panoramic viewing
-- ✅ Created XianxiaIcons.tsx with 16 custom SVG icons (Sword, Alchemy, Formation, etc.)
-- ⚠️ SVG icons cần được đánh giá lại - có thể không phù hợp với phong cách 3D minimalist
+- ✅ REPLACED SVG icons with Glow Orbs (CSS radial-gradient + box-shadow)
+- ✅ DELETED XianxiaIcons.tsx - không phù hợp phong cách 3D minimalist
+- ✅ Updated SkillsSection, ProjectsSection, ExperienceSection với glow orbs
+- ✅ Sắp xếp lại ExperienceMonuments theo hình tam giác đều (bán kính 30)
+- ✅ Sắp xếp lại CertificationStones đối xứng hai bên ([-38,0,0] và [38,0,0])
+- ✅ Camera: Thêm event listener để dừng animation khi user tương tác (zoom/rotate/pan)
+- ✅ User có thể tự do điều khiển camera mà không bị reset
 ```
 
 ### Git Commits
@@ -261,7 +266,6 @@ a3f19e1 - feat: Implement all content sections for portfolio
 | Mobile controls not implemented | Medium | Pending |
 | Sound not integrated | Low | Pending |
 | Sword/Phoenix transport not done | Medium | Pending |
-| **SVG Icons không phù hợp phong cách** | High | **Cần giải quyết** |
 
 ---
 
@@ -290,16 +294,7 @@ a3f19e1 - feat: Implement all content sections for portfolio
 
 ## 🔮 Next Steps
 
-1. **Immediate - FIX ICON ISSUE**:
-   - SVG icons quá chi tiết, không hợp phong cách 3D minimalist
-   - **Đề xuất giải pháp:**
-     - Option 1: Bỏ icon, dùng hình học 3D thuần túy (chỉ màu sắc phân biệt)
-     - Option 2: Icon đơn giản cực độ (1-2 nét: `/` `○` `△` `✦`)
-     - Option 3: Dùng 1 ký tự Hán đơn lẻ (劍 丹 陣 龍)
-     - Option 4: Không icon, chỉ glow orb (đã có sẵn) - **RECOMMENDED**
-   - Files liên quan: XianxiaIcons.tsx, SkillsSection.tsx, ProjectsSection.tsx, ExperienceSection.tsx
-
-2. **Short-term**:
+1. **Short-term**:
    - Add sound/music integration
    - Implement sword flying mode
    - Add mobile joystick controls
@@ -326,13 +321,12 @@ src/
 │   │   ├── Player.tsx          # Player controller
 │   │   └── CloudPlatforms.tsx  # Cloud platforms
 │   ├── sections/
-│   │   ├── SkillsSection.tsx   # Skills (dùng XianxiaIcons)
-│   │   ├── ProjectsSection.tsx # Projects (dùng XianxiaIcons)
-│   │   ├── ExperienceSection.tsx # Experience (dùng XianxiaIcons)
+│   │   ├── SkillsSection.tsx   # Skills (glow orbs)
+│   │   ├── ProjectsSection.tsx # Projects (glow orbs)
+│   │   ├── ExperienceSection.tsx # Experience (glow orbs)
 │   │   ├── AboutSection.tsx
 │   │   └── ContactSection.tsx
 │   └── ui/
-│       ├── XianxiaIcons.tsx    # ⚠️ 16 SVG icons - CẦN XEM LẠI
 │       ├── LevelNavigator.tsx  # Navigation với cultivation levels
 │       ├── LoadingScreen.tsx
 │       └── ProjectModal.tsx

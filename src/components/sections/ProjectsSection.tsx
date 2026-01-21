@@ -6,7 +6,6 @@ import * as THREE from 'three';
 import { projects } from '@/data/content';
 import { useGameStore, useUIStore } from '@/stores/gameStore';
 import type { Project } from '@/types';
-import { DragonIcon, PhoenixIcon, TigerIcon, TurtleIcon, QilinIcon, FlameIcon } from '@/components/ui/XianxiaIcons';
 
 // Extend THREE.Line to avoid JSX conflicts
 extend({ Line_: THREE.Line });
@@ -153,10 +152,6 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
   const viewProject = useGameStore((state) => state.viewProject);
   const openModal = useUIStore((state) => state.openModal);
 
-  // Project icons (SVG components) - Mythical creatures
-  const ProjectIcons = [DragonIcon, PhoenixIcon, TigerIcon, TurtleIcon, QilinIcon, FlameIcon];
-  const ProjectIcon = ProjectIcons[index % ProjectIcons.length];
-
   useFrame((state) => {
     if (crystalRef.current) {
       crystalRef.current.rotation.y = state.clock.elapsedTime * 0.5;
@@ -270,7 +265,7 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
           />
         ))}
 
-        {/* Icon button - always visible */}
+        {/* Glow Orb - always visible */}
         <Html
           position={[0, 14, 0]}
           center
@@ -286,19 +281,19 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
               setIsOpen(!isOpen);
             }}
             style={{
-              transform: hovered ? 'scale(1.2)' : 'scale(1)',
+              transform: hovered ? 'scale(1.15)' : 'scale(1)',
             }}
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center"
+              className="w-10 h-10 rounded-full"
               style={{
-                backgroundColor: 'rgba(26, 10, 10, 0.9)',
-                border: `3px solid ${project.color}`,
-                boxShadow: (hovered || isOpen) ? `0 0 25px ${project.color}, 0 0 50px ${project.color}50` : `0 0 10px ${project.color}50`,
+                background: `radial-gradient(circle at 30% 30%, ${project.color}, ${project.color}80 40%, ${project.color}40 70%, transparent)`,
+                boxShadow: (hovered || isOpen)
+                  ? `0 0 30px ${project.color}, 0 0 60px ${project.color}80, inset 0 0 20px ${project.color}60`
+                  : `0 0 15px ${project.color}80, 0 0 30px ${project.color}40, inset 0 0 10px ${project.color}40`,
+                border: `2px solid ${project.color}`,
               }}
-            >
-              <ProjectIcon size={24} color={project.color} />
-            </div>
+            />
           </div>
         </Html>
 
@@ -337,14 +332,13 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
               {/* Header */}
               <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  className="w-8 h-8 rounded-full flex-shrink-0"
                   style={{
-                    backgroundColor: `${project.color}20`,
+                    background: `radial-gradient(circle at 30% 30%, ${project.color}, ${project.color}60 50%, transparent)`,
+                    boxShadow: `0 0 15px ${project.color}80, inset 0 0 8px ${project.color}40`,
                     border: `2px solid ${project.color}`,
                   }}
-                >
-                  <ProjectIcon size={20} color={project.color} />
-                </div>
+                />
                 <div>
                   <h3 className="font-bold text-sm" style={{ color: project.color }}>
                     {project.name}

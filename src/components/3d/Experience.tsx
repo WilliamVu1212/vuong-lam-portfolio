@@ -103,6 +103,27 @@ function CameraController() {
   const targetLookAt = useRef(new THREE.Vector3());
   const isAnimating = useRef(false);
 
+  // Stop animation when user interacts with controls (zoom, rotate, pan)
+  useEffect(() => {
+    if (controls) {
+      const orbitControls = controls as any;
+      const handleUserInteraction = () => {
+        // User đang tương tác - dừng animation ngay lập tức
+        if (isAnimating.current) {
+          isAnimating.current = false;
+          setCameraTarget(null, null);
+        }
+      };
+
+      // Lắng nghe sự kiện user bắt đầu tương tác
+      orbitControls.addEventListener('start', handleUserInteraction);
+
+      return () => {
+        orbitControls.removeEventListener('start', handleUserInteraction);
+      };
+    }
+  }, [controls, setCameraTarget]);
+
   useEffect(() => {
     if (cameraTarget) {
       targetPosition.current.set(...cameraTarget);

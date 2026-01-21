@@ -2,47 +2,82 @@
 
 ## 🔥 CURRENT STATUS (2026-01-21)
 
-### Vấn đề cần giải quyết ngay:
-**SVG Icons không phù hợp phong cách 3D minimalist của dự án**
+**Overall Progress: 70%** - Phase 5 (UI & Polish)
 
-- File: `src/components/ui/XianxiaIcons.tsx` (16 custom SVG icons)
-- Vấn đề: Icons có nhiều đường nét chi tiết, trông "2D line art", không hòa hợp với style 3D geometric + glow
-- Các section đang dùng: SkillsSection, ProjectsSection, ExperienceSection
+### Dự án là gì?
+- Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
+- User "tu tiên" qua các cảnh giới, khám phá portfolio trong thế giới 3D
+- Tech: React + Three.js (R3F) + Rapier Physics + Tailwind CSS
 
-### Đề xuất giải pháp (user chưa chọn):
-1. **Option 1**: Bỏ icon, dùng hình học 3D thuần túy (chỉ màu sắc phân biệt)
-2. **Option 2**: Icon đơn giản cực độ (1-2 nét: `/` `○` `△` `✦`)
-3. **Option 3**: Dùng 1 ký tự Hán đơn lẻ (劍 丹 陣 龍)
-4. **Option 4**: Không icon, chỉ glow orb (đã có sẵn) - **RECOMMENDED**
-
-### Phong cách hiện tại của dự án:
+### Phong cách hiện tại:
 - 3D geometric minimalist
-- Glow/emissive effects
+- Glow orbs thay vì icons (CSS radial-gradient + box-shadow)
 - Dark theme (Xích Hỏa - Fire theme)
 - Colors: #FF4444, #FF8C00, #FFD700, #FF6B35
+
+### Các section đã hoàn thành:
+1. **Intro** (Phàm Nhân) - Landing với rings, runes
+2. **About** (Luyện Khí) - Pagoda, InfoStones, Torii gates
+3. **Skills** (Trúc Cơ) - 4 pillars với glow orbs, click để xem chi tiết
+4. **Projects** (Kim Đan + Nguyên Anh) - 6 floating islands với glow orbs
+5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones (đã sắp xếp cân xứng)
+6. **Contact** (Đại Thừa) - Cloud palace style
+
+### Camera Controls:
+- OrbitControls với zoom/rotate/pan
+- LevelNavigator để chuyển section
+- Camera animation tự dừng khi user tương tác
+
+---
+
+## 🔮 Next Steps (chưa làm)
+
+### Short-term:
+- Add sound/music integration
+- Implement sword flying mode (Ngự Kiếm)
+- Add mobile joystick controls
+
+### Medium-term:
+- Performance optimization (bundle 3.5MB cần giảm)
+- Cross-browser testing
+- Deploy to Vercel
+
+---
+
+## 📁 Key Files Structure
+
+```
+src/
+├── components/
+│   ├── 3d/
+│   │   ├── Experience.tsx      # Main scene + CameraController
+│   │   ├── Player.tsx          # Player với physics
+│   │   └── CloudPlatforms.tsx  # Cloud stepping
+│   ├── sections/
+│   │   ├── SkillsSection.tsx   # 4 pillars (glow orbs)
+│   │   ├── ProjectsSection.tsx # 6 islands (glow orbs)
+│   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones (tam giác đều)
+│   │   ├── AboutSection.tsx
+│   │   └── ContactSection.tsx
+│   └── ui/
+│       ├── LevelNavigator.tsx  # Navigation dọc
+│       ├── LoadingScreen.tsx
+│       └── ProjectModal.tsx
+├── stores/gameStore.ts         # Zustand (game, UI, audio)
+├── data/content.ts             # Content data
+└── App.tsx                     # Main app
+```
 
 ---
 
 ## Skills Reference
 Các skills Three.js nằm tại: `../.claude/skills/`
 
-Available skills:
-- threejs-animation
-- threejs-fundamentals
-- threejs-geometry
-- threejs-interaction
-- threejs-lighting
-- threejs-loaders
-- threejs-materials
-- threejs-postprocessing
-- threejs-shaders
-- threejs-textures
-
-Khi làm việc với Three.js, hãy tham khảo các skill tương ứng.
+Available: threejs-animation, threejs-fundamentals, threejs-geometry, threejs-interaction, threejs-lighting, threejs-loaders, threejs-materials, threejs-postprocessing, threejs-shaders, threejs-textures
 
 ---
 
 ## Quick Commands
 - Dev server: `npm run dev` (port 3001)
 - Build: `npm run build`
-- Progress: Xem `PROGRESS.md`
+- Progress chi tiết: Xem `PROGRESS.md`
