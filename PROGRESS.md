@@ -220,7 +220,20 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 9 (Latest)
+### Session 2026-01-21 - Update 10 (Latest)
+```
+- UX: Thêm hint cho người chơi biết về Ngự Kiếm ở Hóa Thần
+  - LevelNavigator.tsx:
+    - Icon ⚔️ nhấp nháy (animate-pulse) bên cạnh node Hóa Thần
+    - Hover panel hiển thị box vàng: "Ngự Kiếm đang chờ! Đến gần Trảm La Kiếm để khai mở"
+    - Tự động ẩn sau khi người chơi unlock sword
+  - Sử dụng useGameStore để check unlockedTransports
+
+- Files changed: LevelNavigator.tsx
+- Git commit: a7638d6
+```
+
+### Session 2026-01-21 - Update 9
 ```
 - Implement Ngự Kiếm (Sword Flying Mode):
   - FlyingSword.tsx: Thanh kiếm vàng kim với 30 particle trail

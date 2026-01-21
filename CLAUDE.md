@@ -38,16 +38,19 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 9
+## Recent Update (2026-01-21) - Session 10
 
 ### Đã hoàn thành:
-- ✅ **Ngự Kiếm (Sword Flying Mode)** - Hoàn toàn có thể bay kiếm!
-  - **FlyingSword.tsx** - Thanh kiếm vàng kim với trail effect khi bay
-  - **Flight Physics** - Bay tự do 3D với WASD + Space(lên) + Shift(xuống)
-  - **Unlock System** - Đến gần Trảm La Kiếm ở Hóa Thần để unlock
-  - **Camera Follow** - Camera tự động theo sau khi bay
-  - **UI Updates** - HUD hiển thị trạng thái bay, hướng dẫn điều khiển
-  - **Controls**: F để bật/tắt bay, WASD di chuyển, Space/Q lên, Shift/E xuống
+- ✅ **UX: Sword Unlock Hint** - Người chơi biết có Ngự Kiếm ở Hóa Thần
+  - **LevelNavigator.tsx** - Icon ⚔️ nhấp nháy bên cạnh node Hóa Thần
+  - **Hover Panel** - Hiển thị hint "Ngự Kiếm đang chờ! Đến gần Trảm La Kiếm để khai mở"
+  - **Auto-hide** - Hint tự động ẩn sau khi unlock
+
+### Session 9:
+- ✅ **Ngự Kiếm (Sword Flying Mode)** - Bay kiếm hoàn chỉnh
+  - FlyingSword.tsx với trail effect
+  - WASD + Space/Q + Shift/E + F controls
+  - Unlock trigger ở Trảm La Kiếm
 
 ### Session trước:
 - ✅ **Thần Phượng (Divine Phoenix)** ở Anh Biến
