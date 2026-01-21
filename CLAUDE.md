@@ -28,7 +28,7 @@
 3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals + 2 thác nước
 4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals + 2 thác nước
 5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Trảm La Kiếm (Soul Slaying Swords)**
-6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau
+6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau + **2 Thần Phượng (Băng Phượng + Hỏa Phượng)**
 7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, William panel + **2 Cấm Phiên (Soul Banners)**
 
 ### Camera Controls:
@@ -38,20 +38,21 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 6
+## Recent Update (2026-01-21) - Session 8
 
 ### Đã hoàn thành:
-- ✅ Thêm **Cấm Phiên (Soul Banner)** vào section Vấn Đỉnh:
-  - 2 cây phướn trấn yểm 2 bên, phát sáng đỏ
-  - Cột chính 60 units, thân phướn hình thang với viền vàng
-  - Tua dây, chuỗi xích với đồng xu vàng
-  - 150 particles lửa + animation đung đưa
+- ✅ Thêm **Thần Phượng (Divine Phoenix)** vào section Anh Biến:
+  - **Băng Phượng (Ice Phoenix)** bên trái - màu cyan/xanh lơ
+  - **Hỏa Phượng (Fire Phoenix)** bên phải - màu cam/vàng/đỏ
+  - Cánh xòe rộng hoành tráng với 3 lớp lông (9+7+5 feathers)
+  - Vầng hào quang (Divine Halo) với 12 tia sáng
+  - Mào 7 lông cao + đuôi 11 lông xòe như quạt
+  - 150 particles + 180 sparkles mỗi con
+  - Đế với 8 cột rune xoay quanh
 
-- ✅ Thay **Phoenix Flames** bằng **Trảm La Kiếm (Soul Slaying Sword)** ở Hóa Thần:
-  - 2 thanh kiếm vàng kim thẳng đứng 2 bên
-  - Lưỡi kiếm 8x55 units với ngọc bích (jade) xanh lơ
-  - Crossguard, chuôi kiếm với hoa văn
-  - 120 particles + 8 rune xoay quanh đế
+### Session trước:
+- ✅ **Cấm Phiên (Soul Banner)** ở Vấn Đỉnh
+- ✅ **Trảm La Kiếm (Soul Slaying Sword)** ở Hóa Thần
 
 ---
 

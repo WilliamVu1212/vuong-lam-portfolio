@@ -219,7 +219,27 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 7 (Latest)
+### Session 2026-01-21 - Update 8 (Latest)
+```
+- Thêm Thần Phượng (Divine Phoenix) vào section Anh Biến:
+  - Băng Phượng (Ice Phoenix) bên trái với màu cyan/xanh lơ
+  - Hỏa Phượng (Fire Phoenix) bên phải với màu cam/vàng/đỏ
+  - Cánh xòe rộng hoành tráng với 3 lớp lông:
+    - Primary feathers: 9 lông dài 35 units
+    - Secondary feathers: 7 lông dài 22 units
+    - Covert feathers: 5 lông dài 12 units
+  - Vầng hào quang (Divine Halo) phía sau với 12 tia sáng
+  - Mào phượng (Crown): 7 lông cao với đầu phát sáng
+  - Đuôi (Majestic Tail): 11 lông xòe như quạt, dài 40 units
+  - 150 particles mỗi con (băng rơi xuống, lửa bay lên)
+  - Đế (Divine Pedestal) với 8 cột rune xoay quanh
+  - 4 point lights + 180 sparkles mỗi con
+
+- Git commit: 08eefb7
+- Files changed: ContactSection.tsx (+763 lines)
+```
+
+### Session 2026-01-21 - Update 7
 ```
 - Bỏ bóng vàng (glow aura) xung quanh Trảm La Kiếm ở Hóa Thần:
   - Xóa Main glow aura (plane 20x70)
