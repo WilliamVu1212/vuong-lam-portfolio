@@ -271,15 +271,17 @@ interface ExperienceMonumentProps {
 
 function ExperienceMonument({ experience, position, index }: ExperienceMonumentProps) {
   const [hovered, setHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const monumentRef = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const colors = ['#FF4444', '#FF8C00', '#FFD700'];
   const color = colors[index % colors.length];
+  const icons = ['💼', '🏢', '⚡'];
 
   useFrame((state) => {
     if (glowRef.current) {
       const material = glowRef.current.material as THREE.MeshBasicMaterial;
-      material.opacity = hovered ? 0.6 : 0.3 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.1;
+      material.opacity = (hovered || isOpen) ? 0.6 : 0.3 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.1;
     }
   });
 
@@ -309,7 +311,7 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
             roughness={0.7}
             metalness={0.3}
             emissive={color}
-            emissiveIntensity={hovered ? 0.3 : 0.1}
+            emissiveIntensity={(hovered || isOpen) ? 0.3 : 0.1}
           />
         </mesh>
 
@@ -329,36 +331,103 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
           <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={1}
+            emissiveIntensity={(hovered || isOpen) ? 1.5 : 1}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
 
-        {/* Period indicator */}
-        <mesh position={[0, 9, 0.77]}>
-          <planeGeometry args={[3.5, 1]} />
-          <meshBasicMaterial color="#FFD700" transparent opacity={0.6} />
-        </mesh>
+        {/* Icon button - always visible */}
+        <Html
+          position={[0, 13, 0]}
+          center
+          style={{
+            pointerEvents: 'auto',
+            userSelect: 'none',
+          }}
+        >
+          <div
+            className="cursor-pointer transition-all duration-300"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(!isOpen);
+            }}
+            style={{
+              transform: hovered ? 'scale(1.2)' : 'scale(1)',
+            }}
+          >
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+              style={{
+                backgroundColor: 'rgba(26, 10, 10, 0.9)',
+                border: `3px solid ${color}`,
+                boxShadow: (hovered || isOpen) ? `0 0 25px ${color}, 0 0 50px ${color}50` : `0 0 10px ${color}50`,
+              }}
+            >
+              {icons[index]}
+            </div>
+          </div>
+        </Html>
 
-        {/* HTML info on hover */}
-        {hovered && (
+        {/* Detail panel - only show when clicked */}
+        {isOpen && (
           <Html
-            position={[0, 14, 0]}
+            position={[0, 22, 0]}
             center
             style={{
-              pointerEvents: 'none',
+              pointerEvents: 'auto',
               userSelect: 'none',
             }}
           >
-            <div className="glass px-4 py-3 rounded-lg text-center max-w-[250px]">
-              <p className="text-hoa-quang text-xs">{experience.period}</p>
-              <p className="text-co-chi font-heading font-bold mt-1">{experience.role}</p>
-              <p className="text-tho-kim text-sm">{experience.company}</p>
-              <p className="text-am-tho text-xs mt-2">{experience.description}</p>
-              <div className="mt-2 space-y-1">
+            <div
+              className="rounded-xl p-4 backdrop-blur-md relative animate-fadeIn"
+              style={{
+                backgroundColor: 'rgba(26, 10, 10, 0.95)',
+                border: `2px solid ${color}`,
+                boxShadow: `0 0 40px ${color}60`,
+                minWidth: '220px',
+                maxWidth: '280px',
+              }}
+            >
+              {/* Close button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
+                className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                style={{ color: '#C4A77D' }}
+              >
+                ✕
+              </button>
+
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                  style={{
+                    backgroundColor: `${color}20`,
+                    border: `2px solid ${color}`,
+                  }}
+                >
+                  {icons[index]}
+                </div>
+                <div>
+                  <p className="text-xs" style={{ color: color }}>{experience.period}</p>
+                  <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
+                    {experience.role}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Content */}
+              <p className="text-sm mb-2" style={{ color: '#C4A77D' }}>{experience.company}</p>
+              <p className="text-xs mb-3" style={{ color: '#8B7355' }}>{experience.description}</p>
+
+              {/* Achievements */}
+              <div className="space-y-1">
                 {experience.achievements.slice(0, 2).map((achievement, i) => (
-                  <p key={i} className="text-xs text-co-chi">✦ {achievement}</p>
+                  <p key={i} className="text-xs" style={{ color: '#F5E6D3' }}>✦ {achievement}</p>
                 ))}
               </div>
             </div>
@@ -369,19 +438,21 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
         <pointLight
           position={[0, 8, 2]}
           color={color}
-          intensity={hovered ? 1.5 : 0.5}
+          intensity={(hovered || isOpen) ? 1.5 : 0.5}
           distance={15}
         />
 
         {/* Sparkles */}
-        <Sparkles
-          count={15}
-          scale={[8, 12, 8]}
-          position={[0, 8, 0]}
-          size={1}
-          speed={0.3}
-          color={color}
-        />
+        {(hovered || isOpen) && (
+          <Sparkles
+            count={20}
+            scale={[8, 12, 8]}
+            position={[0, 8, 0]}
+            size={2}
+            speed={0.5}
+            color={color}
+          />
+        )}
       </group>
     </Float>
   );
@@ -415,12 +486,13 @@ interface CertificationStoneProps {
 
 function CertificationStone({ certification, position, index }: CertificationStoneProps) {
   const [hovered, setHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const stoneRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (stoneRef.current) {
       const material = stoneRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = hovered ? 0.4 : 0.1 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.05;
+      material.emissiveIntensity = (hovered || isOpen) ? 0.4 : 0.1 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.05;
     }
   });
 
@@ -450,45 +522,112 @@ function CertificationStone({ certification, position, index }: CertificationSto
           <meshStandardMaterial
             color="#FFD700"
             emissive="#FFD700"
-            emissiveIntensity={hovered ? 1 : 0.5}
+            emissiveIntensity={(hovered || isOpen) ? 1 : 0.5}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
 
-        {/* Year indicator */}
-        <mesh position={[0, 6, 0]}>
-          <sphereGeometry args={[0.5, 16, 16]} />
-          <meshBasicMaterial color="#FFFFFF" />
-        </mesh>
+        {/* Icon button - always visible */}
+        <Html
+          position={[0, 7, 0]}
+          center
+          style={{
+            pointerEvents: 'auto',
+            userSelect: 'none',
+          }}
+        >
+          <div
+            className="cursor-pointer transition-all duration-300"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(!isOpen);
+            }}
+            style={{
+              transform: hovered ? 'scale(1.2)' : 'scale(1)',
+            }}
+          >
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+              style={{
+                backgroundColor: 'rgba(26, 10, 10, 0.9)',
+                border: '3px solid #FFD700',
+                boxShadow: (hovered || isOpen) ? '0 0 25px #FFD700, 0 0 50px #FFD70050' : '0 0 10px #FFD70050',
+              }}
+            >
+              🏆
+            </div>
+          </div>
+        </Html>
 
-        {/* HTML info on hover */}
-        {hovered && (
+        {/* Detail panel - only show when clicked */}
+        {isOpen && (
           <Html
-            position={[0, 8, 0]}
+            position={[0, 14, 0]}
             center
             style={{
-              pointerEvents: 'none',
+              pointerEvents: 'auto',
               userSelect: 'none',
             }}
           >
-            <div className="glass px-3 py-2 rounded-lg text-center">
-              <p className="text-hoang-kim text-xs">🏆 Certification</p>
-              <p className="text-co-chi font-bold text-sm mt-1">{certification.name}</p>
-              <p className="text-tho-kim text-xs mt-1">{certification.year}</p>
+            <div
+              className="rounded-xl p-4 backdrop-blur-md relative animate-fadeIn"
+              style={{
+                backgroundColor: 'rgba(26, 10, 10, 0.95)',
+                border: '2px solid #FFD700',
+                boxShadow: '0 0 40px #FFD70060',
+                minWidth: '200px',
+              }}
+            >
+              {/* Close button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
+                className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                style={{ color: '#C4A77D' }}
+              >
+                ✕
+              </button>
+
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-2">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                  style={{
+                    backgroundColor: '#FFD70020',
+                    border: '2px solid #FFD700',
+                  }}
+                >
+                  🏆
+                </div>
+                <div>
+                  <p className="text-xs" style={{ color: '#FFD700' }}>Certification</p>
+                  <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
+                    {certification.name}
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-xs text-center mt-2" style={{ color: '#C4A77D' }}>
+                📅 {certification.year}
+              </p>
             </div>
           </Html>
         )}
 
         {/* Sparkles */}
-        <Sparkles
-          count={10}
-          scale={[6, 6, 6]}
-          position={[0, 4, 0]}
-          size={1}
-          speed={0.5}
-          color="#FFD700"
-        />
+        {(hovered || isOpen) && (
+          <Sparkles
+            count={15}
+            scale={[6, 6, 6]}
+            position={[0, 4, 0]}
+            size={1.5}
+            speed={0.5}
+            color="#FFD700"
+          />
+        )}
       </group>
     </Float>
   );

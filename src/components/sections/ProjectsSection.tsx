@@ -146,22 +146,27 @@ interface ProjectIslandProps {
 
 function ProjectIsland({ project, position, index }: ProjectIslandProps) {
   const [hovered, setHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const islandRef = useRef<THREE.Group>(null);
   const crystalRef = useRef<THREE.Mesh>(null);
   const viewProject = useGameStore((state) => state.viewProject);
   const openModal = useUIStore((state) => state.openModal);
 
+  // Project icons based on type
+  const projectIcons = ['⚡', '🔮', '📜', '🌟', '💎', '🔥'];
+
   useFrame((state) => {
     if (crystalRef.current) {
       crystalRef.current.rotation.y = state.clock.elapsedTime * 0.5;
       const material = crystalRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = hovered ? 2 : 1 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.3;
+      material.emissiveIntensity = (hovered || isOpen) ? 2 : 1 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.3;
     }
   });
 
-  const handleClick = () => {
+  const handleViewDetail = () => {
     viewProject(project.id);
     openModal('project', project);
+    setIsOpen(false);
   };
 
   return (
@@ -171,7 +176,6 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
         position={position}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
-        onClick={handleClick}
       >
         {/* Physics collider for landing */}
         <RigidBody type="fixed" colliders={false}>
@@ -187,7 +191,7 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
             metalness={0.2}
             flatShading
             emissive={project.color}
-            emissiveIntensity={hovered ? 0.2 : 0.1}
+            emissiveIntensity={(hovered || isOpen) ? 0.2 : 0.1}
           />
         </mesh>
 
@@ -229,12 +233,12 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
         </mesh>
 
         {/* Glow sphere around crystal */}
-        <mesh position={[0, 10, 0]} scale={hovered ? 1.8 : 1.5}>
+        <mesh position={[0, 10, 0]} scale={(hovered || isOpen) ? 1.8 : 1.5}>
           <sphereGeometry args={[2, 16, 16]} />
           <meshBasicMaterial
             color={project.color}
             transparent
-            opacity={hovered ? 0.3 : 0.15}
+            opacity={(hovered || isOpen) ? 0.3 : 0.15}
           />
         </mesh>
 
@@ -264,50 +268,144 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
           />
         ))}
 
-        {/* Simple project name label - always visible */}
+        {/* Icon button - always visible */}
         <Html
           position={[0, 14, 0]}
           center
           style={{
-            pointerEvents: 'none',
+            pointerEvents: 'auto',
             userSelect: 'none',
           }}
         >
           <div
-            className="text-center cursor-pointer transition-all duration-200"
+            className="cursor-pointer transition-all duration-300"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(!isOpen);
+            }}
             style={{
-              transform: hovered ? 'scale(1.1)' : 'scale(1)',
+              transform: hovered ? 'scale(1.2)' : 'scale(1)',
             }}
           >
             <div
-              className="font-bold text-sm whitespace-nowrap px-3 py-1.5 rounded-lg"
+              className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
               style={{
-                color: '#F5E6D3',
                 backgroundColor: 'rgba(26, 10, 10, 0.9)',
-                border: `2px solid ${project.color}`,
-                boxShadow: hovered ? `0 0 20px ${project.color}` : `0 0 8px ${project.color}50`,
+                border: `3px solid ${project.color}`,
+                boxShadow: (hovered || isOpen) ? `0 0 25px ${project.color}, 0 0 50px ${project.color}50` : `0 0 10px ${project.color}50`,
               }}
             >
-              {project.name}
+              {projectIcons[index % projectIcons.length]}
             </div>
           </div>
         </Html>
 
+        {/* Detail panel - only show when clicked */}
+        {isOpen && (
+          <Html
+            position={[0, 22, 0]}
+            center
+            style={{
+              pointerEvents: 'auto',
+              userSelect: 'none',
+            }}
+          >
+            <div
+              className="rounded-xl p-4 backdrop-blur-md relative animate-fadeIn"
+              style={{
+                backgroundColor: 'rgba(26, 10, 10, 0.95)',
+                border: `2px solid ${project.color}`,
+                boxShadow: `0 0 40px ${project.color}60`,
+                minWidth: '220px',
+                maxWidth: '280px',
+              }}
+            >
+              {/* Close button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
+                className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                style={{ color: '#C4A77D' }}
+              >
+                ✕
+              </button>
+
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                  style={{
+                    backgroundColor: `${project.color}20`,
+                    border: `2px solid ${project.color}`,
+                  }}
+                >
+                  {projectIcons[index % projectIcons.length]}
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm" style={{ color: project.color }}>
+                    {project.name}
+                  </h3>
+                  <p className="text-xs" style={{ color: '#C4A77D' }}>
+                    {project.category}
+                  </p>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-xs mb-3" style={{ color: '#8B7355' }}>
+                {project.description.slice(0, 100)}...
+              </p>
+
+              {/* Tech tags */}
+              <div className="flex flex-wrap gap-1 mb-3">
+                {project.tech.slice(0, 3).map((tech, i) => (
+                  <span
+                    key={i}
+                    className="text-xs px-2 py-0.5 rounded"
+                    style={{
+                      color: project.color,
+                      backgroundColor: `${project.color}20`,
+                    }}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              {/* View detail button */}
+              <button
+                onClick={handleViewDetail}
+                className="w-full py-2 rounded-lg text-sm font-bold transition-all hover:brightness-110"
+                style={{
+                  backgroundColor: project.color,
+                  color: '#1A0A0A',
+                }}
+              >
+                Xem Chi Tiết
+              </button>
+            </div>
+          </Html>
+        )}
+
         {/* Island sparkles */}
-        <Sparkles
-          count={20}
-          scale={[15, 15, 15]}
-          position={[0, 8, 0]}
-          size={1.5}
-          speed={0.5}
-          color={project.color}
-        />
+        {(hovered || isOpen) && (
+          <Sparkles
+            count={25}
+            scale={[15, 15, 15]}
+            position={[0, 8, 0]}
+            size={2}
+            speed={0.5}
+            color={project.color}
+          />
+        )}
 
         {/* Light */}
         <pointLight
           position={[0, 10, 0]}
           color={project.color}
-          intensity={hovered ? 2 : 1}
+          intensity={(hovered || isOpen) ? 2 : 1}
           distance={20}
         />
       </group>

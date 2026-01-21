@@ -1,10 +1,11 @@
 import { useRef, useMemo, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree, extend } from '@react-three/fiber';
 import {
   Stars,
   Float,
   Sparkles,
   OrbitControls,
+  shaderMaterial,
 } from '@react-three/drei';
 import {
   EffectComposer,
@@ -14,6 +15,71 @@ import {
 import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 import * as THREE from 'three';
+
+// Waterfall shader material
+const WaterfallMaterial = shaderMaterial(
+  {
+    uTime: 0,
+    uColor1: new THREE.Color('#4488FF'),
+    uColor2: new THREE.Color('#88CCFF'),
+    uOpacity: 0.6,
+  },
+  // Vertex shader
+  `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+
+    void main() {
+      vUv = uv;
+
+      vec3 pos = position;
+
+      // Wave distortion
+      float wave = sin(pos.y * 3.0 + uTime * 2.0) * 0.15;
+      wave += sin(pos.y * 5.0 + uTime * 3.0) * 0.1;
+      pos.x += wave;
+      pos.z += wave * 0.5;
+
+      vElevation = wave;
+
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `,
+  // Fragment shader
+  `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform float uOpacity;
+
+    void main() {
+      // Animated gradient
+      float flow = fract(vUv.y * 3.0 - uTime * 0.8);
+
+      // Mix colors based on flow
+      vec3 color = mix(uColor1, uColor2, flow);
+
+      // Add shimmer
+      float shimmer = sin(vUv.x * 20.0 + uTime * 5.0) * 0.1 + 0.9;
+      color *= shimmer;
+
+      // Fade at edges
+      float alpha = uOpacity;
+      alpha *= smoothstep(0.0, 0.1, vUv.x) * smoothstep(1.0, 0.9, vUv.x);
+      alpha *= smoothstep(0.0, 0.05, vUv.y) * smoothstep(1.0, 0.95, vUv.y);
+
+      // Add glow based on elevation
+      color += vec3(0.2, 0.4, 0.6) * (vElevation + 0.2);
+
+      gl_FragColor = vec4(color, alpha);
+    }
+  `
+);
+
+extend({ WaterfallMaterial });
 import { WORLD } from '@/utils/constants';
 import { useUIStore } from '@/stores/gameStore';
 import Player from './Player';
@@ -211,6 +277,16 @@ function WorldContent() {
 
       {/* Cloud Sea - Đã bỏ theo yêu cầu */}
       {/* <CloudSea /> */}
+
+      {/* Waterfalls - Thác nước linh khí */}
+      {/* Thác Hỏa Viêm - Lửa đỏ (trái) */}
+      <Waterfall position={[-50, 40, -120]} height={35} width={10} color1="#FF2222" color2="#FF6600" />
+      {/* Thác Thanh Lam - Xanh lam (phải) */}
+      <Waterfall position={[50, 40, -120]} height={35} width={10} color1="#2266FF" color2="#66CCFF" />
+      {/* Thác Tử Điện - Tím (trái xa) */}
+      <Waterfall position={[-70, 90, -250]} height={40} width={12} color1="#8B00FF" color2="#DA70D6" />
+      {/* Thác Kim Quang - Vàng kim (phải xa) */}
+      <Waterfall position={[70, 90, -250]} height={40} width={12} color1="#FFD700" color2="#FFFACD" />
 
       {/* Fire Particles */}
       <FireParticles />
@@ -427,51 +503,20 @@ function Moon() {
 }
 */
 
+/* CloudSea - Removed as per user request
 function CloudSea() {
-  // Using simple fog-like meshes instead of Cloud component to avoid rendering issues
   return (
     <group position={[0, -30, 0]}>
       {[...Array(20)].map((_, i) => (
-        <mesh
-          key={i}
-          position={[
-            (Math.random() - 0.5) * 300,
-            Math.random() * 10 - 20,
-            (Math.random() - 0.5) * 400 - 100
-          ]}
-          scale={[30 + Math.random() * 20, 3 + Math.random() * 2, 15 + Math.random() * 10]}
-        >
+        <mesh key={i} position={[(Math.random() - 0.5) * 300, Math.random() * 10 - 20, (Math.random() - 0.5) * 400 - 100]}>
           <sphereGeometry args={[1, 8, 8]} />
-          <meshBasicMaterial
-            color="#2D1B1B"
-            transparent
-            opacity={0.3 + Math.random() * 0.2}
-          />
-        </mesh>
-      ))}
-
-      {/* Glowing cloud layer */}
-      {[...Array(10)].map((_, i) => (
-        <mesh
-          key={`glow-${i}`}
-          position={[
-            (Math.random() - 0.5) * 200,
-            Math.random() * 5 - 25,
-            (Math.random() - 0.5) * 300 - 50
-          ]}
-          scale={[40 + Math.random() * 30, 2 + Math.random() * 2, 20 + Math.random() * 15]}
-        >
-          <sphereGeometry args={[1, 8, 8]} />
-          <meshBasicMaterial
-            color="#FF4444"
-            transparent
-            opacity={0.1 + Math.random() * 0.1}
-          />
+          <meshBasicMaterial color="#2D1B1B" transparent opacity={0.3 + Math.random() * 0.2} />
         </mesh>
       ))}
     </group>
   );
 }
+*/
 
 function FireParticles() {
   const particlesRef = useRef<THREE.Points>(null);
@@ -531,6 +576,174 @@ function EnergyOrbs() {
         </Float>
       ))}
     </>
+  );
+}
+
+// Waterfall Component - Thác nước linh khí
+interface WaterfallProps {
+  position: [number, number, number];
+  height?: number;
+  width?: number;
+  color1?: string;
+  color2?: string;
+}
+
+function Waterfall({ position, height = 30, width = 8, color1 = '#4488FF', color2 = '#88CCFF' }: WaterfallProps) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const particlesRef = useRef<THREE.Points>(null);
+  const mistRef = useRef<THREE.Mesh>(null);
+
+  // Particle system for water droplets
+  const { particlePositions, particleSpeeds } = useMemo(() => {
+    const count = 150;
+    const positions = new Float32Array(count * 3);
+    const speeds = new Float32Array(count);
+
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * width;
+      positions[i * 3 + 1] = Math.random() * height;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 2;
+      speeds[i] = 0.3 + Math.random() * 0.4;
+    }
+
+    return { particlePositions: positions, particleSpeeds: speeds };
+  }, [height, width]);
+
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
+
+    // Update shader time
+    if (materialRef.current) {
+      materialRef.current.uniforms.uTime.value = time;
+    }
+
+    // Animate particles falling
+    if (particlesRef.current) {
+      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+      for (let i = 0; i < positions.length / 3; i++) {
+        positions[i * 3 + 1] -= particleSpeeds[i];
+
+        // Reset particle when it falls below
+        if (positions[i * 3 + 1] < -5) {
+          positions[i * 3 + 1] = height;
+          positions[i * 3] = (Math.random() - 0.5) * width;
+        }
+      }
+      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+    }
+
+    // Animate mist
+    if (mistRef.current) {
+      const scale = 1 + Math.sin(time * 2) * 0.1;
+      mistRef.current.scale.set(scale, scale * 0.5, scale);
+      (mistRef.current.material as THREE.MeshBasicMaterial).opacity = 0.15 + Math.sin(time * 1.5) * 0.05;
+    }
+  });
+
+  return (
+    <group position={position}>
+      {/* Main waterfall surface */}
+      <mesh>
+        <planeGeometry args={[width, height, 32, 64]} />
+        {/* @ts-ignore - custom shader material */}
+        <waterfallMaterial
+          ref={materialRef}
+          uColor1={new THREE.Color(color1)}
+          uColor2={new THREE.Color(color2)}
+          uOpacity={0.6}
+          transparent
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Back glow layer */}
+      <mesh position={[0, 0, -0.5]}>
+        <planeGeometry args={[width + 2, height + 2]} />
+        <meshBasicMaterial
+          color={color1}
+          transparent
+          opacity={0.15}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Water droplet particles */}
+      <points ref={particlesRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={particlePositions.length / 3}
+            array={particlePositions}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.3}
+          color={color2}
+          transparent
+          opacity={0.7}
+          sizeAttenuation
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+
+      {/* Mist at bottom */}
+      <mesh ref={mistRef} position={[0, -height / 2 - 2, 2]}>
+        <sphereGeometry args={[width * 0.8, 16, 16]} />
+        <meshBasicMaterial
+          color={color2}
+          transparent
+          opacity={0.15}
+        />
+      </mesh>
+
+      {/* Splash sparkles at bottom */}
+      <Sparkles
+        count={30}
+        scale={[width * 1.5, 5, 5]}
+        position={[0, -height / 2, 0]}
+        size={1}
+        speed={0.5}
+        color={color2}
+      />
+
+      {/* Pool at base */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -height / 2 - 1, 3]}>
+        <circleGeometry args={[width * 0.6, 32]} />
+        <meshBasicMaterial
+          color={color1}
+          transparent
+          opacity={0.3}
+        />
+      </mesh>
+
+      {/* Rocks at base */}
+      <group position={[0, -height / 2, 0]}>
+        <mesh position={[-width * 0.4, 0, 2]} castShadow>
+          <dodecahedronGeometry args={[2, 0]} />
+          <meshStandardMaterial color="#3D2424" roughness={0.9} flatShading />
+        </mesh>
+        <mesh position={[width * 0.4, -0.5, 2.5]} castShadow>
+          <dodecahedronGeometry args={[1.5, 0]} />
+          <meshStandardMaterial color="#4a2828" roughness={0.9} flatShading />
+        </mesh>
+        <mesh position={[0, 0.5, 3]} castShadow>
+          <dodecahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial color="#3D2424" roughness={0.9} flatShading />
+        </mesh>
+      </group>
+
+      {/* Side rocks/cliff */}
+      <mesh position={[-width / 2 - 2, 0, -1]} castShadow>
+        <boxGeometry args={[4, height + 5, 3]} />
+        <meshStandardMaterial color="#3D2424" roughness={0.9} />
+      </mesh>
+      <mesh position={[width / 2 + 2, 0, -1]} castShadow>
+        <boxGeometry args={[4, height + 5, 3]} />
+        <meshStandardMaterial color="#3D2424" roughness={0.9} />
+      </mesh>
+    </group>
   );
 }
 

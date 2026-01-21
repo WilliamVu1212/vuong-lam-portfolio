@@ -329,32 +329,34 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
         </mesh>
       </Float>
 
-      {/* Always visible label - Category name */}
+      {/* Icon only - click to show details */}
       <Html
-        position={[0, 23, 0]}
+        position={[0, 22, 0]}
         center
         style={{
-          pointerEvents: 'none',
+          pointerEvents: 'auto',
           userSelect: 'none',
         }}
       >
         <div
-          className="text-center cursor-pointer transition-all duration-200"
+          className="cursor-pointer transition-all duration-300"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
           style={{
-            transform: hovered ? 'scale(1.1)' : 'scale(1)',
+            transform: hovered ? 'scale(1.2)' : 'scale(1)',
           }}
         >
-          <div className="text-2xl">{categoryIcons[index]}</div>
           <div
-            className="font-bold text-sm whitespace-nowrap px-3 py-1 rounded-lg mt-1"
+            className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
             style={{
-              color: '#F5E6D3',
               backgroundColor: 'rgba(26, 10, 10, 0.9)',
-              border: `2px solid ${color}`,
-              boxShadow: hovered || isOpen ? `0 0 20px ${color}` : `0 0 8px ${color}50`,
+              border: `3px solid ${color}`,
+              boxShadow: hovered || isOpen ? `0 0 25px ${color}, 0 0 50px ${color}50` : `0 0 10px ${color}50`,
             }}
           >
-            {categoryShortNames[index]}
+            {categoryIcons[index]}
           </div>
         </div>
       </Html>
@@ -362,7 +364,7 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
       {/* Skills Detail Panel - CHỈ HIỆN KHI CLICK */}
       {isOpen && (
         <Html
-          position={[0, 35, 0]}
+          position={[0, 32, 0]}
           center
           style={{
             pointerEvents: 'auto',
@@ -370,12 +372,14 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
           }}
         >
           <div
-            className="rounded-xl p-4 backdrop-blur-md relative"
+            className="rounded-xl p-4 backdrop-blur-md relative animate-fadeIn"
             style={{
               backgroundColor: 'rgba(26, 10, 10, 0.95)',
               border: `2px solid ${color}`,
               boxShadow: `0 0 40px ${color}60`,
-              minWidth: '240px',
+              minWidth: '220px',
+              maxWidth: '280px',
+              animation: 'fadeIn 0.2s ease-out',
             }}
           >
             {/* Close button */}
@@ -390,15 +394,23 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
               ✕
             </button>
 
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-700">
-              <span className="text-2xl">{categoryIcons[index]}</span>
+            {/* Header with category name */}
+            <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                style={{
+                  backgroundColor: `${color}20`,
+                  border: `2px solid ${color}`,
+                }}
+              >
+                {categoryIcons[index]}
+              </div>
               <div>
-                <h3 className="font-bold text-base" style={{ color: color }}>
-                  {category.name.split('(')[0].trim()}
+                <h3 className="font-bold text-sm" style={{ color: color }}>
+                  {categoryShortNames[index]}
                 </h3>
                 <p className="text-xs" style={{ color: '#C4A77D' }}>
-                  {category.name.match(/\(([^)]+)\)/)?.[1] || ''}
+                  {category.name.match(/\(([^)]+)\)/)?.[1] || category.name.split('(')[0].trim()}
                 </p>
               </div>
             </div>
@@ -410,9 +422,9 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
                 return (
                   <div key={idx} className="text-sm">
                     <div className="flex justify-between items-center mb-1">
-                      <span style={{ color: '#F5E6D3' }}>{skill.name}</span>
+                      <span className="text-xs" style={{ color: '#F5E6D3' }}>{skill.name}</span>
                       <span
-                        className="text-xs px-2 py-0.5 rounded"
+                        className="text-xs px-1.5 py-0.5 rounded"
                         style={{
                           color: rankColor,
                           backgroundColor: `${rankColor}20`,
@@ -422,7 +434,7 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
                       </span>
                     </div>
                     <div
-                      className="h-1.5 rounded-full overflow-hidden"
+                      className="h-1 rounded-full overflow-hidden"
                       style={{ backgroundColor: '#1A0A0A' }}
                     >
                       <div
@@ -430,7 +442,7 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
                         style={{
                           width: `${skill.level}%`,
                           backgroundColor: rankColor,
-                          boxShadow: `0 0 8px ${rankColor}`,
+                          boxShadow: `0 0 6px ${rankColor}`,
                         }}
                       />
                     </div>
