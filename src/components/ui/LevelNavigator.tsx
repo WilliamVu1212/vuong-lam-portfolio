@@ -1,4 +1,5 @@
 import { cultivationTechniques } from '@/data/content';
+import { useGameStore } from '@/stores/gameStore';
 
 interface LevelNavigatorProps {
   onNavigate?: (sectionId: string) => void;
@@ -58,6 +59,8 @@ const levels = [
 ];
 
 export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
+  const swordUnlocked = useGameStore((state) => state.unlockedTransports).includes('sword');
+
   return (
     <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
       {/* Vertical timeline */}
@@ -72,6 +75,7 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
               key={level.id}
               level={level}
               onNavigate={onNavigate}
+              swordUnlocked={swordUnlocked}
             />
           ))}
         </div>
@@ -93,9 +97,14 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
 interface LevelNodeProps {
   level: typeof levels[0];
   onNavigate?: (sectionId: string) => void;
+  swordUnlocked: boolean;
 }
 
-function LevelNode({ level, onNavigate }: LevelNodeProps) {
+function LevelNode({ level, onNavigate, swordUnlocked }: LevelNodeProps) {
+  // Hóa Thần (experience) có Ngự Kiếm chờ unlock
+  const isHoaThan = level.id === 'experience';
+  const showSwordHint = isHoaThan && !swordUnlocked;
+
   return (
     <button
       onClick={() => onNavigate?.(level.id)}
@@ -118,6 +127,16 @@ function LevelNode({ level, onNavigate }: LevelNodeProps) {
         />
       </div>
 
+      {/* Sword icon hint for Hóa Thần (nếu chưa unlock) */}
+      {showSwordHint && (
+        <div
+          className="absolute -left-6 animate-pulse"
+          title="Ngự Kiếm đang chờ!"
+        >
+          <span className="text-yellow-400 text-sm">⚔️</span>
+        </div>
+      )}
+
       {/* Hover panel with techniques */}
       <div
         className="absolute right-full mr-3 px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none min-w-[160px]"
@@ -131,6 +150,20 @@ function LevelNode({ level, onNavigate }: LevelNodeProps) {
         <p className="text-sm font-bold mb-2 pb-1 border-b border-white/10" style={{ color: level.color }}>
           {level.name}
         </p>
+
+        {/* Sword unlock hint for Hóa Thần */}
+        {showSwordHint && (
+          <div
+            className="mb-2 p-2 rounded-md text-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,140,0,0.2) 100%)',
+              border: '1px solid rgba(255,215,0,0.5)'
+            }}
+          >
+            <p className="text-xs text-yellow-400 font-medium">⚔️ Ngự Kiếm đang chờ!</p>
+            <p className="text-[10px] text-yellow-200/70 mt-0.5">Đến gần Trảm La Kiếm để khai mở</p>
+          </div>
+        )}
 
         {/* Techniques list */}
         <div className="space-y-1">
