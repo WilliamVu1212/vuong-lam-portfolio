@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float, Sparkles, Html } from '@react-three/drei';
+import { Float, Sparkles, Html, Line } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { skillCategories } from '@/data/content';
 import { SKILL_RANKS } from '@/utils/constants';
-import type { Skill, SkillCategory } from '@/types';
+import type { SkillCategory } from '@/types';
 
 interface SkillsSectionProps {
   position?: [number, number, number];
@@ -14,6 +14,9 @@ interface SkillsSectionProps {
 export function SkillsSection({ position = [0, 60, -200] }: SkillsSectionProps) {
   return (
     <group position={position}>
+      {/* Section Title */}
+      <SectionTitle />
+
       {/* Main Platform */}
       <SkillsPlatform />
 
@@ -26,6 +29,9 @@ export function SkillsSection({ position = [0, 60, -200] }: SkillsSectionProps) 
       {/* Floating Runes */}
       <FloatingRunes />
 
+      {/* Skill Rank Legend */}
+      <SkillLegend />
+
       {/* Energy flow particles */}
       <Sparkles
         count={150}
@@ -37,6 +43,16 @@ export function SkillsSection({ position = [0, 60, -200] }: SkillsSectionProps) 
       />
     </group>
   );
+}
+
+function SectionTitle() {
+  // Đã bỏ tiêu đề theo yêu cầu
+  return null;
+}
+
+function SkillLegend() {
+  // Bỏ legend panel - sẽ hiển thị trong detail panel khi hover
+  return null;
 }
 
 function SkillsPlatform() {
@@ -242,11 +258,41 @@ interface SkillPillarProps {
 
 function SkillPillar({ position, category, index }: SkillPillarProps) {
   const pillarRef = useRef<THREE.Group>(null);
+  const orbRef = useRef<THREE.Mesh>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const colors = ['#FF4444', '#FF8C00', '#FFD700', '#FF6B35'];
   const color = colors[index % colors.length];
 
+  // Category icons (emoji representation)
+  const categoryIcons = ['⚔️', '🔮', '📿', '🌟'];
+  const categoryShortNames = ['Kiếm Pháp', 'Đan Pháp', 'Trận Pháp', 'Thần Thông'];
+
+  useFrame((state) => {
+    if (orbRef.current) {
+      orbRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+      orbRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.2;
+    }
+  });
+
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <group ref={pillarRef} position={position}>
+    <group
+      ref={pillarRef}
+      position={position}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onClick={handleClick}
+    >
+      {/* Clickable area - invisible but larger for easier clicking */}
+      <mesh position={[0, 10, 0]} visible={false}>
+        <cylinderGeometry args={[5, 5, 25, 8]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+
       {/* Main pillar */}
       <mesh position={[0, 8, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[2, 2.5, 16, 8]} />
@@ -255,7 +301,7 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
           roughness={0.7}
           metalness={0.3}
           emissive={color}
-          emissiveIntensity={0.1}
+          emissiveIntensity={hovered || isOpen ? 0.4 : 0.15}
         />
       </mesh>
 
@@ -265,41 +311,166 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
         <meshStandardMaterial
           color="#3D2424"
           emissive={color}
-          emissiveIntensity={0.2}
+          emissiveIntensity={hovered || isOpen ? 0.5 : 0.25}
         />
       </mesh>
 
-      {/* Category icon orb */}
+      {/* Category icon orb - larger and brighter */}
       <Float speed={2} floatIntensity={0.3}>
-        <mesh position={[0, 19, 0]}>
-          <octahedronGeometry args={[1.5, 0]} />
+        <mesh ref={orbRef} position={[0, 19, 0]}>
+          <octahedronGeometry args={[2, 0]} />
           <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={1}
+            emissiveIntensity={hovered || isOpen ? 2 : 1.2}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
       </Float>
 
-      {/* Skill tablets floating around pillar */}
-      {category.skills.map((skill, skillIndex) => (
-        <SkillTablet
-          key={skillIndex}
-          skill={skill}
-          position={[
-            Math.cos((Math.PI * 2 * skillIndex) / category.skills.length) * 6,
-            4 + skillIndex * 2.5,
-            Math.sin((Math.PI * 2 * skillIndex) / category.skills.length) * 6,
-          ]}
-          color={color}
-          index={skillIndex}
-        />
-      ))}
+      {/* Always visible label - Category name */}
+      <Html
+        position={[0, 23, 0]}
+        center
+        style={{
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        <div
+          className="text-center cursor-pointer transition-all duration-200"
+          style={{
+            transform: hovered ? 'scale(1.1)' : 'scale(1)',
+          }}
+        >
+          <div className="text-2xl">{categoryIcons[index]}</div>
+          <div
+            className="font-bold text-sm whitespace-nowrap px-3 py-1 rounded-lg mt-1"
+            style={{
+              color: '#F5E6D3',
+              backgroundColor: 'rgba(26, 10, 10, 0.9)',
+              border: `2px solid ${color}`,
+              boxShadow: hovered || isOpen ? `0 0 20px ${color}` : `0 0 8px ${color}50`,
+            }}
+          >
+            {categoryShortNames[index]}
+          </div>
+        </div>
+      </Html>
 
-      {/* Pillar light */}
-      <pointLight position={[0, 10, 0]} color={color} intensity={1} distance={15} />
+      {/* Skills Detail Panel - CHỈ HIỆN KHI CLICK */}
+      {isOpen && (
+        <Html
+          position={[0, 35, 0]}
+          center
+          style={{
+            pointerEvents: 'auto',
+            userSelect: 'none',
+          }}
+        >
+          <div
+            className="rounded-xl p-4 backdrop-blur-md relative"
+            style={{
+              backgroundColor: 'rgba(26, 10, 10, 0.95)',
+              border: `2px solid ${color}`,
+              boxShadow: `0 0 40px ${color}60`,
+              minWidth: '240px',
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
+              className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+              style={{ color: '#C4A77D' }}
+            >
+              ✕
+            </button>
+
+            {/* Header */}
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-700">
+              <span className="text-2xl">{categoryIcons[index]}</span>
+              <div>
+                <h3 className="font-bold text-base" style={{ color: color }}>
+                  {category.name.split('(')[0].trim()}
+                </h3>
+                <p className="text-xs" style={{ color: '#C4A77D' }}>
+                  {category.name.match(/\(([^)]+)\)/)?.[1] || ''}
+                </p>
+              </div>
+            </div>
+
+            {/* Skills List */}
+            <div className="space-y-2">
+              {category.skills.map((skill, idx) => {
+                const rankColor = SKILL_RANKS.colors[skill.rank] || color;
+                return (
+                  <div key={idx} className="text-sm">
+                    <div className="flex justify-between items-center mb-1">
+                      <span style={{ color: '#F5E6D3' }}>{skill.name}</span>
+                      <span
+                        className="text-xs px-2 py-0.5 rounded"
+                        style={{
+                          color: rankColor,
+                          backgroundColor: `${rankColor}20`,
+                        }}
+                      >
+                        {skill.rank}
+                      </span>
+                    </div>
+                    <div
+                      className="h-1.5 rounded-full overflow-hidden"
+                      style={{ backgroundColor: '#1A0A0A' }}
+                    >
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${skill.level}%`,
+                          backgroundColor: rankColor,
+                          boxShadow: `0 0 8px ${rankColor}`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Html>
+      )}
+
+      {/* Pillar light - intensifies on hover/open */}
+      <pointLight
+        position={[0, 10, 0]}
+        color={color}
+        intensity={hovered || isOpen ? 2.5 : 1.5}
+        distance={hovered || isOpen ? 30 : 20}
+      />
+
+      {/* Additional glow light when active */}
+      {(hovered || isOpen) && (
+        <pointLight
+          position={[0, 19, 0]}
+          color={color}
+          intensity={4}
+          distance={25}
+        />
+      )}
+
+      {/* Sparkles around pillar when active */}
+      {(hovered || isOpen) && (
+        <Sparkles
+          count={50}
+          scale={[15, 25, 15]}
+          position={[0, 12, 0]}
+          size={3}
+          speed={2}
+          color={color}
+        />
+      )}
 
       {/* Energy connection to center */}
       <EnergyBeam
@@ -311,99 +482,6 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
   );
 }
 
-interface SkillTabletProps {
-  skill: Skill;
-  position: [number, number, number];
-  color: string;
-  index: number;
-}
-
-function SkillTablet({ skill, position, color, index }: SkillTabletProps) {
-  const [hovered, setHovered] = useState(false);
-  const tabletRef = useRef<THREE.Group>(null);
-  const glowRef = useRef<THREE.Mesh>(null);
-  const rankColor = SKILL_RANKS.colors[skill.rank] || color;
-
-  useFrame((state) => {
-    if (tabletRef.current) {
-      tabletRef.current.rotation.y = state.clock.elapsedTime * 0.2 + index;
-    }
-    if (glowRef.current) {
-      const material = glowRef.current.material as THREE.MeshBasicMaterial;
-      material.opacity = hovered ? 0.6 : 0.3 + Math.sin(state.clock.elapsedTime * 2 + index) * 0.1;
-    }
-  });
-
-  return (
-    <Float speed={1.5} floatIntensity={0.2}>
-      <group
-        ref={tabletRef}
-        position={position}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        {/* Tablet base */}
-        <mesh castShadow>
-          <boxGeometry args={[3, 2, 0.3]} />
-          <meshStandardMaterial
-            color="#2D1B1B"
-            roughness={0.8}
-            metalness={0.2}
-            emissive={rankColor}
-            emissiveIntensity={hovered ? 0.3 : 0.1}
-          />
-        </mesh>
-
-        {/* Glow effect */}
-        <mesh ref={glowRef} position={[0, 0, 0.16]}>
-          <planeGeometry args={[2.8, 1.8]} />
-          <meshBasicMaterial
-            color={rankColor}
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
-
-        {/* Skill level bar background */}
-        <mesh position={[0, -0.6, 0.17]}>
-          <planeGeometry args={[2.4, 0.2]} />
-          <meshBasicMaterial color="#1A0A0A" />
-        </mesh>
-
-        {/* Skill level bar fill */}
-        <mesh position={[(skill.level / 100 - 1) * 1.2, -0.6, 0.18]}>
-          <planeGeometry args={[2.4 * (skill.level / 100), 0.15]} />
-          <meshBasicMaterial color={rankColor} />
-        </mesh>
-
-        {/* HTML tooltip on hover */}
-        {hovered && (
-          <Html
-            position={[0, 1.5, 0]}
-            center
-            style={{
-              pointerEvents: 'none',
-              userSelect: 'none',
-            }}
-          >
-            <div className="glass px-3 py-2 rounded-lg text-center whitespace-nowrap">
-              <p className="text-co-chi font-bold text-sm">{skill.name}</p>
-              <p className="text-xs" style={{ color: rankColor }}>
-                {skill.rank} - {skill.level}%
-              </p>
-            </div>
-          </Html>
-        )}
-
-        {/* Point light when hovered */}
-        {hovered && (
-          <pointLight color={rankColor} intensity={1} distance={5} />
-        )}
-      </group>
-    </Float>
-  );
-}
-
 interface EnergyBeamProps {
   start: [number, number, number];
   end: [number, number, number];
@@ -411,26 +489,16 @@ interface EnergyBeamProps {
 }
 
 function EnergyBeam({ start, end, color }: EnergyBeamProps) {
-  const beamRef = useRef<THREE.Line>(null);
-
-  const points = [
-    new THREE.Vector3(...start),
-    new THREE.Vector3(...end),
-  ];
-
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-  useFrame((state) => {
-    if (beamRef.current) {
-      const material = beamRef.current.material as THREE.LineBasicMaterial;
-      material.opacity = 0.3 + Math.sin(state.clock.elapsedTime * 3) * 0.2;
-    }
-  });
+  const points = useMemo(() => [start, end], [start, end]);
 
   return (
-    <line ref={beamRef} geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.4} linewidth={2} />
-    </line>
+    <Line
+      points={points}
+      color={color}
+      lineWidth={2}
+      transparent
+      opacity={0.4}
+    />
   );
 }
 

@@ -157,8 +157,8 @@ function WorldContent() {
       {/* Floating Mountains */}
       <FloatingMountains />
 
-      {/* Moon */}
-      <Moon />
+      {/* Moon - Đã bỏ theo yêu cầu */}
+      {/* <Moon /> */}
 
       {/* Cloud Sea */}
       <CloudSea />
