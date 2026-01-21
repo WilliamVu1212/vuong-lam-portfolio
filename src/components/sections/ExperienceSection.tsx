@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, useEffect } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Sparkles, Html } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -26,9 +26,9 @@ export function ExperienceSection({ position = [0, 150, -450] }: ExperienceSecti
       {/* Certification Stones */}
       <CertificationStones />
 
-      {/* Trảm La Kiếm - Soul Slaying Swords 2 bên */}
-      <SoulSlayingSword position={[-55, 0, 0]} side="left" sectionPosition={position} />
-      <SoulSlayingSword position={[55, 0, 0]} side="right" sectionPosition={position} />
+      {/* Thượng Cổ Đồng Chung - Ancient Divine Bell (unlock Cưỡi Phượng) */}
+      <AncientDivineBell position={[-55, 0, 0]} type="ice" sectionPosition={position} />
+      <AncientDivineBell position={[55, 0, 0]} type="fire" sectionPosition={position} />
 
       {/* Ambient energy */}
       <Sparkles
@@ -568,530 +568,556 @@ function CertificationStone({ certification, position, index }: CertificationSto
   );
 }
 
-// ==================== TRẢM LA KIẾM (SOUL SLAYING SWORD) ====================
-interface SoulSlayingSwordProps {
+// ==================== THƯỢNG CỔ ĐỒNG CHUNG (ANCIENT DIVINE BELL) ====================
+interface AncientDivineBellProps {
   position: [number, number, number];
-  side: 'left' | 'right';
+  type: 'ice' | 'fire';
   sectionPosition: [number, number, number];
 }
 
-function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) {
-  const swordRef = useRef<THREE.Group>(null);
-  const bladeRef = useRef<THREE.Group>(null);
-  const particlesRef = useRef<THREE.Points>(null);
-  const runesRef = useRef<THREE.Group>(null);
+function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBellProps) {
+  const bellRef = useRef<THREE.Group>(null);
+  const runeRingRef = useRef<THREE.Group>(null);
+
+  // Unlock trigger state - only fire bell can unlock
   const [showPrompt, setShowPrompt] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
+  // Store hooks
   const playerPosition = useGameStore((state) => state.player.position);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
   const setTransportMode = useGameStore((state) => state.setTransportMode);
 
-  // Calculate world position of sword
+  const isIce = type === 'ice';
+  const isFire = type === 'fire';
+
+  // Calculate world position of bell
   const worldPosition: [number, number, number] = [
     sectionPosition[0] + position[0],
     sectionPosition[1] + position[1],
     sectionPosition[2] + position[2],
   ];
 
-  // Check if sword is already unlocked
-  useEffect(() => {
-    setIsUnlocked(unlockedTransports.includes('sword'));
-  }, [unlockedTransports]);
+  // Color scheme - Xanh lục như trong ảnh
+  const colors = isIce ? {
+    primary: '#00FF88',      // Bright green
+    secondary: '#00FFAA',    // Cyan-green
+    glow: '#66FFCC',         // Light green
+    accent: '#AAFFDD',       // Pale green
+    body: '#33CC77',         // Medium green
+    dark: '#006644',         // Dark green
+    rune: '#00FFFF',         // Cyan runes
+  } : {
+    primary: '#44FF44',      // Lime green
+    secondary: '#88FF00',    // Yellow-green
+    glow: '#99FF66',         // Light lime
+    accent: '#CCFF99',       // Pale lime
+    body: '#66CC33',         // Medium lime
+    dark: '#336600',         // Dark lime
+    rune: '#FFFF00',         // Yellow runes
+  };
 
-  // Check proximity to player
-  useFrame(() => {
-    const dx = playerPosition[0] - worldPosition[0];
-    const dy = playerPosition[1] - worldPosition[1];
-    const dz = playerPosition[2] - worldPosition[2];
-    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-    // Show prompt when player is within 20 units
-    if (distance < 20 && !isUnlocked) {
-      setShowPrompt(true);
-    } else {
-      setShowPrompt(false);
+  // Particles data
+  const particles = useMemo(() => {
+    const arr: { pos: [number, number, number]; speed: number; size: number; delay: number }[] = [];
+    for (let i = 0; i < 100; i++) {
+      arr.push({
+        pos: [
+          (Math.random() - 0.5) * 40,
+          Math.random() * 50 - 5,
+          (Math.random() - 0.5) * 40
+        ],
+        speed: 0.2 + Math.random() * 0.5,
+        size: 0.15 + Math.random() * 0.4,
+        delay: Math.random() * Math.PI * 2
+      });
     }
+    return arr;
+  }, []);
 
-    // Auto unlock when very close (within 12 units)
-    if (distance < 12 && !isUnlocked) {
-      unlockTransport('sword');
-      setTransportMode('sword');
-      setIsUnlocked(true);
+  // Ancient rune symbols on the bell
+  const runeSymbols = useMemo(() => {
+    const symbols: { angle: number; height: number; scale: number }[] = [];
+    // 3 rows of runes
+    for (let row = 0; row < 3; row++) {
+      const runeCount = 8 - row * 2;
+      for (let i = 0; i < runeCount; i++) {
+        symbols.push({
+          angle: (Math.PI * 2 * i) / runeCount + row * 0.2,
+          height: 12 + row * 8,
+          scale: 1 - row * 0.2
+        });
+      }
     }
-  });
-
-  // Main colors - vàng kim như trong ảnh
-  const goldColor = '#FFD700';
-  const brightGold = '#FFA500';
-  const jadeColor = '#40E0D0'; // Ngọc bích trên kiếm
-
-  // Particle system
-  const particleCount = 120;
-  const particlePositions = useMemo(() => {
-    const positions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 1] = Math.random() * 80;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-    }
-    return positions;
+    return symbols;
   }, []);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
 
-    // Sword hover animation - nhẹ nhàng
-    if (swordRef.current) {
-      swordRef.current.position.y = Math.sin(t * 0.5) * 2;
-      // Slight rotation
-      swordRef.current.rotation.y = Math.sin(t * 0.3) * 0.05;
+    // Bell gentle hover and swing
+    if (bellRef.current) {
+      bellRef.current.position.y = Math.sin(t * 0.3) * 1.5;
+      bellRef.current.rotation.y = Math.sin(t * 0.15) * 0.05;
+      bellRef.current.rotation.z = Math.sin(t * 0.2) * 0.02;
     }
 
-    // Blade glow pulse
-    if (bladeRef.current) {
-      bladeRef.current.children.forEach((child) => {
-        if (child instanceof THREE.Mesh) {
-          const mat = child.material as THREE.MeshStandardMaterial;
-          if (mat.emissiveIntensity !== undefined) {
-            mat.emissiveIntensity = 0.8 + Math.sin(t * 2) * 0.3;
-          }
-        }
-      });
+    // Rune ring rotation
+    if (runeRingRef.current) {
+      runeRingRef.current.rotation.y = t * 0.3;
     }
 
-    // Runes rotation
-    if (runesRef.current) {
-      runesRef.current.rotation.y = t * 0.2;
-    }
+    // ===== UNLOCK TRIGGER - Only Fire Bell can unlock =====
+    if (isFire && !unlockedTransports.includes('beast')) {
+      // Calculate distance to player
+      const dx = playerPosition[0] - worldPosition[0];
+      const dy = playerPosition[1] - worldPosition[1];
+      const dz = playerPosition[2] - worldPosition[2];
+      const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-    // Particle animation - energy swirl
-    if (particlesRef.current) {
-      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < particleCount; i++) {
-        // Spiral upward
-        positions[i * 3 + 1] += 0.2;
-        positions[i * 3] += Math.sin(t + i * 0.1) * 0.05;
-        positions[i * 3 + 2] += Math.cos(t + i * 0.1) * 0.03;
-
-        // Reset
-        if (positions[i * 3 + 1] > 85) {
-          positions[i * 3 + 1] = Math.random() * 10;
-          positions[i * 3] = (Math.random() - 0.5) * 15;
-          positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-        }
+      // Show prompt when close
+      if (distance < 25 && !isUnlocked) {
+        setShowPrompt(true);
+      } else if (distance >= 25) {
+        setShowPrompt(false);
       }
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+
+      // Auto-unlock when very close
+      if (distance < 15 && !isUnlocked) {
+        unlockTransport('beast');
+        setTransportMode('beast');
+        setIsUnlocked(true);
+        setShowPrompt(true);
+      }
     }
   });
 
   return (
     <group position={position}>
-      {/* Unlock Prompt */}
-      {showPrompt && (
-        <Html position={[0, 80, 0]} center distanceFactor={100}>
-          <div
-            style={{
-              background: 'linear-gradient(135deg, rgba(26,10,10,0.95) 0%, rgba(45,27,27,0.95) 100%)',
-              border: '2px solid #FFD700',
-              borderRadius: '12px',
-              padding: '16px 24px',
-              color: '#FFD700',
-              fontFamily: 'Cinzel, serif',
-              fontSize: '18px',
-              textAlign: 'center',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 0 30px rgba(255,215,0,0.5)',
-              animation: 'pulse 2s ease-in-out infinite',
-            }}
-          >
-            <div style={{ marginBottom: '8px', fontSize: '22px' }}>⚔️ Trảm La Kiếm ⚔️</div>
-            <div style={{ color: '#F5E6D3', fontSize: '14px' }}>Đến gần để nhận Phi Kiếm</div>
-          </div>
-        </Html>
-      )}
+      {/* Main bell group */}
+      <group ref={bellRef}>
 
-      {/* Unlocked notification */}
-      {isUnlocked && showPrompt && (
-        <Html position={[0, 80, 0]} center distanceFactor={100}>
-          <div
-            style={{
-              background: 'linear-gradient(135deg, rgba(0,100,0,0.95) 0%, rgba(0,50,0,0.95) 100%)',
-              border: '2px solid #00FF00',
-              borderRadius: '12px',
-              padding: '16px 24px',
-              color: '#00FF00',
-              fontFamily: 'Cinzel, serif',
-              fontSize: '18px',
-              textAlign: 'center',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 0 30px rgba(0,255,0,0.5)',
-            }}
-          >
-            <div>✓ Đã khai mở Ngự Kiếm!</div>
-            <div style={{ color: '#90EE90', fontSize: '14px', marginTop: '8px' }}>Nhấn F để bay</div>
-          </div>
-        </Html>
-      )}
+        {/* ===== THÂN CHUÔNG (BELL BODY) ===== */}
+        {/* Main bell shape - hình chuông đồng cổ */}
+        <mesh position={[0, 20, 0]}>
+          {/* Bell body using lathe geometry for authentic bell shape */}
+          <cylinderGeometry args={[8, 14, 25, 32, 1, true]} />
+          <meshPhysicalMaterial
+            color={colors.body}
+            emissive={colors.primary}
+            emissiveIntensity={0.8}
+            metalness={0.7}
+            roughness={0.2}
+            transparent
+            opacity={0.85}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
 
-      {/* === BASE PEDESTAL === */}
-      <mesh position={[0, 3, 0]} castShadow>
-        <cylinderGeometry args={[5, 7, 6, 8]} />
-        <meshStandardMaterial
-          color="#1A0A0A"
-          roughness={0.5}
-          metalness={0.6}
-          emissive={goldColor}
-          emissiveIntensity={0.2}
-        />
-      </mesh>
+        {/* Bell top dome */}
+        <mesh position={[0, 33, 0]}>
+          <sphereGeometry args={[8, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <meshPhysicalMaterial
+            color={colors.body}
+            emissive={colors.primary}
+            emissiveIntensity={0.8}
+            metalness={0.7}
+            roughness={0.2}
+            transparent
+            opacity={0.85}
+          />
+        </mesh>
 
-      {/* Pedestal decorative rings */}
-      <mesh position={[0, 6, 0]}>
-        <torusGeometry args={[5.5, 0.3, 8, 32]} />
-        <meshStandardMaterial
-          color={goldColor}
-          emissive={goldColor}
-          emissiveIntensity={0.6}
-          metalness={0.9}
-          roughness={0.2}
-        />
-      </mesh>
+        {/* Bell bottom rim - thick ring */}
+        <mesh position={[0, 7.5, 0]}>
+          <torusGeometry args={[14, 1.5, 16, 32]} />
+          <meshPhysicalMaterial
+            color={colors.secondary}
+            emissive={colors.glow}
+            emissiveIntensity={1.2}
+            metalness={0.8}
+            roughness={0.1}
+          />
+        </mesh>
 
-      {/* Ground rune circle */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]}>
-        <ringGeometry args={[7, 10, 32]} />
-        <meshBasicMaterial color={goldColor} transparent opacity={0.4} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.15, 0]}>
-        <ringGeometry args={[10, 11, 32]} />
-        <meshBasicMaterial color={brightGold} transparent opacity={0.3} />
-      </mesh>
-
-      {/* Rotating runes around base */}
-      <group ref={runesRef} position={[0, 1, 0]}>
-        {[...Array(8)].map((_, i) => (
-          <mesh
-            key={i}
-            position={[
-              Math.cos((Math.PI * 2 * i) / 8) * 9,
-              0.5,
-              Math.sin((Math.PI * 2 * i) / 8) * 9,
-            ]}
-            rotation={[-Math.PI / 2, 0, (Math.PI * 2 * i) / 8]}
-          >
-            <boxGeometry args={[1.5, 0.1, 0.4]} />
-            <meshBasicMaterial color={goldColor} transparent opacity={0.7} />
+        {/* Decorative rings around bell */}
+        {[15, 22, 28].map((height, i) => (
+          <mesh key={i} position={[0, height, 0]}>
+            <torusGeometry args={[9 - i * 0.8, 0.4, 12, 32]} />
+            <meshPhysicalMaterial
+              color={colors.secondary}
+              emissive={colors.accent}
+              emissiveIntensity={0.8}
+              metalness={0.9}
+              roughness={0.1}
+            />
           </mesh>
         ))}
-      </group>
 
-      {/* === MAIN SWORD === */}
-      <group ref={swordRef} position={[0, 8, 0]}>
-        {/* Sword blade group */}
-        <group ref={bladeRef}>
-          {/* Main blade body - wide rectangular like in image */}
-          <mesh position={[0, 35, 0]} castShadow>
-            <boxGeometry args={[8, 55, 1.5]} />
+        {/* ===== NÚM CHUÔNG (BELL CROWN/HANDLE) ===== */}
+        <group position={[0, 36, 0]}>
+          {/* Dragon/creature handle */}
+          <mesh position={[0, 3, 0]}>
+            <torusGeometry args={[3, 1.2, 16, 32]} />
             <meshPhysicalMaterial
-              color={goldColor}
-              emissive={brightGold}
-              emissiveIntensity={0.8}
-              metalness={0.95}
-              roughness={0.15}
-              clearcoat={1}
-              clearcoatRoughness={0.1}
-            />
-          </mesh>
-
-          {/* Blade edge glow - left */}
-          <mesh position={[-4.2, 35, 0]}>
-            <boxGeometry args={[0.5, 55, 1.8]} />
-            <meshBasicMaterial color={'#FFFACD'} transparent opacity={0.6} />
-          </mesh>
-
-          {/* Blade edge glow - right */}
-          <mesh position={[4.2, 35, 0]}>
-            <boxGeometry args={[0.5, 55, 1.8]} />
-            <meshBasicMaterial color={'#FFFACD'} transparent opacity={0.6} />
-          </mesh>
-
-          {/* === BLADE DECORATIONS === */}
-          {/* Central vertical line */}
-          <mesh position={[0, 35, 0.8]}>
-            <boxGeometry args={[0.4, 50, 0.2]} />
-            <meshStandardMaterial
-              color="#8B4513"
-              emissive={brightGold}
-              emissiveIntensity={0.4}
-            />
-          </mesh>
-
-          {/* Horizontal pattern lines */}
-          {[-15, -5, 5, 15, 25, 35, 45].map((y, i) => (
-            <mesh key={`hline-${i}`} position={[0, y + 10, 0.8]}>
-              <boxGeometry args={[6, 0.3, 0.15]} />
-              <meshStandardMaterial
-                color="#8B4513"
-                emissive={goldColor}
-                emissiveIntensity={0.3}
-              />
-            </mesh>
-          ))}
-
-          {/* Corner decorations - meander pattern */}
-          {[[-2.5, 20], [2.5, 20], [-2.5, 50], [2.5, 50]].map(([x, y], i) => (
-            <mesh key={`corner-${i}`} position={[x, y, 0.85]}>
-              <boxGeometry args={[1.5, 1.5, 0.1]} />
-              <meshStandardMaterial
-                color="#8B4513"
-                emissive={brightGold}
-                emissiveIntensity={0.5}
-              />
-            </mesh>
-          ))}
-
-          {/* Central medallion - top */}
-          <mesh position={[0, 52, 0.9]}>
-            <circleGeometry args={[2.5, 16]} />
-            <meshStandardMaterial
-              color={goldColor}
-              emissive={brightGold}
+              color={colors.secondary}
+              emissive={colors.glow}
               emissiveIntensity={1}
-              metalness={0.95}
+              metalness={0.8}
+              roughness={0.2}
+            />
+          </mesh>
+
+          {/* Crown ornament */}
+          <mesh position={[0, 0, 0]}>
+            <dodecahedronGeometry args={[2, 0]} />
+            <meshStandardMaterial
+              color={colors.accent}
+              emissive={colors.accent}
+              emissiveIntensity={2}
+              metalness={0.9}
               roughness={0.1}
             />
           </mesh>
-          <mesh position={[0, 52, 1]}>
-            <ringGeometry args={[1, 2, 16]} />
+
+          {/* Top gem */}
+          <mesh position={[0, 6, 0]}>
+            <octahedronGeometry args={[1.5, 0]} />
             <meshStandardMaterial
-              color="#8B4513"
-              emissive={goldColor}
+              color={colors.rune}
+              emissive={colors.rune}
+              emissiveIntensity={3}
+            />
+          </mesh>
+        </group>
+
+        {/* ===== CỔ VĂN (ANCIENT RUNES) trên thân chuông ===== */}
+        {runeSymbols.map((rune, i) => {
+          const radius = 9.5 - (rune.height - 12) * 0.15;
+          const x = Math.cos(rune.angle) * radius;
+          const z = Math.sin(rune.angle) * radius;
+          return (
+            <group key={i} position={[x, rune.height, z]} rotation={[0, -rune.angle + Math.PI / 2, 0]}>
+              {/* Rune glyph - vertical bar */}
+              <mesh>
+                <boxGeometry args={[0.3 * rune.scale, 3 * rune.scale, 0.2]} />
+                <meshStandardMaterial
+                  color={colors.rune}
+                  emissive={colors.rune}
+                  emissiveIntensity={2}
+                />
+              </mesh>
+              {/* Rune glyph - horizontal bars */}
+              {[0.8, -0.8].map((y, j) => (
+                <mesh key={j} position={[0, y * rune.scale, 0]}>
+                  <boxGeometry args={[0.8 * rune.scale, 0.25 * rune.scale, 0.2]} />
+                  <meshStandardMaterial
+                    color={colors.rune}
+                    emissive={colors.rune}
+                    emissiveIntensity={2}
+                  />
+                </mesh>
+              ))}
+            </group>
+          );
+        })}
+
+        {/* ===== LÕI CHUÔNG (BELL CLAPPER/TONGUE) ===== */}
+        <group position={[0, 12, 0]}>
+          {/* Clapper rod */}
+          <mesh>
+            <cylinderGeometry args={[0.5, 0.5, 15, 8]} />
+            <meshStandardMaterial
+              color={colors.secondary}
+              emissive={colors.glow}
               emissiveIntensity={0.5}
+              metalness={0.8}
+              roughness={0.3}
             />
           </mesh>
-
-          {/* Central medallion - middle */}
-          <mesh position={[0, 35, 0.9]}>
-            <circleGeometry args={[3, 16]} />
-            <meshStandardMaterial
-              color={goldColor}
-              emissive={brightGold}
-              emissiveIntensity={1.2}
-              metalness={0.95}
-              roughness={0.1}
-            />
-          </mesh>
-          {/* Inner jade gem */}
-          <mesh position={[0, 35, 1.1]}>
-            <sphereGeometry args={[1.2, 16, 16]} />
-            <meshStandardMaterial
-              color={jadeColor}
-              emissive={jadeColor}
+          {/* Clapper ball */}
+          <mesh position={[0, -8, 0]}>
+            <sphereGeometry args={[2.5, 16, 16]} />
+            <meshPhysicalMaterial
+              color={colors.accent}
+              emissive={colors.glow}
               emissiveIntensity={1.5}
-              metalness={0.7}
-              roughness={0.2}
-              transparent
-              opacity={0.9}
-            />
-          </mesh>
-
-          {/* Side jade gems */}
-          {[-2.8, 2.8].map((x, i) => (
-            <group key={`jade-${i}`}>
-              <mesh position={[x, 35, 0.9]}>
-                <sphereGeometry args={[0.6, 12, 12]} />
-                <meshStandardMaterial
-                  color={jadeColor}
-                  emissive={jadeColor}
-                  emissiveIntensity={1.2}
-                  metalness={0.7}
-                  roughness={0.2}
-                />
-              </mesh>
-              <mesh position={[x, 25, 0.9]}>
-                <sphereGeometry args={[0.5, 12, 12]} />
-                <meshStandardMaterial
-                  color={jadeColor}
-                  emissive={jadeColor}
-                  emissiveIntensity={1}
-                  metalness={0.7}
-                  roughness={0.2}
-                />
-              </mesh>
-              <mesh position={[x, 45, 0.9]}>
-                <sphereGeometry args={[0.5, 12, 12]} />
-                <meshStandardMaterial
-                  color={jadeColor}
-                  emissive={jadeColor}
-                  emissiveIntensity={1}
-                  metalness={0.7}
-                  roughness={0.2}
-                />
-              </mesh>
-            </group>
-          ))}
-
-          {/* Blade tip - pointed */}
-          <mesh position={[0, 63, 0]}>
-            <coneGeometry args={[4, 6, 4]} />
-            <meshPhysicalMaterial
-              color={goldColor}
-              emissive={brightGold}
-              emissiveIntensity={1}
-              metalness={0.95}
-              roughness={0.1}
-            />
-          </mesh>
-
-          {/* === CROSSGUARD (TSUBA) === */}
-          <mesh position={[0, 7, 0]} rotation={[0, 0, 0]}>
-            <boxGeometry args={[14, 2, 3]} />
-            <meshPhysicalMaterial
-              color={goldColor}
-              emissive={brightGold}
-              emissiveIntensity={0.7}
-              metalness={0.95}
-              roughness={0.15}
-            />
-          </mesh>
-
-          {/* Crossguard ends - curved up */}
-          {[-7, 7].map((x, i) => (
-            <group key={`guard-${i}`}>
-              <mesh position={[x, 8, 0]} rotation={[0, 0, i === 0 ? 0.3 : -0.3]}>
-                <boxGeometry args={[2, 3, 2.5]} />
-                <meshPhysicalMaterial
-                  color={goldColor}
-                  emissive={brightGold}
-                  emissiveIntensity={0.6}
-                  metalness={0.95}
-                  roughness={0.15}
-                />
-              </mesh>
-              {/* Guard end ornament */}
-              <mesh position={[x * 1.15, 10, 0]}>
-                <sphereGeometry args={[1, 12, 12]} />
-                <meshStandardMaterial
-                  color={goldColor}
-                  emissive={goldColor}
-                  emissiveIntensity={0.8}
-                  metalness={0.9}
-                  roughness={0.2}
-                />
-              </mesh>
-            </group>
-          ))}
-
-          {/* Crossguard center jade */}
-          <mesh position={[0, 7, 1.6]}>
-            <sphereGeometry args={[1, 12, 12]} />
-            <meshStandardMaterial
-              color={jadeColor}
-              emissive={jadeColor}
-              emissiveIntensity={1.5}
-              metalness={0.7}
-              roughness={0.2}
-            />
-          </mesh>
-
-          {/* === HANDLE === */}
-          <mesh position={[0, 2, 0]}>
-            <cylinderGeometry args={[1.2, 1.5, 8, 8]} />
-            <meshStandardMaterial
-              color="#8B4513"
-              roughness={0.8}
-              metalness={0.3}
-              emissive={goldColor}
-              emissiveIntensity={0.2}
-            />
-          </mesh>
-
-          {/* Handle wrapping */}
-          {[...Array(5)].map((_, i) => (
-            <mesh key={`wrap-${i}`} position={[0, i * 1.5 - 1, 0]}>
-              <torusGeometry args={[1.3, 0.15, 8, 16]} />
-              <meshStandardMaterial
-                color={goldColor}
-                emissive={goldColor}
-                emissiveIntensity={0.4}
-                metalness={0.9}
-                roughness={0.2}
-              />
-            </mesh>
-          ))}
-
-          {/* Pommel */}
-          <mesh position={[0, -3, 0]}>
-            <sphereGeometry args={[1.8, 16, 16]} />
-            <meshPhysicalMaterial
-              color={goldColor}
-              emissive={brightGold}
-              emissiveIntensity={0.8}
-              metalness={0.95}
-              roughness={0.1}
-            />
-          </mesh>
-
-          {/* Pommel jade */}
-          <mesh position={[0, -3.5, 1]}>
-            <sphereGeometry args={[0.6, 12, 12]} />
-            <meshStandardMaterial
-              color={jadeColor}
-              emissive={jadeColor}
-              emissiveIntensity={1.2}
               metalness={0.7}
               roughness={0.2}
             />
           </mesh>
         </group>
 
+        {/* ===== ENERGY EFFECTS ===== */}
+        {/* Rotating rune ring */}
+        <group ref={runeRingRef} position={[0, 20, 0]}>
+          {[...Array(12)].map((_, i) => {
+            const angle = (Math.PI * 2 * i) / 12;
+            return (
+              <mesh
+                key={i}
+                position={[Math.cos(angle) * 18, Math.sin(angle * 3) * 3, Math.sin(angle) * 18]}
+                rotation={[0, -angle, 0]}
+              >
+                <boxGeometry args={[0.4, 2, 0.2]} />
+                <meshBasicMaterial
+                  color={colors.rune}
+                  transparent
+                  opacity={0.8}
+                />
+              </mesh>
+            );
+          })}
+        </group>
+
+        {/* Vertical energy beams */}
+        {[...Array(6)].map((_, i) => {
+          const angle = (Math.PI * 2 * i) / 6;
+          return (
+            <mesh
+              key={i}
+              position={[Math.cos(angle) * 16, 20, Math.sin(angle) * 16]}
+            >
+              <cylinderGeometry args={[0.2, 0.2, 40, 8]} />
+              <meshBasicMaterial
+                color={colors.glow}
+                transparent
+                opacity={0.3}
+              />
+            </mesh>
+          );
+        })}
+
+        {/* ===== PARTICLES ===== */}
+        {particles.map((p, i) => (
+          <BellParticle
+            key={i}
+            initialPos={p.pos}
+            speed={p.speed}
+            size={p.size}
+            delay={p.delay}
+            color={colors.glow}
+            isIce={isIce}
+          />
+        ))}
+
+        {/* Sparkles */}
+        <Sparkles
+          count={120}
+          scale={[40, 50, 40]}
+          position={[0, 20, 0]}
+          size={2}
+          speed={0.4}
+          color={colors.secondary}
+        />
+        <Sparkles
+          count={80}
+          scale={[30, 40, 30]}
+          position={[0, 25, 0]}
+          size={3}
+          speed={0.6}
+          color={colors.accent}
+        />
+
+        {/* Lights */}
+        <pointLight position={[0, 35, 0]} color={colors.secondary} intensity={5} distance={60} />
+        <pointLight position={[0, 20, 0]} color={colors.glow} intensity={8} distance={50} />
+        <pointLight position={[0, 5, 0]} color={colors.accent} intensity={3} distance={30} />
       </group>
 
-      {/* === PARTICLES === */}
-      <points ref={particlesRef} position={[0, 5, 0]}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={particleCount}
-            array={particlePositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <pointsMaterial
-          size={0.6}
-          color={goldColor}
-          transparent
-          opacity={0.7}
-          blending={THREE.AdditiveBlending}
-          sizeAttenuation
+      {/* ===== ĐẾ CHUÔNG (BELL PEDESTAL) ===== */}
+      <BellPedestal colors={colors} />
+
+      {/* ===== UNLOCK PROMPT - Only for Fire Bell ===== */}
+      {isFire && showPrompt && (
+        <Html position={[0, 50, 0]} center>
+          <div
+            className="px-4 py-3 rounded-lg text-center whitespace-nowrap animate-fadeIn"
+            style={{
+              background: isUnlocked
+                ? 'linear-gradient(135deg, rgba(0,206,209,0.95), rgba(64,224,208,0.9))'
+                : 'linear-gradient(135deg, rgba(0,255,136,0.95), rgba(102,255,204,0.9))',
+              border: `2px solid ${isUnlocked ? '#00FFFF' : '#00FF88'}`,
+              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(0,255,255,0.5)' : 'rgba(0,255,136,0.5)'}`,
+            }}
+          >
+            {isUnlocked ? (
+              <>
+                <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
+                  ✓ Đã khai mở Cưỡi Phượng!
+                </p>
+                <p className="text-cyan-100 text-sm mt-1">
+                  Nhấn <span className="font-bold text-white">F</span> để bay trên lưng Hỏa Phượng
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
+                  🔔 Thượng Cổ Đồng Chung
+                </p>
+                <p className="text-green-100 text-sm mt-1">
+                  Đến gần để khai mở Cưỡi Linh Thú
+                </p>
+              </>
+            )}
+          </div>
+        </Html>
+      )}
+    </group>
+  );
+}
+
+interface BellColors {
+  primary: string;
+  secondary: string;
+  glow: string;
+  accent: string;
+  body: string;
+  dark: string;
+  rune: string;
+}
+
+interface BellParticleProps {
+  initialPos: [number, number, number];
+  speed: number;
+  size: number;
+  delay: number;
+  color: string;
+  isIce: boolean;
+}
+
+function BellParticle({ initialPos, speed, size, delay, color, isIce }: BellParticleProps) {
+  const ref = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (ref.current) {
+      const t = state.clock.elapsedTime * speed + delay;
+
+      if (isIce) {
+        // Ice bell: particles spiral down
+        ref.current.position.y = initialPos[1] - (t % 30) + 25;
+        ref.current.position.x = initialPos[0] + Math.sin(t * 0.5) * 5;
+        ref.current.position.z = initialPos[2] + Math.cos(t * 0.5) * 5;
+      } else {
+        // Fire bell: particles spiral up
+        ref.current.position.y = initialPos[1] + (t % 30);
+        ref.current.position.x = initialPos[0] + Math.sin(t * 0.6) * 4;
+        ref.current.position.z = initialPos[2] + Math.cos(t * 0.6) * 4;
+      }
+
+      ref.current.rotation.y = t * 2;
+      ref.current.rotation.x = t;
+    }
+  });
+
+  return (
+    <mesh ref={ref} position={initialPos}>
+      <octahedronGeometry args={[size, 0]} />
+      <meshStandardMaterial
+        color={color}
+        emissive={color}
+        emissiveIntensity={2}
+        transparent
+        opacity={0.7}
+      />
+    </mesh>
+  );
+}
+
+function BellPedestal({ colors }: { colors: BellColors }) {
+  const ringRef = useRef<THREE.Mesh>(null);
+  const runeRingRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (ringRef.current) {
+      ringRef.current.rotation.z = state.clock.elapsedTime * 0.2;
+    }
+    if (runeRingRef.current) {
+      runeRingRef.current.rotation.y = -state.clock.elapsedTime * 0.15;
+    }
+  });
+
+  return (
+    <group position={[0, -5, 0]}>
+      {/* Main platform - octagonal */}
+      <mesh receiveShadow>
+        <cylinderGeometry args={[15, 18, 5, 8]} />
+        <meshStandardMaterial
+          color="#0A1A1A"
+          roughness={0.5}
+          metalness={0.5}
+          emissive={colors.dark}
+          emissiveIntensity={0.4}
         />
-      </points>
+      </mesh>
 
-      {/* Sparkles */}
-      <Sparkles
-        count={100}
-        scale={[20, 80, 15]}
-        position={[0, 45, 0]}
-        size={2.5}
-        speed={0.8}
-        color={goldColor}
-      />
-      <Sparkles
-        count={50}
-        scale={[15, 60, 10]}
-        position={[0, 40, 0]}
-        size={1.5}
-        speed={0.5}
-        color={jadeColor}
-      />
+      {/* Upper tier */}
+      <mesh position={[0, 3, 0]} receiveShadow>
+        <cylinderGeometry args={[12, 15, 2, 8]} />
+        <meshStandardMaterial
+          color={colors.dark}
+          emissive={colors.primary}
+          emissiveIntensity={0.3}
+          metalness={0.6}
+          roughness={0.3}
+        />
+      </mesh>
 
-      {/* Lights */}
-      <pointLight position={[0, 50, 5]} color={goldColor} intensity={5} distance={60} />
-      <pointLight position={[0, 30, 3]} color={brightGold} intensity={3} distance={40} />
-      <pointLight position={[0, 15, 0]} color={goldColor} intensity={2} distance={30} />
-      <pointLight position={[0, 45, 0]} color={jadeColor} intensity={1.5} distance={25} />
+      {/* Rotating energy ring */}
+      <mesh ref={ringRef} position={[0, 4.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[10, 12, 64]} />
+        <meshBasicMaterial
+          color={colors.glow}
+          transparent
+          opacity={0.5}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Corner pillars with gems */}
+      <group ref={runeRingRef}>
+        {[...Array(8)].map((_, i) => {
+          const angle = (Math.PI * 2 * i) / 8;
+          return (
+            <group key={i} position={[Math.cos(angle) * 16, 0, Math.sin(angle) * 16]}>
+              {/* Pillar */}
+              <mesh>
+                <cylinderGeometry args={[0.8, 1, 10, 6]} />
+                <meshStandardMaterial
+                  color={colors.dark}
+                  emissive={colors.primary}
+                  emissiveIntensity={0.5}
+                  metalness={0.6}
+                  roughness={0.3}
+                />
+              </mesh>
+              {/* Gem on top */}
+              <mesh position={[0, 6, 0]}>
+                <octahedronGeometry args={[1, 0]} />
+                <meshStandardMaterial
+                  color={colors.accent}
+                  emissive={colors.accent}
+                  emissiveIntensity={2.5}
+                />
+              </mesh>
+            </group>
+          );
+        })}
+      </group>
+
+      {/* Central glow */}
+      <mesh position={[0, 4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[10, 32]} />
+        <meshBasicMaterial
+          color={colors.glow}
+          transparent
+          opacity={0.3}
+        />
+      </mesh>
+
+      {/* Platform lights */}
+      <pointLight position={[0, 8, 0]} color={colors.glow} intensity={4} distance={35} />
     </group>
   );
 }

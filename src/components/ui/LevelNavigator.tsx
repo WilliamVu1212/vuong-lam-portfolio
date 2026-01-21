@@ -105,13 +105,13 @@ interface LevelNodeProps {
 }
 
 function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNodeProps) {
-  // Hóa Thần (experience) có Ngự Kiếm chờ unlock
-  const isHoaThan = level.id === 'experience';
-  const showSwordHint = isHoaThan && !swordUnlocked;
+  // Kết Đan (skills) có Ngự Kiếm chờ unlock (Trảm La Kiếm ở đây)
+  const isKetDan = level.id === 'skills';
+  const showSwordHint = isKetDan && !swordUnlocked;
 
-  // Anh Biến (contact) có Cưỡi Phượng chờ unlock
-  const isAnhBien = level.id === 'contact';
-  const showPhoenixHint = isAnhBien && !beastUnlocked;
+  // Hóa Thần (experience) có Cưỡi Phượng chờ unlock (Đồng Chung ở đây)
+  const isHoaThan = level.id === 'experience';
+  const showPhoenixHint = isHoaThan && !beastUnlocked;
 
   return (
     <button
@@ -135,7 +135,7 @@ function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNod
         />
       </div>
 
-      {/* Sword icon hint for Hóa Thần (nếu chưa unlock) */}
+      {/* Sword icon hint for Kết Đan (nếu chưa unlock) */}
       {showSwordHint && (
         <div
           className="absolute -left-6 animate-pulse"
@@ -145,7 +145,7 @@ function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNod
         </div>
       )}
 
-      {/* Phoenix icon hint for Anh Biến (nếu chưa unlock) */}
+      {/* Phoenix icon hint for Hóa Thần (nếu chưa unlock) */}
       {showPhoenixHint && (
         <div
           className="absolute -left-6 animate-pulse"
@@ -169,7 +169,7 @@ function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNod
           {level.name}
         </p>
 
-        {/* Sword unlock hint for Hóa Thần */}
+        {/* Sword unlock hint for Kết Đan */}
         {showSwordHint && (
           <div
             className="mb-2 p-2 rounded-md text-center"
@@ -183,7 +183,7 @@ function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNod
           </div>
         )}
 
-        {/* Phoenix unlock hint for Anh Biến */}
+        {/* Phoenix unlock hint for Hóa Thần */}
         {showPhoenixHint && (
           <div
             className="mb-2 p-2 rounded-md text-center"
@@ -193,7 +193,7 @@ function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNod
             }}
           >
             <p className="text-xs text-orange-400 font-medium">🔥 Hỏa Phượng đang chờ!</p>
-            <p className="text-[10px] text-orange-200/70 mt-0.5">Đến gần Thần Phượng để khai mở</p>
+            <p className="text-[10px] text-orange-200/70 mt-0.5">Đến gần Đồng Chung để khai mở</p>
           </div>
         )}
 

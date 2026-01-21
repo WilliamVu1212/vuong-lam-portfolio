@@ -220,7 +220,29 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 12 (Latest)
+### Session 2026-01-21 - Update 13 (Latest)
+```
+- Di chuyển vị trí unlock các phương tiện di chuyển:
+  - Ngự Kiếm (SoulSlayingSword): Hóa Thần → Kết Đan (SkillsSection)
+    - Thêm 2 Trảm La Kiếm ở vị trí [-55, 0, 0] và [55, 0, 0]
+    - Unlock khi player đến gần (<12 units)
+  - Hỏa Phượng (AncientDivineBell): Anh Biến → Hóa Thần (ExperienceSection)
+    - Thêm 2 Đồng Chung ở vị trí [-55, 0, 0] và [55, 0, 0]
+    - Unlock khi player đến gần chuông bên phải (<15 units)
+
+- Cập nhật LevelNavigator hints:
+  - ⚔️ hint hiện ở Kết Đan (skills) thay vì Hóa Thần
+  - 🔥 hint hiện ở Hóa Thần (experience) thay vì Anh Biến
+  - Cập nhật tooltip text cho phù hợp
+
+- Cleanup ContactSection:
+  - Xóa AncientDivineBell, BellParticle, BellPedestal components
+  - Xóa import useGameStore, useMemo không dùng
+
+- Files changed: SkillsSection.tsx, ExperienceSection.tsx, ContactSection.tsx, LevelNavigator.tsx
+```
+
+### Session 2026-01-21 - Update 12
 ```
 - Thay thế Thần Phượng (Divine Phoenix) bằng Thượng Cổ Đồng Chung (Ancient Divine Bell):
   - Xóa DivinePhoenix component
