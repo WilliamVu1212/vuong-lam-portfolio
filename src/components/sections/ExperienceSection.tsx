@@ -5,6 +5,7 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { experiences, certifications } from '@/data/content';
 import type { Experience, Certification } from '@/types';
+import { ScrollIcon, SealIcon, SpiritStoneIcon, JadeIcon } from '@/components/ui/XianxiaIcons';
 
 interface ExperienceSectionProps {
   position?: [number, number, number];
@@ -276,7 +277,10 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
   const glowRef = useRef<THREE.Mesh>(null);
   const colors = ['#FF4444', '#FF8C00', '#FFD700'];
   const color = colors[index % colors.length];
-  const icons = ['💼', '🏢', '⚡'];
+
+  // Experience icons (SVG components)
+  const ExpIcons = [ScrollIcon, SealIcon, SpiritStoneIcon];
+  const ExpIcon = ExpIcons[index % ExpIcons.length];
 
   useFrame((state) => {
     if (glowRef.current) {
@@ -357,14 +361,14 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
             }}
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+              className="w-12 h-12 rounded-full flex items-center justify-center"
               style={{
                 backgroundColor: 'rgba(26, 10, 10, 0.9)',
                 border: `3px solid ${color}`,
                 boxShadow: (hovered || isOpen) ? `0 0 25px ${color}, 0 0 50px ${color}50` : `0 0 10px ${color}50`,
               }}
             >
-              {icons[index]}
+              <ExpIcon size={24} color={color} />
             </div>
           </div>
         </Html>
@@ -404,13 +408,13 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
               {/* Header */}
               <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
                   style={{
                     backgroundColor: `${color}20`,
                     border: `2px solid ${color}`,
                   }}
                 >
-                  {icons[index]}
+                  <ExpIcon size={20} color={color} />
                 </div>
                 <div>
                   <p className="text-xs" style={{ color: color }}>{experience.period}</p>
@@ -548,14 +552,14 @@ function CertificationStone({ certification, position, index }: CertificationSto
             }}
           >
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+              className="w-10 h-10 rounded-full flex items-center justify-center"
               style={{
                 backgroundColor: 'rgba(26, 10, 10, 0.9)',
                 border: '3px solid #FFD700',
                 boxShadow: (hovered || isOpen) ? '0 0 25px #FFD700, 0 0 50px #FFD70050' : '0 0 10px #FFD70050',
               }}
             >
-              🏆
+              <JadeIcon size={20} color="#FFD700" />
             </div>
           </div>
         </Html>
@@ -594,16 +598,16 @@ function CertificationStone({ certification, position, index }: CertificationSto
               {/* Header */}
               <div className="flex items-center gap-3 mb-2">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
                   style={{
                     backgroundColor: '#FFD70020',
                     border: '2px solid #FFD700',
                   }}
                 >
-                  🏆
+                  <JadeIcon size={20} color="#FFD700" />
                 </div>
                 <div>
-                  <p className="text-xs" style={{ color: '#FFD700' }}>Certification</p>
+                  <p className="text-xs" style={{ color: '#FFD700' }}>Chứng Chỉ</p>
                   <h3 className="font-bold text-sm" style={{ color: '#F5E6D3' }}>
                     {certification.name}
                   </h3>

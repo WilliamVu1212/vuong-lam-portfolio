@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { projects } from '@/data/content';
 import { useGameStore, useUIStore } from '@/stores/gameStore';
 import type { Project } from '@/types';
+import { DragonIcon, PhoenixIcon, TigerIcon, TurtleIcon, QilinIcon, FlameIcon } from '@/components/ui/XianxiaIcons';
 
 // Extend THREE.Line to avoid JSX conflicts
 extend({ Line_: THREE.Line });
@@ -152,8 +153,9 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
   const viewProject = useGameStore((state) => state.viewProject);
   const openModal = useUIStore((state) => state.openModal);
 
-  // Project icons based on type
-  const projectIcons = ['⚡', '🔮', '📜', '🌟', '💎', '🔥'];
+  // Project icons (SVG components) - Mythical creatures
+  const ProjectIcons = [DragonIcon, PhoenixIcon, TigerIcon, TurtleIcon, QilinIcon, FlameIcon];
+  const ProjectIcon = ProjectIcons[index % ProjectIcons.length];
 
   useFrame((state) => {
     if (crystalRef.current) {
@@ -288,14 +290,14 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
             }}
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+              className="w-12 h-12 rounded-full flex items-center justify-center"
               style={{
                 backgroundColor: 'rgba(26, 10, 10, 0.9)',
                 border: `3px solid ${project.color}`,
                 boxShadow: (hovered || isOpen) ? `0 0 25px ${project.color}, 0 0 50px ${project.color}50` : `0 0 10px ${project.color}50`,
               }}
             >
-              {projectIcons[index % projectIcons.length]}
+              <ProjectIcon size={24} color={project.color} />
             </div>
           </div>
         </Html>
@@ -335,13 +337,13 @@ function ProjectIsland({ project, position, index }: ProjectIslandProps) {
               {/* Header */}
               <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
                   style={{
                     backgroundColor: `${project.color}20`,
                     border: `2px solid ${project.color}`,
                   }}
                 >
-                  {projectIcons[index % projectIcons.length]}
+                  <ProjectIcon size={20} color={project.color} />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm" style={{ color: project.color }}>

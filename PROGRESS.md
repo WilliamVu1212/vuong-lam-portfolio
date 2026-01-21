@@ -10,8 +10,8 @@
 |--------|-------|
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
-| **Current Phase** | Phase 4 - Sections & Content |
-| **Overall Progress** | 65% |
+| **Current Phase** | Phase 5 - UI & Polish |
+| **Overall Progress** | 70% |
 
 ---
 
@@ -68,7 +68,7 @@
 | Architecture models | ✅ Done | Pagoda, Torii gates |
 | Nature elements | ✅ Done | Cherry trees, lanterns |
 | Lanterns + glow | ✅ Done | Floating lanterns with pulse |
-| Waterfalls | ⬜ Todo | Shader |
+| Waterfalls | ✅ Done | GLSL shader, 4 colors (Fire, Water, Lightning, Gold) |
 | Environment particles | ✅ Done | Fire particles, sparkles, energy orbs |
 | World optimization | 🔄 In Progress | Some components optimized |
 
@@ -98,9 +98,9 @@
 |------|--------|-------|
 | Intro section | ✅ Done | IntroPlatform with rings, runes |
 | About section | ✅ Done | Pagoda, InfoStones, Torii gates, Cherry trees |
-| Skills section | ✅ Done | Skill tablets with click interaction |
-| Projects section | ✅ Done | 6 project islands with crystals |
-| Experience section | ✅ Done | Timeline implementation |
+| Skills section | ✅ Done | Icon-based UI with clickable detail panels |
+| Projects section | ✅ Done | Icon-based UI with clickable detail panels |
+| Experience section | ✅ Done | Icon-based UI with timeline + CertificationStone |
 | Contact section | ✅ Done | Cloud palace style |
 
 ---
@@ -221,6 +221,13 @@
 
 ### Session 2026-01-21 (Latest)
 ```
+- ✅ Added Waterfall component with custom GLSL shader for animated water effect
+- ✅ Added 4 waterfalls with distinct colors (Fire, Water, Lightning, Gold)
+- ✅ Converted SkillsSection labels to clickable icons with detail panels
+- ✅ Converted ProjectsSection labels to clickable icons with detail panels
+- ✅ Converted ExperienceSection labels to clickable icons with detail panels
+- ✅ Converted CertificationStone labels to clickable icons with detail panels
+- ✅ Added fadeIn animation for popup panels
 - ✅ Added LevelNavigator component with cultivation levels
 - ✅ Each level shows techniques from Tiên Nghịch novel on hover
 - ✅ Smooth camera navigation with lerp interpolation
@@ -235,6 +242,7 @@
 
 ### Git Commits
 ```
+fbd9d48 - feat: Add waterfalls and convert all labels to icon-based UI
 ae80215 - fix: Remove Chinese text and improve UI display
 0cda074 - feat: Add LevelNavigator with cultivation techniques and improve UI
 7a66976 - feat: Improve SkillsSection UI with click interaction

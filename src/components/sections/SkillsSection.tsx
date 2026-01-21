@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { skillCategories } from '@/data/content';
 import { SKILL_RANKS } from '@/utils/constants';
 import type { SkillCategory } from '@/types';
+import { SwordIcon, AlchemyIcon, FormationIcon, DivinePowerIcon } from '@/components/ui/XianxiaIcons';
 
 interface SkillsSectionProps {
   position?: [number, number, number];
@@ -264,8 +265,9 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
   const colors = ['#FF4444', '#FF8C00', '#FFD700', '#FF6B35'];
   const color = colors[index % colors.length];
 
-  // Category icons (emoji representation)
-  const categoryIcons = ['⚔️', '🔮', '📿', '🌟'];
+  // Category icons (SVG components)
+  const CategoryIcons = [SwordIcon, AlchemyIcon, FormationIcon, DivinePowerIcon];
+  const CategoryIcon = CategoryIcons[index % CategoryIcons.length];
   const categoryShortNames = ['Kiếm Pháp', 'Đan Pháp', 'Trận Pháp', 'Thần Thông'];
 
   useFrame((state) => {
@@ -349,14 +351,14 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
           }}
         >
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+            className="w-12 h-12 rounded-full flex items-center justify-center"
             style={{
               backgroundColor: 'rgba(26, 10, 10, 0.9)',
               border: `3px solid ${color}`,
               boxShadow: hovered || isOpen ? `0 0 25px ${color}, 0 0 50px ${color}50` : `0 0 10px ${color}50`,
             }}
           >
-            {categoryIcons[index]}
+            <CategoryIcon size={24} color={color} />
           </div>
         </div>
       </Html>
@@ -397,13 +399,13 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
             {/* Header with category name */}
             <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
+                className="w-10 h-10 rounded-full flex items-center justify-center"
                 style={{
                   backgroundColor: `${color}20`,
                   border: `2px solid ${color}`,
                 }}
               >
-                {categoryIcons[index]}
+                <CategoryIcon size={20} color={color} />
               </div>
               <div>
                 <h3 className="font-bold text-sm" style={{ color: color }}>
