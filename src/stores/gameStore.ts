@@ -220,7 +220,7 @@ export const useUIStore = create<UIStore>()((set) => ({
   isPaused: false,
   isLoading: true,
   loadingProgress: 0,
-  isDebugMode: true,
+  isDebugMode: false,
   cameraTarget: null,
   cameraLookAt: null,
 

@@ -13,23 +13,30 @@ function LoadingScreen() {
     >
       {/* Title */}
       <motion.h1
-        className="text-4xl md:text-6xl font-heading font-bold mb-2 text-fire"
+        className="text-4xl md:text-6xl font-bold mb-2"
+        style={{
+          fontFamily: "'Cinzel', 'Times New Roman', serif",
+          background: 'linear-gradient(180deg, #FF8C00 0%, #FF4444 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Vương Lâm
+        VƯƠNG LÂM
       </motion.h1>
 
       {/* Subtitle */}
       <motion.p
-        className="text-xl md:text-2xl font-heading text-tho-kim mb-8"
-        style={{ fontFamily: "'Ma Shan Zheng', serif" }}
+        className="text-xl md:text-2xl text-tho-kim mb-8 italic"
+        style={{ fontFamily: "'Cinzel', 'Georgia', serif" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        修仙之路 · The Path of Cultivation
+        Con Đường Tu Tiên · The Path of Cultivation
       </motion.p>
 
       {/* Loading Spinner */}
@@ -71,7 +78,7 @@ function LoadingScreen() {
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       >
-        正在加载灵气... Loading spiritual energy...
+        Đang nạp linh khí... Loading spiritual energy...
       </motion.p>
 
       {/* Decorative elements */}

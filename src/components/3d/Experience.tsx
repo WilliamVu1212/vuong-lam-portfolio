@@ -209,8 +209,8 @@ function WorldContent() {
       {/* Moon - Đã bỏ theo yêu cầu */}
       {/* <Moon /> */}
 
-      {/* Cloud Sea */}
-      <CloudSea />
+      {/* Cloud Sea - Đã bỏ theo yêu cầu */}
+      {/* <CloudSea /> */}
 
       {/* Fire Particles */}
       <FireParticles />
