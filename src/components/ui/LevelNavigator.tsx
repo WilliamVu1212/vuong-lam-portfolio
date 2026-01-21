@@ -105,9 +105,9 @@ interface LevelNodeProps {
 }
 
 function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNodeProps) {
-  // Kết Đan (skills) có Ngự Kiếm chờ unlock (Trảm La Kiếm ở đây)
-  const isKetDan = level.id === 'skills';
-  const showSwordHint = isKetDan && !swordUnlocked;
+  // Trúc Cơ (about) có Ngự Kiếm chờ unlock (Trảm La Kiếm ở đây)
+  const isTrucCo = level.id === 'about';
+  const showSwordHint = isTrucCo && !swordUnlocked;
 
   // Hóa Thần (experience) có Cưỡi Phượng chờ unlock (Đồng Chung ở đây)
   const isHoaThan = level.id === 'experience';
@@ -169,7 +169,7 @@ function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNod
           {level.name}
         </p>
 
-        {/* Sword unlock hint for Kết Đan */}
+        {/* Sword unlock hint for Trúc Cơ */}
         {showSwordHint && (
           <div
             className="mb-2 p-2 rounded-md text-center"

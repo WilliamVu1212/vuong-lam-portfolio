@@ -220,7 +220,22 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 13 (Latest)
+### Session 2026-01-21 - Update 14 (Latest)
+```
+- Di chuyển Ngự Kiếm unlock từ Kết Đan xuống Trúc Cơ:
+  - Trảm La Kiếm giờ ở AboutSection (Trúc Cơ) thay vì SkillsSection (Kết Đan)
+  - Vị trí mới: [-45, 0, 0] và [45, 0, 0] trong AboutSection
+  - Xóa SoulSlayingSword component khỏi SkillsSection
+  - Thêm SoulSlayingSword component vào AboutSection
+
+- Cập nhật LevelNavigator hints:
+  - ⚔️ hint giờ hiện ở Trúc Cơ (about) thay vì Kết Đan (skills)
+  - Logic: isTrucCo = level.id === 'about'
+
+- Files changed: AboutSection.tsx, SkillsSection.tsx, LevelNavigator.tsx
+```
+
+### Session 2026-01-21 - Update 13
 ```
 - Di chuyển vị trí unlock các phương tiện di chuyển:
   - Ngự Kiếm (SoulSlayingSword): Hóa Thần → Kết Đan (SkillsSection)

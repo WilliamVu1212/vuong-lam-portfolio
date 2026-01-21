@@ -38,17 +38,19 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 12
+## Recent Update (2026-01-21) - Session 14
 
 ### Đã hoàn thành:
+- ✅ **Di chuyển Ngự Kiếm unlock từ Kết Đan xuống Trúc Cơ**
+  - Trảm La Kiếm giờ ở AboutSection (Trúc Cơ) thay vì SkillsSection (Kết Đan)
+  - Vị trí: [-45, 0, 0] và [45, 0, 0] trong AboutSection
+  - LevelNavigator hint ⚔️ giờ hiện ở Trúc Cơ
+
+### Session 13:
+- ✅ Di chuyển vị trí unlock từ Kết Đan/Anh Biến sang vị trí mới
+
+### Session 12:
 - ✅ **Thượng Cổ Đồng Chung (Ancient Divine Bell)** - Thay thế Thần Phượng ở Anh Biến
-  - **AncientDivineBell component** - Chuông đồng cổ phát sáng xanh lục
-  - Thân chuông + mái vòm + vành đáy + 3 vòng trang trí
-  - Núm chuông (handle) + Lõi chuông (clapper)
-  - Cổ văn (ancient runes) 3 hàng khắc trên thân
-  - Vòng rune xoay + 6 tia năng lượng + 100 particles
-  - **BellPedestal** - Đế chuông với 8 cột rune xoay
-  - Bỏ outer/inner glow sphere cho chuông rõ hơn
 
 ### Session 11:
 - ✅ **Cưỡi Linh Thú (Phoenix Mount System)** - Bay trên lưng Hỏa Phượng
