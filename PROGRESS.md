@@ -220,7 +220,18 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 14 (Latest)
+### Session 2026-01-21 - Update 15 (Latest)
+```
+- Di chuyển vị trí 4 thác nước để phân bố hợp lý giữa Kết Đan và Nguyên Anh:
+  - Thác Hỏa Viêm (đỏ): [-50, 40, -120] → [-100, 115, -260] (Kết Đan)
+  - Thác Thanh Lam (xanh): [50, 40, -120] → [100, 115, -260] (Kết Đan)
+  - Thác Tử Điện (tím): [-70, 130, -320] → [-100, 130, -340] (Nguyên Anh)
+  - Thác Kim Quang (vàng): [70, 130, -320] → [100, 130, -340] (Nguyên Anh)
+
+- Files changed: Experience.tsx
+```
+
+### Session 2026-01-21 - Update 14
 ```
 - Di chuyển Ngự Kiếm unlock từ Kết Đan xuống Trúc Cơ:
   - Trảm La Kiếm giờ ở AboutSection (Trúc Cơ) thay vì SkillsSection (Kết Đan)
