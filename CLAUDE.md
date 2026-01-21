@@ -1,8 +1,8 @@
-# Project: Vuong Lam Portfolio
+# Project: William Vu Portfolio
 
 ## CURRENT STATUS (2026-01-21)
 
-**Overall Progress: 82%** - Phase 5 (UI & Polish)
+**Overall Progress: 84%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -25,9 +25,9 @@
 ### Các section đã hoàn thành (7 cảnh giới):
 1. **Intro** (Phàm Nhân) - Landing với rings, runes
 2. **About** (Luyện Khí) - Pagoda, InfoStones, Torii gates
-3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals
-4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals
-5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones
+3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals + 2 thác nước
+4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals + 2 thác nước
+5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Phoenix Flames**
 6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau
 7. **Vấn Đỉnh** - Peak platform, throne, celestial gates phía sau với title, William panel + câu nói Tiên Nghịch
 
@@ -38,17 +38,19 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 4
+## Recent Update (2026-01-21) - Session 5
 
 ### Đã hoàn thành:
-- ✅ Di chuyển 3 cổng (CelestialGates) ở Vấn Đỉnh từ phía trước ra phía sau (z âm)
-- ✅ Di chuyển 3 cổng (HeavenlyGates) ở Anh Biến từ phía trước ra phía sau (z âm)
-- ✅ Đặt chữ "Vấn Đỉnh" lên trên cổng giữa (main gate) thay vì ở Immortal Throne
-- ✅ Thêm font "Dancing Script" - font thư pháp hỗ trợ tiếng Việt (chữ Đ hiển thị đúng)
-- ✅ Cập nhật Contact panel ở Vấn Đỉnh:
-  - Tiêu đề: "William" (font thư pháp Dancing Script)
-  - Câu nói Tiên Nghịch: "Thuận là Phàm / Nghịch là Tiên / Nghịch Thiên thành Tiên / Nghịch Tiên thành Cổ"
-  - Bỏ form input (tên, email, tin nhắn)
+- ✅ Đổi tên VUONG LAM → William Vu (index.html, LoadingScreen)
+- ✅ Bỏ phần tiếng Anh ở Loading Screen
+- ✅ Thêm **Phoenix Flames (Phượng Hỏa)** vào section Hóa Thần:
+  - 2 phượng hoàng năng lượng 2 bên (tím trái, xanh lơ phải)
+  - Chi tiết: body, neck, head, beak, crown feathers, eyes
+  - Cánh: 5 primary feathers + 3 secondary feathers mỗi bên
+  - Đuôi: 7 lông đuôi dài xòe hình quạt với wave animation
+  - 100 particles thác lửa chảy từ đuôi xuống
+  - MeshPhysicalMaterial cho hiệu ứng sheen/glow
+  - Animation: đập cánh, lượn sóng đuôi, hover body
 
 ---
 
@@ -78,7 +80,7 @@ src/
 │   ├── sections/
 │   │   ├── SkillsSection.tsx   # 4 pillars (clickable crystals)
 │   │   ├── ProjectsSection.tsx # 6 islands (clickable crystals)
-│   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones
+│   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones + 2 Phoenix Flames
 │   │   ├── AboutSection.tsx
 │   │   ├── ContactSection.tsx  # Social links + gates phía sau
 │   │   └── VanDinhSection.tsx  # Đỉnh cao + William panel + gates phía sau

@@ -194,7 +194,7 @@
 | Model | Status | Source |
 |-------|--------|--------|
 | Flying Sword | ⬜ Need | Create/Buy |
-| Fire Phoenix | ⬜ Need | Create/Buy |
+| Fire Phoenix | ✅ Done | Procedural geometry (PhoenixFlame component) |
 | Floating Mountain x3 | ✅ Done | Procedural geometry |
 | Pagoda | ✅ Done | Procedural geometry |
 | Torii Gate | ✅ Done | Procedural geometry |
@@ -219,7 +219,22 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 4 (Latest)
+### Session 2026-01-21 - Update 5 (Latest)
+```
+- Đổi tên VUONG LAM thành William Vu (index.html, LoadingScreen.tsx)
+- Bỏ phần tiếng Anh ở Loading Screen
+- Thêm Phoenix Flames (Phượng Hỏa) vào section Hóa Thần (ExperienceSection):
+  - 2 phượng hoàng năng lượng 2 bên (tím trái, xanh lơ phải)
+  - Chi tiết: body, neck, head, beak, crown feathers, eyes
+  - Cánh: 5 primary feathers + 3 secondary feathers mỗi bên
+  - Đuôi: 7 lông đuôi dài xòe hình quạt với wave animation
+  - 100 particles thác lửa chảy từ đuôi xuống
+  - MeshPhysicalMaterial cho hiệu ứng sheen/glow
+  - Animation: đập cánh, lượn sóng đuôi, hover body
+- Git commit: 29a74aa
+```
+
+### Session 2026-01-21 - Update 4
 ```
 - Di chuyển 3 cổng (CelestialGates) ở Vấn Đỉnh từ phía trước ra phía sau (z âm)
 - Di chuyển 3 cổng (HeavenlyGates) ở Anh Biến từ phía trước ra phía sau (z âm)
@@ -296,6 +311,8 @@
 
 ### Git Commits
 ```
+29a74aa - feat: Add Phoenix Flames to Hoa Than section, rename to William Vu
+be6d1cf - feat: Move gates to back, add Dancing Script font for Vietnamese support
 78a9b6a - feat: Add Vietnamese diacritics, move contact form to Van Dinh
 12e3604 - feat: Add Van Dinh section, new fonts, rename realms & remove diacritics
 a0040b3 - feat: Replace SVG icons with glow orbs, improve layout & camera controls
