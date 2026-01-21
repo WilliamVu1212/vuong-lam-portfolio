@@ -11,7 +11,7 @@
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
 | **Current Phase** | Phase 5 - UI & Polish |
-| **Overall Progress** | 88% |
+| **Overall Progress** | 92% |
 
 ---
 
@@ -74,7 +74,7 @@
 
 ---
 
-### Phase 3: Movement Systems (Tuần 5) - `🔄 PARTIAL`
+### Phase 3: Movement Systems (Tuần 5) - `✅ COMPLETED`
 
 | Task | Status | Notes |
 |------|--------|-------|
@@ -84,11 +84,11 @@
 | Ngự kiếm - Trail effect | ✅ Done | 30 particles trail behind sword |
 | Ngự kiếm - Unlock trigger | ✅ Done | Proximity trigger at Trảm La Kiếm |
 | Ngự kiếm - Camera follow | ✅ Done | Smooth camera follow when flying |
-| Cưỡi linh thú - Phoenix model | ⬜ Todo | |
-| Cưỡi linh thú - Mount system | ⬜ Todo | |
-| Cưỡi linh thú - Flight controls | ⬜ Todo | |
-| Cưỡi linh thú - Fire trail | ⬜ Todo | |
-| Transition animations | ⬜ Todo | |
+| Cưỡi linh thú - Phoenix model | ✅ Done | RidingPhoenix.tsx |
+| Cưỡi linh thú - Mount system | ✅ Done | Player.tsx beast mode |
+| Cưỡi linh thú - Flight controls | ✅ Done | WASD + Space/Q + Shift/E + F |
+| Cưỡi linh thú - Fire trail | ✅ Done | Particle effects |
+| Transition animations | ✅ Done | CSS animations in globals.css |
 | Mobile controls | ⬜ Todo | Joystick |
 
 ---
@@ -220,7 +220,40 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 10 (Latest)
+### Session 2026-01-21 - Update 11 (Latest)
+```
+- Implement Cưỡi Linh Thú (Phoenix Mount System):
+  - RidingPhoenix.tsx: Phoenix model cho player cưỡi khi bay
+    - Body, neck, head với crown feathers
+    - Wings (9 primary + 7 secondary + 5 covert feathers mỗi bên)
+    - Tail (11 feathers xòe như quạt)
+    - 50 trail particles
+    - Wing flap animation synchronized với speed
+  - Player.tsx: Thêm beast flight mode
+    - Tốc độ 80 (nhanh hơn sword: 50)
+    - Vertical speed 30
+    - enterBeastFlight() / exitBeastFlight()
+    - F key toggle cho beast mode
+  - ContactSection.tsx: Unlock trigger ở Hỏa Phượng
+    - Distance < 25: show prompt
+    - Distance < 15: auto unlock
+    - HTML notification panel
+  - App.tsx: UI updates
+    - HUD hiển thị trạng thái Cưỡi Phượng
+    - ControlsHelp động theo mode (orange color)
+    - PhoenixUnlockTutorial popup
+  - LevelNavigator.tsx: Thêm hint cho Phoenix
+    - Icon 🔥 nhấp nháy ở Anh Biến
+    - Hover panel: "Hỏa Phượng đang chờ!"
+  - globals.css: Thêm animations
+    - phoenixUnlock, fireGlowPulse
+    - mount/unmount transitions
+
+- Files changed: RidingPhoenix.tsx (new), Player.tsx, ContactSection.tsx,
+                 App.tsx, LevelNavigator.tsx, globals.css
+```
+
+### Session 2026-01-21 - Update 10
 ```
 - UX: Thêm hint cho người chơi biết về Ngự Kiếm ở Hóa Thần
   - LevelNavigator.tsx:

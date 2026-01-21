@@ -6,6 +6,7 @@ import { Vector3, Raycaster, Vector2, Plane } from 'three';
 import { useGameStore } from '@/stores/gameStore';
 import { useControls } from '@/hooks/useKeyboardControls';
 import { FlyingSword } from './FlyingSword';
+import { RidingPhoenix } from './RidingPhoenix';
 import { PHYSICS, WORLD } from '@/utils/constants';
 
 const MOVE_SPEED = 8;
@@ -18,6 +19,11 @@ const SWORD_MAX_SPEED = PHYSICS.sword.maxSpeed;
 const SWORD_ACCELERATION = PHYSICS.sword.acceleration;
 const SWORD_DECELERATION = PHYSICS.sword.deceleration;
 const SWORD_VERTICAL_SPEED = 25;
+
+// Beast (Phoenix) flight constants
+const BEAST_MAX_SPEED = PHYSICS.beast.maxSpeed;
+const BEAST_ACCELERATION = PHYSICS.beast.acceleration;
+const BEAST_VERTICAL_SPEED = PHYSICS.beast.verticalSpeed;
 
 export function Player() {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
@@ -298,6 +304,103 @@ export function Player() {
     }
 
     // ==========================================
+    // BEAST (PHOENIX) FLIGHT MODE
+    // ==========================================
+    if (isFlying && transportMode === 'beast') {
+      // Disable gravity
+      rb.setGravityScale(0, true);
+      rb.setLinearDamping(0);
+
+      // Get camera direction for flight
+      camera.getWorldDirection(cameraDirection.current);
+      const camDirHorizontal = new Vector3(cameraDirection.current.x, 0, cameraDirection.current.z).normalize();
+
+      // Calculate target velocity based on input
+      const targetVel = new Vector3(0, 0, 0);
+      const hasInput = controls.forward || controls.backward || controls.left || controls.right;
+
+      if (controls.forward) {
+        targetVel.add(camDirHorizontal.clone().multiplyScalar(-1));
+      }
+      if (controls.backward) {
+        targetVel.add(camDirHorizontal);
+      }
+      if (controls.left) {
+        const leftDir = new Vector3().crossVectors(new Vector3(0, 1, 0), camDirHorizontal);
+        targetVel.add(leftDir);
+      }
+      if (controls.right) {
+        const rightDir = new Vector3().crossVectors(camDirHorizontal, new Vector3(0, 1, 0));
+        targetVel.add(rightDir);
+      }
+
+      // Normalize and scale to max speed (phoenix is faster!)
+      if (targetVel.length() > 0) {
+        targetVel.normalize().multiplyScalar(BEAST_MAX_SPEED);
+      }
+
+      // Vertical movement
+      if (controls.ascend || controls.jump) {
+        targetVel.y = BEAST_VERTICAL_SPEED;
+      } else if (controls.descend) {
+        targetVel.y = -BEAST_VERTICAL_SPEED;
+      }
+
+      // Smoothly interpolate velocity
+      const accelRate = hasInput || controls.ascend || controls.descend || controls.jump
+        ? BEAST_ACCELERATION
+        : BEAST_ACCELERATION * 0.5; // Slower deceleration for phoenix
+
+      flightVelocity.current.lerp(targetVel, accelRate * delta);
+
+      // Clamp velocity
+      const horizontalSpeed = Math.sqrt(
+        flightVelocity.current.x ** 2 + flightVelocity.current.z ** 2
+      );
+      if (horizontalSpeed > BEAST_MAX_SPEED) {
+        const scale = BEAST_MAX_SPEED / horizontalSpeed;
+        flightVelocity.current.x *= scale;
+        flightVelocity.current.z *= scale;
+      }
+
+      // World bounds clamping
+      const nextX = position.x + flightVelocity.current.x * delta;
+      const nextY = position.y + flightVelocity.current.y * delta;
+      const nextZ = position.z + flightVelocity.current.z * delta;
+
+      if (nextX < WORLD.bounds.minX || nextX > WORLD.bounds.maxX) {
+        flightVelocity.current.x = 0;
+      }
+      if (nextY < WORLD.bounds.minY + 5 || nextY > WORLD.bounds.maxY) {
+        flightVelocity.current.y = 0;
+      }
+      if (nextZ < WORLD.bounds.minZ || nextZ > WORLD.bounds.maxZ) {
+        flightVelocity.current.z = 0;
+      }
+
+      // Apply velocity
+      rb.setLinvel(
+        {
+          x: flightVelocity.current.x,
+          y: flightVelocity.current.y,
+          z: flightVelocity.current.z,
+        },
+        true
+      );
+
+      // Update store
+      setPlayerPosition([position.x, position.y, position.z]);
+      setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
+
+      // Exit flight mode if descending and close to ground
+      if (controls.descend && position.y < 3) {
+        exitBeastFlight();
+      }
+
+      return; // Skip ground movement logic
+    }
+
+    // ==========================================
     // GROUND MOVEMENT MODE (Original code)
     // ==========================================
 
@@ -430,14 +533,51 @@ export function Player() {
     setPlayerFlying(false);
   };
 
-  // Listen for sword mode toggle (F key when sword is unlocked)
+  // Function to enter beast (phoenix) flight mode
+  const enterBeastFlight = () => {
+    if (!rigidBodyRef.current) return;
+    const rb = rigidBodyRef.current;
+    const velocity = rb.linvel();
+
+    // Initialize flight velocity with current velocity + upward boost
+    flightVelocity.current.set(velocity.x, Math.max(velocity.y, 15), velocity.z);
+
+    // Give initial upward boost (stronger than sword)
+    rb.setLinvel({ x: velocity.x, y: 20, z: velocity.z }, true);
+
+    setPlayerFlying(true);
+  };
+
+  // Function to exit beast flight mode
+  const exitBeastFlight = () => {
+    if (!rigidBodyRef.current) return;
+
+    // Reset flight velocity
+    flightVelocity.current.set(0, 0, 0);
+
+    // Re-enable gravity
+    rigidBodyRef.current.setGravityScale(1, true);
+    rigidBodyRef.current.setLinearDamping(0.5);
+
+    setPlayerFlying(false);
+  };
+
+  // Listen for flight mode toggle (F key)
   useEffect(() => {
     const handleToggleFlight = (e: KeyboardEvent) => {
-      if (e.code === 'KeyF' && transportMode === 'sword') {
-        if (isFlying) {
-          exitSwordFlight();
-        } else {
-          enterSwordFlight();
+      if (e.code === 'KeyF') {
+        if (transportMode === 'sword') {
+          if (isFlying) {
+            exitSwordFlight();
+          } else {
+            enterSwordFlight();
+          }
+        } else if (transportMode === 'beast') {
+          if (isFlying) {
+            exitBeastFlight();
+          } else {
+            enterBeastFlight();
+          }
         }
       }
     };
@@ -490,8 +630,11 @@ export function Player() {
           position={[0, 0.5, 0]}
         />
 
-        {/* Flying Sword - renders under player when flying */}
+        {/* Flying Sword - renders under player when flying sword mode */}
         <FlyingSword velocity={flightVelocity.current} />
+
+        {/* Riding Phoenix - renders under player when flying beast mode */}
+        <RidingPhoenix velocity={flightVelocity.current} phoenixType="fire" />
       </RigidBody>
 
       {/* Target indicator - shows where player will land */}

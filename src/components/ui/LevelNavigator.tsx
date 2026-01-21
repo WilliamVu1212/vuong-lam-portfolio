@@ -59,7 +59,9 @@ const levels = [
 ];
 
 export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
-  const swordUnlocked = useGameStore((state) => state.unlockedTransports).includes('sword');
+  const unlockedTransports = useGameStore((state) => state.unlockedTransports);
+  const swordUnlocked = unlockedTransports.includes('sword');
+  const beastUnlocked = unlockedTransports.includes('beast');
 
   return (
     <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
@@ -76,6 +78,7 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
               level={level}
               onNavigate={onNavigate}
               swordUnlocked={swordUnlocked}
+              beastUnlocked={beastUnlocked}
             />
           ))}
         </div>
@@ -98,12 +101,17 @@ interface LevelNodeProps {
   level: typeof levels[0];
   onNavigate?: (sectionId: string) => void;
   swordUnlocked: boolean;
+  beastUnlocked: boolean;
 }
 
-function LevelNode({ level, onNavigate, swordUnlocked }: LevelNodeProps) {
+function LevelNode({ level, onNavigate, swordUnlocked, beastUnlocked }: LevelNodeProps) {
   // Hóa Thần (experience) có Ngự Kiếm chờ unlock
   const isHoaThan = level.id === 'experience';
   const showSwordHint = isHoaThan && !swordUnlocked;
+
+  // Anh Biến (contact) có Cưỡi Phượng chờ unlock
+  const isAnhBien = level.id === 'contact';
+  const showPhoenixHint = isAnhBien && !beastUnlocked;
 
   return (
     <button
@@ -137,6 +145,16 @@ function LevelNode({ level, onNavigate, swordUnlocked }: LevelNodeProps) {
         </div>
       )}
 
+      {/* Phoenix icon hint for Anh Biến (nếu chưa unlock) */}
+      {showPhoenixHint && (
+        <div
+          className="absolute -left-6 animate-pulse"
+          title="Hỏa Phượng đang chờ!"
+        >
+          <span className="text-orange-400 text-sm">🔥</span>
+        </div>
+      )}
+
       {/* Hover panel with techniques */}
       <div
         className="absolute right-full mr-3 px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none min-w-[160px]"
@@ -162,6 +180,20 @@ function LevelNode({ level, onNavigate, swordUnlocked }: LevelNodeProps) {
           >
             <p className="text-xs text-yellow-400 font-medium">⚔️ Ngự Kiếm đang chờ!</p>
             <p className="text-[10px] text-yellow-200/70 mt-0.5">Đến gần Trảm La Kiếm để khai mở</p>
+          </div>
+        )}
+
+        {/* Phoenix unlock hint for Anh Biến */}
+        {showPhoenixHint && (
+          <div
+            className="mb-2 p-2 rounded-md text-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,69,0,0.2) 0%, rgba(255,140,0,0.2) 100%)',
+              border: '1px solid rgba(255,69,0,0.5)'
+            }}
+          >
+            <p className="text-xs text-orange-400 font-medium">🔥 Hỏa Phượng đang chờ!</p>
+            <p className="text-[10px] text-orange-200/70 mt-0.5">Đến gần Thần Phượng để khai mở</p>
           </div>
         )}
 

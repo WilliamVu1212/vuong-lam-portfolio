@@ -76,17 +76,30 @@ function HUD() {
       {/* Status */}
       <div className="glass rounded-lg px-4 py-2">
         <p className="text-tho-kim text-xs font-accent">Trạng Thái</p>
-        <p className={`text-sm font-body ${isFlying ? 'text-cyan-400' : isGrounded ? 'text-green-400' : 'text-yellow-400'}`}>
-          {isFlying ? '⚔️ Ngự Kiếm Bay' : isGrounded ? 'Trên Mặt Đất' : 'Đang Bay'}
+        <p className={`text-sm font-body ${isFlying ? (transportMode === 'beast' ? 'text-orange-400' : 'text-cyan-400') : isGrounded ? 'text-green-400' : 'text-yellow-400'}`}>
+          {isFlying && transportMode === 'sword' && '⚔️ Ngự Kiếm Bay'}
+          {isFlying && transportMode === 'beast' && '🔥 Cưỡi Phượng'}
+          {!isFlying && isGrounded && 'Trên Mặt Đất'}
+          {!isFlying && !isGrounded && 'Đang Bay'}
         </p>
       </div>
 
       {/* Sword Mode Indicator */}
-      {swordUnlocked && (
+      {swordUnlocked && transportMode === 'sword' && (
         <div className={`glass rounded-lg px-4 py-2 ${isFlying ? 'border border-cyan-500' : ''}`}>
           <p className="text-tho-kim text-xs font-accent">Phi Kiếm</p>
           <p className={`text-sm font-body ${isFlying ? 'text-cyan-400' : 'text-gray-400'}`}>
             {isFlying ? '✓ Đang Bay' : 'Nhấn F để bay'}
+          </p>
+        </div>
+      )}
+
+      {/* Phoenix Mode Indicator */}
+      {unlockedTransports.includes('beast') && transportMode === 'beast' && (
+        <div className={`glass rounded-lg px-4 py-2 ${isFlying ? 'border border-orange-500' : ''}`}>
+          <p className="text-tho-kim text-xs font-accent">Cưỡi Phượng</p>
+          <p className={`text-sm font-body ${isFlying ? 'text-orange-400' : 'text-gray-400'}`}>
+            {isFlying ? '🔥 Đang Bay' : 'Nhấn F để bay'}
           </p>
         </div>
       )}
@@ -96,7 +109,12 @@ function HUD() {
 
 function ControlsHelp() {
   const isFlying = useGameStore((state) => state.player.isFlying);
-  const swordUnlocked = useGameStore((state) => state.unlockedTransports).includes('sword');
+  const transportMode = useGameStore((state) => state.transportMode);
+  const unlockedTransports = useGameStore((state) => state.unlockedTransports);
+  const swordUnlocked = unlockedTransports.includes('sword');
+  const beastUnlocked = unlockedTransports.includes('beast');
+
+  const flyColor = transportMode === 'beast' ? 'text-orange-400' : 'text-cyan-400';
 
   return (
     <div className="absolute bottom-4 left-4 glass rounded-lg px-4 py-3">
@@ -111,12 +129,19 @@ function ControlsHelp() {
         )}
         {isFlying && (
           <>
-            <p><span className="text-cyan-400">Space / Q</span> - Bay lên</p>
-            <p><span className="text-cyan-400">Shift / E</span> - Bay xuống</p>
+            <p><span className={flyColor}>Space / Q</span> - Bay lên</p>
+            <p><span className={flyColor}>Shift / E</span> - Bay xuống</p>
           </>
         )}
-        {swordUnlocked && (
-          <p><span className="text-yellow-400">F</span> - {isFlying ? 'Xuống đất' : 'Ngự Kiếm'}</p>
+        {(swordUnlocked || beastUnlocked) && (
+          <p>
+            <span className="text-yellow-400">F</span> -{' '}
+            {isFlying
+              ? 'Xuống đất'
+              : transportMode === 'beast'
+              ? 'Cưỡi Phượng'
+              : 'Ngự Kiếm'}
+          </p>
         )}
         <p><span className="text-hoa-quang">Kéo chuột trái</span> - Xoay camera</p>
         <p><span className="text-hoa-quang">Kéo chuột phải</span> - Di chuyển camera</p>
@@ -298,7 +323,110 @@ function App() {
 
       {/* Sword Unlock Tutorial */}
       <SwordUnlockTutorial />
+
+      {/* Phoenix Unlock Tutorial */}
+      <PhoenixUnlockTutorial />
     </>
+  );
+}
+
+// Tutorial popup khi unlock Cưỡi Phượng
+function PhoenixUnlockTutorial() {
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [hasShown, setHasShown] = useState(false);
+  const beastUnlocked = useGameStore((state) => state.unlockedTransports).includes('beast');
+
+  useEffect(() => {
+    if (beastUnlocked && !hasShown) {
+      setShowTutorial(true);
+      setHasShown(true);
+    }
+  }, [beastUnlocked, hasShown]);
+
+  if (!showTutorial) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+      <div
+        className="pointer-events-auto animate-swordUnlock animate-glowPulse"
+        style={{
+          background: 'linear-gradient(135deg, rgba(26,10,10,0.98) 0%, rgba(45,27,27,0.98) 100%)',
+          border: '3px solid #FF4500',
+          borderRadius: '16px',
+          padding: '32px',
+          maxWidth: '420px',
+          boxShadow: '0 0 60px rgba(255,69,0,0.4), inset 0 0 30px rgba(255,140,0,0.1)',
+        }}
+      >
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="text-4xl mb-2">🔥</div>
+          <h2
+            className="font-display text-2xl"
+            style={{ color: '#FF4500', textShadow: '0 0 20px rgba(255,69,0,0.5)' }}
+          >
+            Cưỡi Phượng Khai Mở!
+          </h2>
+          <p className="text-tho-kim text-sm mt-1 font-accent">Đã kết giao với Hỏa Phượng Thần Thú</p>
+        </div>
+
+        {/* Controls Guide */}
+        <div className="space-y-3 mb-6">
+          <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,69,0,0.1)' }}>
+            <kbd className="px-3 py-1 rounded font-bold text-lg" style={{ background: '#FF4500', color: '#1A0A0A' }}>F</kbd>
+            <span className="text-co-chi font-body">Bật / Tắt chế độ cưỡi phượng</span>
+          </div>
+
+          <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,140,0,0.1)' }}>
+            <div className="flex gap-1">
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>W</kbd>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>A</kbd>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>S</kbd>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>D</kbd>
+            </div>
+            <span className="text-co-chi font-body">Di chuyển ngang (nhanh hơn kiếm!)</span>
+          </div>
+
+          <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,140,0,0.1)' }}>
+            <div className="flex gap-1">
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Space</kbd>
+              <span className="text-tho-kim">/</span>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Q</kbd>
+            </div>
+            <span className="text-co-chi font-body">Bay lên cao</span>
+          </div>
+
+          <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,140,0,0.1)' }}>
+            <div className="flex gap-1">
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Shift</kbd>
+              <span className="text-tho-kim">/</span>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>E</kbd>
+            </div>
+            <span className="text-co-chi font-body">Hạ xuống thấp</span>
+          </div>
+        </div>
+
+        {/* Tip */}
+        <div className="text-center mb-4 p-3 rounded-lg" style={{ background: 'rgba(255,215,0,0.1)', border: '1px solid rgba(255,215,0,0.3)' }}>
+          <p className="text-sm" style={{ color: '#FFD700' }}>
+            💡 Phượng bay nhanh hơn kiếm! Tốc độ: 80 vs 50
+          </p>
+        </div>
+
+        {/* Close Button */}
+        <button
+          onClick={() => setShowTutorial(false)}
+          className="w-full py-3 rounded-lg font-display text-lg transition-all hover:scale-105"
+          style={{
+            background: 'linear-gradient(135deg, #FF4500 0%, #FF8C00 100%)',
+            color: '#1A0A0A',
+            boxShadow: '0 4px 20px rgba(255,69,0,0.3)',
+          }}
+        >
+          Đã Hiểu - Cưỡi Phượng Bay!
+        </button>
+      </div>
+    </div>
   );
 }
 

@@ -4,6 +4,7 @@ import { Float, Sparkles, Html } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { contactInfo } from '@/data/content';
+import { useGameStore } from '@/stores/gameStore';
 
 // Note: Contact form moved to VanDinhSection
 
@@ -543,7 +544,18 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
   const auraRef = useRef<THREE.Group>(null);
   const haloRef = useRef<THREE.Mesh>(null);
 
+  // Unlock trigger state - only fire phoenix can unlock
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  // Store hooks
+  const playerPosition = useGameStore((state) => state.player.position);
+  const unlockedTransports = useGameStore((state) => state.unlockedTransports);
+  const unlockTransport = useGameStore((state) => state.unlockTransport);
+  const setTransportMode = useGameStore((state) => state.setTransportMode);
+
   const isIce = type === 'ice';
+  const isFire = type === 'fire';
 
   // Color scheme
   const colors = isIce ? {
@@ -607,6 +619,37 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
     if (haloRef.current) {
       const scale = 1 + Math.sin(t * 2) * 0.1;
       haloRef.current.scale.set(scale, scale, 1);
+    }
+
+    // ===== UNLOCK TRIGGER - Only Fire Phoenix can unlock =====
+    if (isFire && !unlockedTransports.includes('beast')) {
+      // Calculate world position of phoenix (ContactSection is at [0, 200, -550])
+      const worldPos = [
+        position[0], // -60 or 60
+        200 + position[1], // 200 + 0
+        -550 + position[2] // -550 + 0
+      ];
+
+      // Calculate distance to player
+      const dx = playerPosition[0] - worldPos[0];
+      const dy = playerPosition[1] - worldPos[1];
+      const dz = playerPosition[2] - worldPos[2];
+      const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+      // Show prompt when close
+      if (distance < 25 && !isUnlocked) {
+        setShowPrompt(true);
+      } else if (distance >= 25) {
+        setShowPrompt(false);
+      }
+
+      // Auto-unlock when very close
+      if (distance < 15 && !isUnlocked) {
+        unlockTransport('beast');
+        setTransportMode('beast');
+        setIsUnlocked(true);
+        setShowPrompt(true);
+      }
     }
   });
 
@@ -910,6 +953,42 @@ function DivinePhoenix({ position, type }: DivinePhoenixProps) {
 
       {/* ===== ĐẾ PHƯỢNG HOÀNG (PEDESTAL) ===== */}
       <DivinePedestal colors={colors} />
+
+      {/* ===== UNLOCK PROMPT - Only for Fire Phoenix ===== */}
+      {isFire && showPrompt && (
+        <Html position={[0, 45, 0]} center>
+          <div
+            className="px-4 py-3 rounded-lg text-center whitespace-nowrap animate-fadeIn"
+            style={{
+              background: isUnlocked
+                ? 'linear-gradient(135deg, rgba(0,206,209,0.95), rgba(64,224,208,0.9))'
+                : 'linear-gradient(135deg, rgba(255,69,0,0.95), rgba(255,140,0,0.9))',
+              border: `2px solid ${isUnlocked ? '#00FFFF' : '#FFD700'}`,
+              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(0,255,255,0.5)' : 'rgba(255,140,0,0.5)'}`,
+            }}
+          >
+            {isUnlocked ? (
+              <>
+                <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
+                  ✓ Đã khai mở Cưỡi Phượng!
+                </p>
+                <p className="text-cyan-100 text-sm mt-1">
+                  Nhấn <span className="font-bold text-white">F</span> để bay trên lưng Hỏa Phượng
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
+                  🔥 Hỏa Phượng
+                </p>
+                <p className="text-yellow-100 text-sm mt-1">
+                  Đến gần để khai mở Cưỡi Linh Thú
+                </p>
+              </>
+            )}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }

@@ -2,7 +2,7 @@
 
 ## CURRENT STATUS (2026-01-21)
 
-**Overall Progress: 88%** - Phase 5 (UI & Polish)
+**Overall Progress: 92%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -38,19 +38,22 @@
 
 ---
 
-## Recent Update (2026-01-21) - Session 10
+## Recent Update (2026-01-21) - Session 11
 
 ### Đã hoàn thành:
+- ✅ **Cưỡi Linh Thú (Phoenix Mount System)** - Bay trên lưng Hỏa Phượng
+  - **RidingPhoenix.tsx** - Phoenix model với body, wings, tail, particles
+  - **Player.tsx** - Thêm beast flight mode (tốc độ 80, nhanh hơn kiếm!)
+  - **ContactSection.tsx** - Unlock trigger ở Hỏa Phượng (distance < 15)
+  - **App.tsx** - HUD & ControlsHelp cho phoenix mode + Tutorial popup
+  - **LevelNavigator.tsx** - Icon 🔥 nhấp nháy ở Anh Biến
+  - **globals.css** - Phoenix animations (phoenixUnlock, fireGlowPulse, mount/unmount)
+
+### Session 10:
 - ✅ **UX: Sword Unlock Hint** - Người chơi biết có Ngự Kiếm ở Hóa Thần
-  - **LevelNavigator.tsx** - Icon ⚔️ nhấp nháy bên cạnh node Hóa Thần
-  - **Hover Panel** - Hiển thị hint "Ngự Kiếm đang chờ! Đến gần Trảm La Kiếm để khai mở"
-  - **Auto-hide** - Hint tự động ẩn sau khi unlock
 
 ### Session 9:
 - ✅ **Ngự Kiếm (Sword Flying Mode)** - Bay kiếm hoàn chỉnh
-  - FlyingSword.tsx với trail effect
-  - WASD + Space/Q + Shift/E + F controls
-  - Unlock trigger ở Trảm La Kiếm
 
 ### Session trước:
 - ✅ **Thần Phượng (Divine Phoenix)** ở Anh Biến
@@ -66,9 +69,14 @@
 - Add mobile joystick controls
 
 ### Medium-term:
-- Performance optimization (bundle 3.5MB cần giảm)
+- Performance optimization (bundle ~3.6MB cần giảm)
 - Cross-browser testing
 - Deploy to Vercel
+
+### Đã hoàn thành từ Phase 3:
+- ✅ Ngự Kiếm (Sword Flying) - Session 9
+- ✅ Cưỡi Linh Thú (Phoenix Mount) - Session 11
+- ⬜ Transition animations giữa các mode (partial)
 
 ---
 
