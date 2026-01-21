@@ -382,12 +382,12 @@ function SocialPillar({ platform, url, position, index }: SocialPillarProps) {
 function HeavenlyGates() {
   return (
     <>
-      {/* Main entrance gate */}
-      <HeavenlyGate position={[0, 0, 30]} rotation={0} scale={1.5} />
+      {/* Main entrance gate - phía sau */}
+      <HeavenlyGate position={[0, 0, -30]} rotation={Math.PI} scale={1.5} />
 
-      {/* Side gates */}
-      <HeavenlyGate position={[-25, 0, 15]} rotation={Math.PI / 4} scale={1} />
-      <HeavenlyGate position={[25, 0, 15]} rotation={-Math.PI / 4} scale={1} />
+      {/* Side gates - phía sau */}
+      <HeavenlyGate position={[-25, 0, -15]} rotation={Math.PI - Math.PI / 4} scale={1} />
+      <HeavenlyGate position={[25, 0, -15]} rotation={Math.PI + Math.PI / 4} scale={1} />
     </>
   );
 }

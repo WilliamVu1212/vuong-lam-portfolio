@@ -297,26 +297,6 @@ function ImmortalThrone({ position }: ImmortalThroneProps) {
         ))}
       </group>
 
-      {/* Achievement Display */}
-      <Html
-        position={[0, 35, 0]}
-        center
-        style={{ pointerEvents: 'none' }}
-      >
-        <div
-          className="text-center px-6 py-3 rounded-lg"
-          style={{
-            backgroundColor: 'rgba(10, 21, 32, 0.9)',
-            border: '2px solid #00CED1',
-            boxShadow: '0 0 40px #00CED180',
-          }}
-        >
-          <h2 className="text-2xl font-bold" style={{ color: '#00CED1', fontFamily: 'Cinzel, serif' }}>
-            Vấn Đỉnh
-          </h2>
-        </div>
-      </Html>
-
       {/* Lights */}
       <pointLight position={[0, 25, 0]} color="#00CED1" intensity={4} distance={50} />
       <pointLight position={[0, 10, 0]} color="#FFD700" intensity={1} distance={25} />
@@ -432,12 +412,12 @@ function ContactAltar({ position }: ContactAltarProps) {
           transform
           occlude
           style={{
-            width: '280px',
+            width: '300px',
             pointerEvents: formHovered ? 'auto' : 'none',
           }}
         >
           <div
-            className="p-4 rounded-lg"
+            className="p-5 rounded-lg"
             style={{
               backgroundColor: 'rgba(10, 21, 32, 0.95)',
               border: '1px solid #00CED1',
@@ -445,66 +425,32 @@ function ContactAltar({ position }: ContactAltarProps) {
             }}
           >
             <h3
-              className="text-center mb-3 text-lg font-bold"
-              style={{ color: '#00CED1', fontFamily: 'Cinzel, serif' }}
+              className="text-center mb-4 text-3xl"
+              style={{
+                color: '#00CED1',
+                fontFamily: 'Dancing Script, cursive',
+                fontWeight: 700,
+                textShadow: '0 0 15px #00CED180'
+              }}
             >
-              Liên Hệ Vương Lâm VN
+              William
             </h3>
-            <form className="space-y-2">
-              <input
-                type="text"
-                placeholder="Tên của bạn"
-                className="w-full px-3 py-2 rounded text-sm focus:outline-none"
-                style={{
-                  backgroundColor: 'rgba(0, 206, 209, 0.1)',
-                  border: '1px solid rgba(0, 206, 209, 0.3)',
-                  color: '#E0E0E0',
-                }}
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full px-3 py-2 rounded text-sm focus:outline-none"
-                style={{
-                  backgroundColor: 'rgba(0, 206, 209, 0.1)',
-                  border: '1px solid rgba(0, 206, 209, 0.3)',
-                  color: '#E0E0E0',
-                }}
-              />
-              <select
-                className="w-full px-3 py-2 rounded text-sm focus:outline-none"
-                style={{
-                  backgroundColor: 'rgba(10, 21, 32, 0.95)',
-                  border: '1px solid rgba(0, 206, 209, 0.3)',
-                  color: '#E0E0E0',
-                }}
-              >
-                <option value="">Chọn chủ đề</option>
-                <option value="project">Hợp tác dự án</option>
-                <option value="job">Cơ hội việc làm</option>
-                <option value="other">Khác</option>
-              </select>
-              <textarea
-                placeholder="Tin nhắn..."
-                rows={3}
-                className="w-full px-3 py-2 rounded text-sm focus:outline-none resize-none"
-                style={{
-                  backgroundColor: 'rgba(0, 206, 209, 0.1)',
-                  border: '1px solid rgba(0, 206, 209, 0.3)',
-                  color: '#E0E0E0',
-                }}
-              />
-              <button
-                type="submit"
-                className="w-full py-2 rounded font-bold transition-opacity hover:opacity-90"
-                style={{
-                  background: 'linear-gradient(90deg, #00CED1, #FFD700)',
-                  color: '#0a1520',
-                }}
-              >
-                Gửi Tin Nhắn
-              </button>
-            </form>
+            <div
+              className="text-center leading-relaxed"
+              style={{
+                color: '#FFD700',
+                fontFamily: 'Dancing Script, cursive',
+                fontSize: '15px',
+                fontWeight: 600,
+                textShadow: '0 0 8px #FFD70060',
+                lineHeight: '2'
+              }}
+            >
+              <p>Thuận là Phàm</p>
+              <p>Nghịch là Tiên</p>
+              <p>Nghịch Thiên thành Tiên</p>
+              <p>Nghịch Tiên thành Cổ</p>
+            </div>
           </div>
         </Html>
       </group>
@@ -529,12 +475,12 @@ function ContactAltar({ position }: ContactAltarProps) {
 function CelestialGates() {
   return (
     <>
-      {/* Main celestial gate */}
-      <CelestialGate position={[0, 0, 40]} scale={2} />
+      {/* Main celestial gate - phía sau với title */}
+      <CelestialGate position={[0, 0, -40]} scale={2} showTitle />
 
-      {/* Side gates */}
-      <CelestialGate position={[-35, 0, 25]} scale={1.2} rotation={Math.PI / 5} />
-      <CelestialGate position={[35, 0, 25]} scale={1.2} rotation={-Math.PI / 5} />
+      {/* Side gates - phía sau */}
+      <CelestialGate position={[-35, 0, -25]} scale={1.2} rotation={-Math.PI / 5} />
+      <CelestialGate position={[35, 0, -25]} scale={1.2} rotation={Math.PI / 5} />
     </>
   );
 }
@@ -543,9 +489,10 @@ interface CelestialGateProps {
   position: [number, number, number];
   scale: number;
   rotation?: number;
+  showTitle?: boolean;
 }
 
-function CelestialGate({ position, scale, rotation = 0 }: CelestialGateProps) {
+function CelestialGate({ position, scale, rotation = 0, showTitle = false }: CelestialGateProps) {
   const gateRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -632,6 +579,33 @@ function CelestialGate({ position, scale, rotation = 0 }: CelestialGateProps) {
           />
         </mesh>
       </Float>
+
+      {/* Title above main gate */}
+      {showTitle && (
+        <Html
+          position={[0, 24, 0]}
+          center
+          style={{ pointerEvents: 'none' }}
+        >
+          <div
+            className="text-center px-8 py-4 rounded-lg"
+            style={{
+              backgroundColor: 'rgba(10, 21, 32, 0.9)',
+              border: '2px solid #00CED1',
+              boxShadow: '0 0 40px #00CED180',
+            }}
+          >
+            <h2 className="text-4xl" style={{
+              color: '#00CED1',
+              fontFamily: 'Dancing Script, cursive',
+              fontWeight: 700,
+              textShadow: '0 0 20px #00CED180'
+            }}>
+              Vấn Đỉnh
+            </h2>
+          </div>
+        </Html>
+      )}
 
       {/* Gate lights */}
       <pointLight position={[0, 8, 2]} color="#00CED1" intensity={1.5} distance={20} />

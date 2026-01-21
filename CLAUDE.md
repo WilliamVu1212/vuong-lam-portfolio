@@ -2,7 +2,7 @@
 
 ## CURRENT STATUS (2026-01-21)
 
-**Overall Progress: 80%** - Phase 5 (UI & Polish)
+**Overall Progress: 82%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -18,6 +18,7 @@
 ### Font chữ Tiên Hiệp:
 - **Cinzel** - Display/heading chính
 - **Cinzel Decorative** - Heading trang trí
+- **Dancing Script** - Font thư pháp (cursive) hỗ trợ tiếng Việt đầy đủ
 - **Cormorant Garamond** - Body/accent (italic đẹp)
 - **Crimson Pro** - Body phụ
 
@@ -27,8 +28,8 @@
 3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals
 4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals
 5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones
-6. **Contact** (Anh Biến) - Cloud palace, social links (không có form)
-7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, **Contact Form** - Cyan theme
+6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau
+7. **Vấn Đỉnh** - Peak platform, throne, celestial gates phía sau với title, William panel + câu nói Tiên Nghịch
 
 ### Camera Controls:
 - OrbitControls với zoom/rotate/pan
@@ -37,14 +38,17 @@
 
 ---
 
-## Recent Update (2026-01-21)
+## Recent Update (2026-01-21) - Session 4
 
 ### Đã hoàn thành:
-- ✅ Cập nhật tất cả text tiếng Việt có dấu đầy đủ
-- ✅ Xóa các text không cần thiết ở Vấn Đỉnh (Dao tablets)
-- ✅ Di chuyển Contact Form từ Anh Biến lên Vấn Đỉnh
-- ✅ Thiết kế lại Contact Form với theme cyan phù hợp
-- ✅ Tiêu đề form: "Liên Hệ Vương Lâm VN"
+- ✅ Di chuyển 3 cổng (CelestialGates) ở Vấn Đỉnh từ phía trước ra phía sau (z âm)
+- ✅ Di chuyển 3 cổng (HeavenlyGates) ở Anh Biến từ phía trước ra phía sau (z âm)
+- ✅ Đặt chữ "Vấn Đỉnh" lên trên cổng giữa (main gate) thay vì ở Immortal Throne
+- ✅ Thêm font "Dancing Script" - font thư pháp hỗ trợ tiếng Việt (chữ Đ hiển thị đúng)
+- ✅ Cập nhật Contact panel ở Vấn Đỉnh:
+  - Tiêu đề: "William" (font thư pháp Dancing Script)
+  - Câu nói Tiên Nghịch: "Thuận là Phàm / Nghịch là Tiên / Nghịch Thiên thành Tiên / Nghịch Tiên thành Cổ"
+  - Bỏ form input (tên, email, tin nhắn)
 
 ---
 
@@ -76,8 +80,8 @@ src/
 │   │   ├── ProjectsSection.tsx # 6 islands (clickable crystals)
 │   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones
 │   │   ├── AboutSection.tsx
-│   │   ├── ContactSection.tsx  # Social links only
-│   │   └── VanDinhSection.tsx  # Đỉnh cao + Contact Form
+│   │   ├── ContactSection.tsx  # Social links + gates phía sau
+│   │   └── VanDinhSection.tsx  # Đỉnh cao + William panel + gates phía sau
 │   └── ui/
 │       ├── LevelNavigator.tsx  # Navigation dọc (7 levels)
 │       ├── LoadingScreen.tsx

@@ -11,7 +11,7 @@
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
 | **Current Phase** | Phase 5 - UI & Polish |
-| **Overall Progress** | 80% |
+| **Overall Progress** | 82% |
 
 ---
 
@@ -219,7 +219,21 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 3 (Latest)
+### Session 2026-01-21 - Update 4 (Latest)
+```
+- Di chuyển 3 cổng (CelestialGates) ở Vấn Đỉnh từ phía trước ra phía sau (z âm)
+- Di chuyển 3 cổng (HeavenlyGates) ở Anh Biến từ phía trước ra phía sau (z âm)
+- Đặt chữ "Vấn Đỉnh" lên trên cổng giữa (main gate) thay vì ở Immortal Throne
+- Thêm font "Dancing Script" - font thư pháp hỗ trợ tiếng Việt đầy đủ (chữ Đ hiển thị đúng)
+- Cập nhật Contact panel ở Vấn Đỉnh:
+  - Tiêu đề: "William" (font thư pháp Dancing Script, màu cyan)
+  - Câu nói Tiên Nghịch 4 dòng (font thư pháp, màu vàng gold):
+    "Thuận là Phàm / Nghịch là Tiên / Nghịch Thiên thành Tiên / Nghịch Tiên thành Cổ"
+  - Bỏ form input (tên, email, tin nhắn, nút gửi)
+- Files changed: index.html, ContactSection.tsx, VanDinhSection.tsx
+```
+
+### Session 2026-01-21 - Update 3
 ```
 - Cập nhật tất cả text tiếng Việt có dấu đầy đủ (Vietnamese diacritics)
   - content.ts: cultivation techniques, sectionZones, cultivationLevels
@@ -282,12 +296,12 @@
 
 ### Git Commits
 ```
+78a9b6a - feat: Add Vietnamese diacritics, move contact form to Van Dinh
+12e3604 - feat: Add Van Dinh section, new fonts, rename realms & remove diacritics
+a0040b3 - feat: Replace SVG icons with glow orbs, improve layout & camera controls
+b6bce68 - docs: Update PROGRESS.md and CLAUDE.md with current status
 76a01de - feat: Replace emoji icons with custom SVG Xianxia-style icons
 fbd9d48 - feat: Add waterfalls and convert all labels to icon-based UI
-ae80215 - fix: Remove Chinese text and improve UI display
-0cda074 - feat: Add LevelNavigator with cultivation techniques and improve UI
-7a66976 - feat: Improve SkillsSection UI with click interaction
-a3f19e1 - feat: Implement all content sections for portfolio
 ```
 
 ---
@@ -358,8 +372,8 @@ src/
 │   │   ├── ProjectsSection.tsx # Projects (glow orbs)
 │   │   ├── ExperienceSection.tsx # Experience (glow orbs)
 │   │   ├── AboutSection.tsx
-│   │   ├── ContactSection.tsx
-│   │   └── VanDinhSection.tsx  # Đỉnh cao + Contact Form
+│   │   ├── ContactSection.tsx  # Social links + gates phía sau
+│   │   └── VanDinhSection.tsx  # Đỉnh cao + William panel + gates phía sau
 │   └── ui/
 │       ├── LevelNavigator.tsx  # Navigation với cultivation levels
 │       ├── LoadingScreen.tsx
