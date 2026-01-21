@@ -238,10 +238,13 @@
 - ✅ Changed font to Cinzel for better Vietnamese diacritics
 - ✅ Disabled debug mode (r3f-perf) by default
 - ✅ Improved OrbitControls for panoramic viewing
+- ✅ Created XianxiaIcons.tsx with 16 custom SVG icons (Sword, Alchemy, Formation, etc.)
+- ⚠️ SVG icons cần được đánh giá lại - có thể không phù hợp với phong cách 3D minimalist
 ```
 
 ### Git Commits
 ```
+76a01de - feat: Replace emoji icons with custom SVG Xianxia-style icons
 fbd9d48 - feat: Add waterfalls and convert all labels to icon-based UI
 ae80215 - fix: Remove Chinese text and improve UI display
 0cda074 - feat: Add LevelNavigator with cultivation techniques and improve UI
@@ -258,6 +261,7 @@ a3f19e1 - feat: Implement all content sections for portfolio
 | Mobile controls not implemented | Medium | Pending |
 | Sound not integrated | Low | Pending |
 | Sword/Phoenix transport not done | Medium | Pending |
+| **SVG Icons không phù hợp phong cách** | High | **Cần giải quyết** |
 
 ---
 
@@ -286,19 +290,56 @@ a3f19e1 - feat: Implement all content sections for portfolio
 
 ## 🔮 Next Steps
 
-1. **Immediate**: Test and verify all sections work correctly
+1. **Immediate - FIX ICON ISSUE**:
+   - SVG icons quá chi tiết, không hợp phong cách 3D minimalist
+   - **Đề xuất giải pháp:**
+     - Option 1: Bỏ icon, dùng hình học 3D thuần túy (chỉ màu sắc phân biệt)
+     - Option 2: Icon đơn giản cực độ (1-2 nét: `/` `○` `△` `✦`)
+     - Option 3: Dùng 1 ký tự Hán đơn lẻ (劍 丹 陣 龍)
+     - Option 4: Không icon, chỉ glow orb (đã có sẵn) - **RECOMMENDED**
+   - Files liên quan: XianxiaIcons.tsx, SkillsSection.tsx, ProjectsSection.tsx, ExperienceSection.tsx
+
 2. **Short-term**:
    - Add sound/music integration
    - Implement sword flying mode
    - Add mobile joystick controls
+
 3. **Medium-term**:
    - Performance optimization
    - Bundle size reduction
    - Cross-browser testing
+
 4. **Long-term**:
    - Deploy to Vercel
    - Add analytics
    - SEO optimization
+
+---
+
+## 📂 Files Structure (Key Files)
+
+```
+src/
+├── components/
+│   ├── 3d/
+│   │   ├── Experience.tsx      # Main 3D scene với Waterfalls
+│   │   ├── Player.tsx          # Player controller
+│   │   └── CloudPlatforms.tsx  # Cloud platforms
+│   ├── sections/
+│   │   ├── SkillsSection.tsx   # Skills (dùng XianxiaIcons)
+│   │   ├── ProjectsSection.tsx # Projects (dùng XianxiaIcons)
+│   │   ├── ExperienceSection.tsx # Experience (dùng XianxiaIcons)
+│   │   ├── AboutSection.tsx
+│   │   └── ContactSection.tsx
+│   └── ui/
+│       ├── XianxiaIcons.tsx    # ⚠️ 16 SVG icons - CẦN XEM LẠI
+│       ├── LevelNavigator.tsx  # Navigation với cultivation levels
+│       ├── LoadingScreen.tsx
+│       └── ProjectModal.tsx
+├── stores/gameStore.ts         # Zustand stores
+├── data/content.ts             # Content data
+└── App.tsx                     # Main app
+```
 
 ---
 
