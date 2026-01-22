@@ -309,8 +309,8 @@ function ControlsHelp() {
         )}
         {isFlying && (
           <>
-            <p><span className={flyColor}>Space / Q</span> - Bay lên</p>
-            <p><span className={flyColor}>Shift / E</span> - Bay xuống</p>
+            <p><span className={flyColor}>Q / Space</span> - Bay lên</p>
+            <p><span className={flyColor}>E</span> - Bay xuống</p>
           </>
         )}
         {(swordUnlocked || beastUnlocked) && (
@@ -390,17 +390,15 @@ function SwordUnlockTutorial() {
 
           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(0,206,209,0.1)' }}>
             <div className="flex gap-1">
-              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#00CED1', color: '#1A0A0A' }}>Space</kbd>
-              <span className="text-tho-kim">/</span>
               <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#00CED1', color: '#1A0A0A' }}>Q</kbd>
+              <span className="text-tho-kim">/</span>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#00CED1', color: '#1A0A0A' }}>Space</kbd>
             </div>
             <span className="text-co-chi font-body">Bay lên cao</span>
           </div>
 
           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(0,206,209,0.1)' }}>
             <div className="flex gap-1">
-              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#00CED1', color: '#1A0A0A' }}>Shift</kbd>
-              <span className="text-tho-kim">/</span>
               <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#00CED1', color: '#1A0A0A' }}>E</kbd>
             </div>
             <span className="text-co-chi font-body">Hạ xuống thấp</span>
@@ -410,14 +408,14 @@ function SwordUnlockTutorial() {
         {/* Tip */}
         <div className="text-center mb-4 p-3 rounded-lg" style={{ background: 'rgba(255,68,68,0.1)', border: '1px solid rgba(255,68,68,0.3)' }}>
           <p className="text-sm" style={{ color: '#FF6B35' }}>
-            💡 Mẹo: Bay đến gần mặt đất và nhấn <kbd className="px-1 rounded" style={{ background: 'rgba(255,215,0,0.3)' }}>Shift</kbd> để hạ cánh
+            💡 Mẹo: Bay đến gần mặt đất và nhấn <kbd className="px-1 rounded" style={{ background: 'rgba(255,215,0,0.3)' }}>E</kbd> để hạ cánh
           </p>
         </div>
 
         {/* Close Button */}
         <button
           onClick={() => setShowTutorial(false)}
-          className="w-full py-3 rounded-lg font-display text-lg transition-all hover:scale-105"
+          className="w-full py-3 rounded-lg font-serif text-lg font-semibold transition-all hover:scale-105"
           style={{
             background: 'linear-gradient(135deg, #FFD700 0%, #FF8C00 100%)',
             color: '#1A0A0A',
@@ -638,17 +636,15 @@ function PhoenixUnlockTutorial() {
 
           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,140,0,0.1)' }}>
             <div className="flex gap-1">
-              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Space</kbd>
-              <span className="text-tho-kim">/</span>
               <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Q</kbd>
+              <span className="text-tho-kim">/</span>
+              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Space</kbd>
             </div>
             <span className="text-co-chi font-body">Bay lên cao</span>
           </div>
 
           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,140,0,0.1)' }}>
             <div className="flex gap-1">
-              <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>Shift</kbd>
-              <span className="text-tho-kim">/</span>
               <kbd className="px-2 py-1 rounded text-sm" style={{ background: '#FF8C00', color: '#1A0A0A' }}>E</kbd>
             </div>
             <span className="text-co-chi font-body">Hạ xuống thấp</span>
@@ -665,7 +661,7 @@ function PhoenixUnlockTutorial() {
         {/* Close Button */}
         <button
           onClick={() => setShowTutorial(false)}
-          className="w-full py-3 rounded-lg font-display text-lg transition-all hover:scale-105"
+          className="w-full py-3 rounded-lg font-serif text-lg font-semibold transition-all hover:scale-105"
           style={{
             background: 'linear-gradient(135deg, #FF4500 0%, #FF8C00 100%)',
             color: '#1A0A0A',

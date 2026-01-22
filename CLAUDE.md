@@ -48,8 +48,8 @@
 - **S** - Lùi về phía sau (Z dương)
 - **A** - Sang trái (X âm)
 - **D** - Sang phải (X dương)
-- **Space / Q** - Bay lên
-- **Shift / E** - Bay xuống
+- **Q / Space** - Bay lên
+- **E** - Bay xuống
 - **F** - Bật/tắt chế độ bay
 
 ---

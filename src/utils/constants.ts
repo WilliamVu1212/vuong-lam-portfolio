@@ -253,9 +253,9 @@ export const CONTROLS = {
     left: ['KeyA', 'ArrowLeft'],
     right: ['KeyD', 'ArrowRight'],
     jump: ['Space'],
-    ascend: ['Space', 'KeyQ'],
-    descend: ['ShiftLeft', 'ShiftRight', 'KeyE'],  // Cả 2 phím Shift + E
-    interact: ['Enter'],  // Bỏ KeyF vì F dùng để toggle flight
+    ascend: ['KeyQ', 'Space'],  // Q hoặc Space để bay lên
+    descend: ['KeyE'],  // E để bay xuống (đơn giản hơn)
+    interact: ['Enter'],
     pause: ['Escape'],
   },
 

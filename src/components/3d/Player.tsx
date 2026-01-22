@@ -264,9 +264,16 @@ export function Player() {
       }
 
       // Vertical movement (ascend/descend)
-      if (controls.ascend || controls.jump) {
+      // Khi bấm cả ascend + descend cùng lúc (Shift+Q), ưu tiên bay lên
+      const wantAscend = controls.ascend || controls.jump;
+      const wantDescend = controls.descend;
+
+      if (wantAscend && wantDescend) {
+        // Bấm cả 2: ưu tiên bay lên
         targetVel.y = SWORD_VERTICAL_SPEED;
-      } else if (controls.descend) {
+      } else if (wantAscend) {
+        targetVel.y = SWORD_VERTICAL_SPEED;
+      } else if (wantDescend) {
         targetVel.y = -SWORD_VERTICAL_SPEED;
       }
 
@@ -357,15 +364,22 @@ export function Player() {
         targetVel.normalize().multiplyScalar(BEAST_MAX_SPEED);
       }
 
-      // Vertical movement
-      if (controls.ascend || controls.jump) {
+      // Vertical movement (ascend/descend)
+      // Khi bấm cả ascend + descend cùng lúc (Shift+Q), ưu tiên bay lên
+      const wantAscendBeast = controls.ascend || controls.jump;
+      const wantDescendBeast = controls.descend;
+
+      if (wantAscendBeast && wantDescendBeast) {
+        // Bấm cả 2: ưu tiên bay lên
         targetVel.y = BEAST_VERTICAL_SPEED;
-      } else if (controls.descend) {
+      } else if (wantAscendBeast) {
+        targetVel.y = BEAST_VERTICAL_SPEED;
+      } else if (wantDescendBeast) {
         targetVel.y = -BEAST_VERTICAL_SPEED;
       }
 
       // Smoothly interpolate velocity
-      const accelRate = hasInput || controls.ascend || controls.descend || controls.jump
+      const accelRate = hasInput || wantAscendBeast || wantDescendBeast
         ? BEAST_ACCELERATION
         : BEAST_ACCELERATION * 0.5; // Slower deceleration for phoenix
 
