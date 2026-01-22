@@ -54,7 +54,26 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 27
+## Recent Update (2026-01-22) - Session 28
+
+### Đã hoàn thành:
+- ✅ **Fix Audio Not Playing (Complete)**
+  - **Bug 1:** `useAudio` hook tạo `isInitialized.current` ref riêng mỗi instance → init/cleanup nhiều lần
+  - **Fix 1:** Chuyển sang module-level flag (`audioInitialized`, `audioInstanceCount`)
+  - **Bug 2:** `setTimeout` trong click handler phá vỡ "user gesture context" → browser block audio
+  - **Fix 2:** Gọi `unlockAudio()` trực tiếp trong click handler, không dùng setTimeout
+  - **Bug 3:** HTML5 Audio pool exhausted warning
+  - **Fix 3:** Chuyển từ `html5: true` sang `html5: false` (dùng Web Audio API)
+  - Thêm debug logging: onload, onplay, onplayerror callbacks
+
+### Files đã sửa:
+- `src/hooks/useAudio.ts` - Module-level audio initialization flag
+- `src/utils/audioManager.ts` - Web Audio API, better callbacks
+- `src/App.tsx` - Direct audio unlock in click handler (no setTimeout)
+
+---
+
+## Session 27
 
 ### Đã hoàn thành:
 - ✅ **Fix Background Music Not Playing**

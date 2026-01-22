@@ -220,7 +220,27 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 27 (Latest)
+### Session 2026-01-22 - Update 28 (Latest)
+```
+- Fix Audio Not Playing (Complete):
+  - Bug 1: useAudio hook tạo isInitialized.current ref riêng mỗi instance
+    → Audio init/cleanup nhiều lần, audio bị unload trước khi play
+    → Fix: Dùng module-level flag (audioInitialized, audioInstanceCount)
+
+  - Bug 2: setTimeout trong click handler phá vỡ "user gesture context"
+    → Browser block audio context resume
+    → Fix: Gọi unlockAudio() trực tiếp trong click handler
+
+  - Bug 3: "HTML5 Audio pool exhausted" warning từ Howler.js
+    → Fix: Chuyển từ html5: true sang html5: false (Web Audio API)
+
+  - Thêm debug callbacks: onload, onplay, onplayerror
+
+- Files changed: useAudio.ts, audioManager.ts, App.tsx
+- Git commit: 091aab6
+```
+
+### Session 2026-01-22 - Update 27
 ```
 - Fix Background Music Not Playing:
   - Bug: playMusic() chỉ cho phép 1 track tại 1 thời điểm
