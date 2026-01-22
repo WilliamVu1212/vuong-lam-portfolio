@@ -221,7 +221,25 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 34 (Latest)
+### Session 2026-01-22 - Update 35 (Latest)
+```
+- Fire Spirit Player (Hồn Hỏa):
+  - Thay thế capsule player bằng thực thể năng lượng lửa animated
+  - FireSpirit.tsx với các thành phần:
+    - Inner Core: Icosahedron vàng-cam, pulse animation
+    - Middle/Outer Layers: Transparent glow, xoay ngược nhau
+    - Energy Wisps: 5 quả cầu bay xoay quanh
+    - Orbit Rings: 3 vòng trang trí
+    - Fire Particles: 20 particles lửa bay lên
+    - Point Lights: 2 đèn động
+  - Intensity +30% khi đang bay
+
+- New files: FireSpirit.tsx
+- Files changed: Player.tsx
+- Git commit: de4f0c2
+```
+
+### Session 2026-01-22 - Update 34
 ```
 - Performance Optimization:
   - Disabled sourcemaps in production build (vite.config.ts)

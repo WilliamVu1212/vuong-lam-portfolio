@@ -54,7 +54,28 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 34
+## Recent Update (2026-01-22) - Session 35
+
+### Đã hoàn thành:
+- ✅ **Fire Spirit Player (Hồn Hỏa)**
+  - Thay thế capsule đơn giản bằng thực thể năng lượng lửa
+  - **Inner Core**: Icosahedron vàng-cam phát sáng, pulse animation
+  - **Middle/Outer Layers**: Transparent glow effects, xoay ngược nhau
+  - **Energy Wisps**: 5 quả cầu nhỏ bay xoay quanh core
+  - **Orbit Rings**: 3 vòng trang trí nghiêng
+  - **Fire Particles**: 20 particles lửa bay lên liên tục
+  - **Point Lights**: 2 đèn động tạo glow effect
+  - Intensity tăng 30% khi đang bay
+
+### Files mới:
+- `src/components/3d/FireSpirit.tsx` - Fire Spirit component
+
+### Files đã sửa:
+- `src/components/3d/Player.tsx` - Import và sử dụng FireSpirit
+
+---
+
+## Session 34
 
 ### Đã hoàn thành:
 - ✅ **Performance Optimization**
