@@ -156,6 +156,13 @@ function CornerPillar({ position, index }: CornerPillarProps) {
 
   return (
     <group position={position}>
+      {/* Physics collider for pillar - player can stand on top */}
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[1.8, 4, 1.8]} position={[0, 4, 0]} />
+        {/* Pillar top surface */}
+        <CuboidCollider args={[1.5, 0.25, 1.5]} position={[0, 8, 0]} />
+      </RigidBody>
+
       {/* Pillar base */}
       <mesh position={[0, 4, 0]} castShadow>
         <cylinderGeometry args={[1.5, 2, 8, 6]} />
@@ -211,6 +218,18 @@ function ImmortalThrone({ position }: ImmortalThroneProps) {
 
   return (
     <group ref={throneRef} position={position}>
+      {/* Physics colliders for ImmortalThrone - player can stand on each tier */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* First tier top */}
+        <CuboidCollider args={[9, 0.25, 9]} position={[0, 4, 0]} />
+        {/* Second tier top */}
+        <CuboidCollider args={[7, 0.25, 7]} position={[0, 6, 0]} />
+        {/* Third tier top */}
+        <CuboidCollider args={[5, 0.25, 5]} position={[0, 9, 0]} />
+        {/* Central pillar top */}
+        <CuboidCollider args={[2.5, 0.25, 2.5]} position={[0, 19, 0]} />
+      </RigidBody>
+
       {/* Base pedestal - multi-tier */}
       <mesh position={[0, 2, 0]} castShadow>
         <cylinderGeometry args={[8, 10, 4, 8]} />

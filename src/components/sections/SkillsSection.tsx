@@ -142,6 +142,16 @@ function CentralAltar({ position }: CentralAltarProps) {
 
   return (
     <group position={position}>
+      {/* Physics colliders for CentralAltar - player can stand on each tier */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Base pedestal top */}
+        <CuboidCollider args={[5.5, 0.25, 5.5]} position={[0, 2, 0]} />
+        {/* Middle section top */}
+        <CuboidCollider args={[4, 0.25, 4]} position={[0, 6, 0]} />
+        {/* Top section top */}
+        <CuboidCollider args={[2.5, 0.25, 2.5]} position={[0, 8, 0]} />
+      </RigidBody>
+
       {/* Base pedestal */}
       <mesh position={[0, 1, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[5, 6, 2, 8]} />

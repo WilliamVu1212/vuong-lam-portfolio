@@ -95,17 +95,32 @@ interface PagodaProps {
 }
 
 function Pagoda({ position }: PagodaProps) {
-  const pagodaRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (pagodaRef.current) {
-      // Subtle floating animation
-      pagodaRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-  });
-
   return (
-    <group ref={pagodaRef} position={position}>
+    <group position={position}>
+      {/* Physics colliders for Pagoda - player can stand on roofs and floors */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Base platform collider */}
+        <CuboidCollider args={[9, 0.5, 9]} position={[0, 0.5, 0]} />
+
+        {/* First floor top (under first roof) */}
+        <CuboidCollider args={[7.5, 0.25, 7.5]} position={[0, 4, 0]} />
+
+        {/* First roof - flat top area */}
+        <CuboidCollider args={[3, 0.3, 3]} position={[0, 6, 0]} />
+
+        {/* Second floor top (under second roof) */}
+        <CuboidCollider args={[5.5, 0.25, 5.5]} position={[0, 8.25, 0]} />
+
+        {/* Second roof - flat top area */}
+        <CuboidCollider args={[2, 0.3, 2]} position={[0, 9.9, 0]} />
+
+        {/* Third floor top (under top roof) */}
+        <CuboidCollider args={[4, 0.25, 4]} position={[0, 11.5, 0]} />
+
+        {/* Top roof - flat top area */}
+        <CuboidCollider args={[1.5, 0.3, 1.5]} position={[0, 13.5, 0]} />
+      </RigidBody>
+
       {/* Base */}
       <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[8, 10, 1, 8]} />
@@ -413,6 +428,18 @@ interface ToriiGateProps {
 function ToriiGate({ position, rotation }: ToriiGateProps) {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
+      {/* Physics colliders for Torii Gate */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Left pillar collider */}
+        <CuboidCollider args={[0.5, 4, 0.5]} position={[-3, 4, 0]} />
+        {/* Right pillar collider */}
+        <CuboidCollider args={[0.5, 4, 0.5]} position={[3, 4, 0]} />
+        {/* Top beam collider */}
+        <CuboidCollider args={[4, 0.3, 0.4]} position={[0, 8, 0]} />
+        {/* Roof piece collider - player can stand on top */}
+        <CuboidCollider args={[4.5, 0.15, 0.6]} position={[0, 8.5, 0]} />
+      </RigidBody>
+
       {/* Left pillar */}
       <mesh position={[-3, 4, 0]} castShadow>
         <cylinderGeometry args={[0.4, 0.5, 8, 8]} />
