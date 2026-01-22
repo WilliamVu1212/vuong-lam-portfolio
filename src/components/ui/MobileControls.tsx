@@ -145,7 +145,7 @@ export function MobileControls() {
     leftManagerRef.current.on('move', handleLeftMove);
     leftManagerRef.current.on('end', handleLeftEnd);
 
-    // Right joystick - Vertical control
+    // Right joystick - Vertical control (for flight up/down)
     rightManagerRef.current = nipplejs.create({
       zone: rightJoystickRef.current,
       mode: 'static',
@@ -153,7 +153,7 @@ export function MobileControls() {
       color: '#00CED1', // Cyan color
       size: JOYSTICK_SIZE,
       restOpacity: 0.7,
-      lockX: true, // Only vertical movement
+      // Removed lockX - allow full vertical movement for up/down control
     });
 
     rightManagerRef.current.on('start', handleRightStart);

@@ -71,7 +71,28 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 41
+## Recent Update (2026-01-22) - Session 42
+
+### Đã hoàn thành:
+- ✅ **Mobile Menu Position Fix**
+  - **SettingsMenu**: Đổi vị trí từ `center` sang `top-4 right-4` (cùng vị trí với MainMenu)
+  - **HelpMenu**: Đổi vị trí từ `center` sang `top-4 right-4` (cùng vị trí với MainMenu)
+  - Giờ khi bấm Cài Đặt/Hướng Dẫn, menu hiện ngay tại vị trí MainMenu thay vì nhảy sang góc khác
+  - Width responsive: `w-[calc(100vw-2rem)]` trên mobile, fixed width trên desktop
+
+- ✅ **Mobile Joystick Vertical Fix**
+  - **Bug**: Right joystick có `lockX: true` nhưng nipplejs hiểu ngược → chỉ cho vuốt ngang
+  - **Fix**: Xóa `lockX: true` để cho phép joystick di chuyển tự do theo chiều dọc (lên/xuống)
+  - Giờ có thể vuốt lên/xuống để bay lên/bay xuống khi đang ở chế độ bay
+
+### Files đã sửa:
+- `src/components/ui/menus/SettingsMenu.tsx` - Đổi position về góc trên phải
+- `src/components/ui/menus/HelpMenu.tsx` - Đổi position về góc trên phải
+- `src/components/ui/MobileControls.tsx` - Xóa lockX để fix joystick vertical
+
+---
+
+## Session 41
 
 ### Đã hoàn thành:
 - ✅ **Mobile UI Fixes**

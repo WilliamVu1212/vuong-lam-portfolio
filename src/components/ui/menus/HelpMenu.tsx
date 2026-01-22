@@ -76,13 +76,13 @@ export function HelpMenu() {
             onClick={handleBack}
           />
 
-          {/* Help Panel */}
+          {/* Help Panel - Same position as MainMenu on mobile */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, x: -50 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.9, x: -50 }}
+            initial={{ opacity: 0, scale: 0.9, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -10 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] sm:w-[450px] max-h-[80vh] overflow-y-auto"
+            className="fixed top-4 right-4 z-50 w-[calc(100vw-2rem)] sm:w-[450px] max-h-[calc(100vh-2rem)] overflow-y-auto"
           >
             <div
               className="glass rounded-2xl overflow-hidden"
