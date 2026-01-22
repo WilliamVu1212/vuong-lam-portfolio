@@ -48,29 +48,37 @@ function GameController() {
 
 // Audio Controller - manages background music
 function AudioController() {
-  const { startAmbient } = useBackgroundMusic();
+  const { startAmbient, startMainTheme } = useBackgroundMusic();
   const { unlockAudio } = useAudio();
   const hasStarted = useRef(false);
 
-  // Start ambient music when user interacts (audio context needs user gesture)
+  // Start music when user interacts (audio context needs user gesture)
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (!hasStarted.current) {
+        console.log('[Audio] First interaction detected, starting music...');
         unlockAudio();
+        // Phát cả ambient và main theme
         startAmbient();
+        startMainTheme();
         hasStarted.current = true;
+        console.log('[Audio] Music started!');
       }
     };
 
-    // Listen for first interaction
-    window.addEventListener('click', handleFirstInteraction, { once: true });
-    window.addEventListener('keydown', handleFirstInteraction, { once: true });
+    // Listen for first interaction - capture phase để bắt sớm nhất
+    document.addEventListener('click', handleFirstInteraction, { capture: true });
+    document.addEventListener('keydown', handleFirstInteraction, { capture: true });
+    document.addEventListener('touchstart', handleFirstInteraction, { capture: true });
+    document.addEventListener('mousedown', handleFirstInteraction, { capture: true });
 
     return () => {
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener('click', handleFirstInteraction, { capture: true });
+      document.removeEventListener('keydown', handleFirstInteraction, { capture: true });
+      document.removeEventListener('touchstart', handleFirstInteraction, { capture: true });
+      document.removeEventListener('mousedown', handleFirstInteraction, { capture: true });
     };
-  }, [unlockAudio, startAmbient]);
+  }, [unlockAudio, startAmbient, startMainTheme]);
 
   return null;
 }

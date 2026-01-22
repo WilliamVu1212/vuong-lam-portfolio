@@ -5,7 +5,7 @@ import type { RapierRigidBody } from '@react-three/rapier';
 import { Vector3, Raycaster, Vector2, Plane } from 'three';
 import { useGameStore } from '@/stores/gameStore';
 import { useControls } from '@/hooks/useKeyboardControls';
-import { useSoundEffects } from '@/hooks/useAudio';
+import { useSoundEffects, useBackgroundMusic, useAudio } from '@/hooks/useAudio';
 import { FlyingSword } from './FlyingSword';
 import { RidingPhoenix } from './RidingPhoenix';
 import { PHYSICS, WORLD } from '@/utils/constants';
@@ -42,6 +42,9 @@ export function Player() {
 
   // Sound effects
   const { playJump, playLand, playSwordWhoosh, playPhoenixCry } = useSoundEffects();
+  const { startAmbient, startMainTheme } = useBackgroundMusic();
+  const { unlockAudio } = useAudio();
+  const musicStarted = useRef(false);
   const wasGrounded = useRef(isGrounded);
 
   // Movement vectors
@@ -119,8 +122,22 @@ export function Player() {
     return hit !== null;
   };
 
+  // Start background music on first interaction
+  const startMusicIfNeeded = () => {
+    if (!musicStarted.current) {
+      unlockAudio();
+      startAmbient();
+      startMainTheme();
+      musicStarted.current = true;
+      console.log('[Player] Music started on first click!');
+    }
+  };
+
   // Jump to click position helper
   const jumpToPosition = (event: MouseEvent) => {
+    // Start music on first click
+    startMusicIfNeeded();
+
     if (!rigidBodyRef.current) return;
     if (!checkGrounded()) return; // Only jump when grounded
 
@@ -415,6 +432,7 @@ export function Player() {
 
     // Play landing sound when transitioning from air to ground
     if (grounded && !wasGrounded.current) {
+      console.log('[DEBUG] Landing detected! Playing land sound...');
       playLand();
     }
     wasGrounded.current = grounded;

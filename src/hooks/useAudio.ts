@@ -138,26 +138,28 @@ export const useSoundEffects = () => {
  */
 export const useBackgroundMusic = () => {
   const { playBackgroundMusic, stopBackgroundMusic, pauseMusic, resumeMusic } = useAudio();
-  const isPlaying = useRef(false);
+  const ambientPlaying = useRef(false);
+  const musicPlaying = useRef(false);
 
   const startAmbient = useCallback(() => {
-    if (!isPlaying.current) {
+    if (!ambientPlaying.current) {
       playBackgroundMusic('ambient', { fadeIn: 2000 });
-      isPlaying.current = true;
+      ambientPlaying.current = true;
     }
   }, [playBackgroundMusic]);
 
   const startMainTheme = useCallback(() => {
-    if (!isPlaying.current) {
+    if (!musicPlaying.current) {
       playBackgroundMusic('music', { fadeIn: 3000 });
-      isPlaying.current = true;
+      musicPlaying.current = true;
     }
   }, [playBackgroundMusic]);
 
   const stopAllMusic = useCallback(() => {
     stopBackgroundMusic('ambient', 1000);
     stopBackgroundMusic('music', 1000);
-    isPlaying.current = false;
+    ambientPlaying.current = false;
+    musicPlaying.current = false;
   }, [stopBackgroundMusic]);
 
   return {
