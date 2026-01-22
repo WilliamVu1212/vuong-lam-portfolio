@@ -499,6 +499,18 @@ interface CherryTreeProps {
 function CherryTree({ position }: CherryTreeProps) {
   return (
     <group position={position}>
+      {/* Physics colliders for CherryTree */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Trunk collider */}
+        <CuboidCollider args={[0.5, 3, 0.5]} position={[0, 3, 0]} />
+        {/* Main foliage sphere collider */}
+        <CuboidCollider args={[3, 3, 3]} position={[0, 7, 0]} />
+        {/* Left foliage collider */}
+        <CuboidCollider args={[2, 2, 2]} position={[-1.5, 6, 1]} />
+        {/* Right foliage collider */}
+        <CuboidCollider args={[2.2, 2.2, 2.2]} position={[1.5, 6.5, -1]} />
+      </RigidBody>
+
       {/* Trunk */}
       <mesh position={[0, 3, 0]} castShadow>
         <cylinderGeometry args={[0.3, 0.5, 6, 8]} />

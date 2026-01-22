@@ -359,6 +359,9 @@ function Experience() {
 
         {/* Waterfall cliff colliders (waterfalls visual is in WorldContent) */}
         <WaterfallColliders />
+
+        {/* Floating Island colliders (visuals are in WorldContent) */}
+        <FloatingIslandColliders />
       </Physics>
 
       {/* Visual World Content (no physics) */}
@@ -949,6 +952,45 @@ function WaterfallColliders() {
           />
         </RigidBody>
       ))}
+    </>
+  );
+}
+
+// Floating Island Colliders - separate from visual FloatingIsland component
+function FloatingIslandColliders() {
+  // Floating island positions and scales (matching FloatingMountains)
+  const islands = [
+    { pos: [0, 25, -80] as [number, number, number], scale: 1.5 },
+    { pos: [0, 50, -160] as [number, number, number], scale: 2 },
+    { pos: [-60, 80, -240] as [number, number, number], scale: 1.3 },
+    { pos: [60, 80, -240] as [number, number, number], scale: 1.3 },
+  ];
+
+  return (
+    <>
+      {islands.map((island, index) => {
+        const s = island.scale;
+        // Base dodecahedron radius is 10, top platform at y=8 with radius 8
+        return (
+          <RigidBody key={index} type="fixed" colliders={false} position={island.pos}>
+            {/* Main body collider - approximating dodecahedron as box */}
+            <CuboidCollider
+              args={[8 * s, 6 * s, 8 * s]}
+              position={[0, 0, 0]}
+            />
+            {/* Top platform collider - player can stand on */}
+            <CuboidCollider
+              args={[7 * s, 0.5 * s, 7 * s]}
+              position={[0, 8 * s, 0]}
+            />
+            {/* Bottom cone collider */}
+            <CuboidCollider
+              args={[4 * s, 5 * s, 4 * s]}
+              position={[0, -8 * s, 0]}
+            />
+          </RigidBody>
+        );
+      })}
     </>
   );
 }

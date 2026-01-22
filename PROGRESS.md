@@ -221,7 +221,25 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 38 (Latest)
+### Session 2026-01-22 - Update 39 (Latest)
+```
+- Add colliders for CherryTree and FloatingIsland:
+  - CherryTree (AboutSection.tsx):
+    - Trunk collider (0.5x3x0.5)
+    - Main foliage sphere collider (3x3x3)
+    - Left foliage collider (2x2x2)
+    - Right foliage collider (2.2x2.2x2.2)
+  - FloatingIsland (Experience.tsx):
+    - FloatingIslandColliders component inside Physics context
+    - 4 floating islands at positions [0,25,-80], [0,50,-160], [-60,80,-240], [60,80,-240]
+    - Main body collider (scaled by island scale)
+    - Top platform collider (player can stand on)
+    - Bottom cone collider
+
+- Files changed: AboutSection.tsx, Experience.tsx
+```
+
+### Session 2026-01-22 - Update 38
 ```
 - Add comprehensive physics colliders to all 3D objects:
   - SoulSlayingSword pedestal + top surface (AboutSection.tsx)

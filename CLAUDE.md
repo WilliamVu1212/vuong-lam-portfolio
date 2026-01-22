@@ -54,7 +54,29 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 38
+## Recent Update (2026-01-22) - Session 39
+
+### Đã hoàn thành:
+- ✅ **Add Colliders for CherryTree and FloatingIsland**
+  - **CherryTree (AboutSection)**:
+    - Trunk collider (0.5x3x0.5)
+    - Main foliage sphere collider (3x3x3)
+    - Left foliage collider (2x2x2)
+    - Right foliage collider (2.2x2.2x2.2)
+  - **FloatingIsland (Experience)**:
+    - 4 floating islands với colliders riêng biệt (inside Physics context)
+    - Main body collider (approximating dodecahedron)
+    - Top platform collider (player có thể đứng lên)
+    - Bottom cone collider
+    - Scaled theo từng island (1.5x, 2x, 1.3x, 1.3x)
+
+### Files đã sửa:
+- `src/components/sections/AboutSection.tsx` - CherryTree colliders
+- `src/components/3d/Experience.tsx` - FloatingIslandColliders component
+
+---
+
+## Session 38
 
 ### Đã hoàn thành:
 - ✅ **Add Comprehensive Physics Colliders to All 3D Objects**
