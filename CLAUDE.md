@@ -54,9 +54,15 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 21
+## Recent Update (2026-01-22) - Session 22
 
 ### Đã hoàn thành:
+- ✅ **Fix Flight Mode Exit Bug**
+  - Sửa lỗi bấm Shift+Q (descend+ascend) cùng lúc bị thoát chế độ bay
+  - Logic mới: Chỉ exit flight khi CHỈ bấm descend (không bấm ascend/jump)
+  - Áp dụng cho cả Ngự Kiếm và Cưỡi Phượng
+
+### Session 21:
 - ✅ **Audio Files Added**
   - `night-wind.mp3` - Nhạc nền ambient (Suno)
   - `main-theme.mp3` - Nhạc nền chính Tiên Hiệp (Suno)

@@ -220,7 +220,19 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 21 (Latest)
+### Session 2026-01-22 - Update 22 (Latest)
+```
+- Fix Flight Mode Exit Bug:
+  - Sửa lỗi bấm Shift+Q (descend+ascend) cùng lúc bị thoát chế độ bay
+  - Trước: controls.descend && position.y < 3 → exit flight
+  - Sau: controls.descend && !controls.ascend && !controls.jump && position.y < 3 → exit flight
+  - Áp dụng cho cả sword flight và beast flight trong Player.tsx
+
+- Files changed: Player.tsx
+- Git commit: ddaee00
+```
+
+### Session 2026-01-22 - Update 21
 ```
 - Audio Files Added:
   - night-wind.mp3 - Nhạc nền ambient (tạo từ Suno)
