@@ -54,7 +54,44 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 31
+## Recent Update (2026-01-22) - Session 32
+
+### Đã hoàn thành:
+- ✅ **Menu System (Main, Settings, Help)**
+  - **MainMenu**: Dropdown góc trên phải với 4 options
+    - Tiếp Tục - Đóng menu
+    - Cài Đặt - Mở SettingsMenu
+    - Hướng Dẫn - Mở HelpMenu
+    - Tải Lại - Reload trang
+  - **SettingsMenu**: Cài đặt âm thanh + hiển thị
+    - Volume sliders: Master, Music, SFX
+    - Toggle: Hiện FPS, Debug Camera
+    - Nút Đặt Lại Mặc Định
+  - **HelpMenu**: Hướng dẫn chi tiết
+    - Điều khiển cơ bản (WASD, Space, Mouse)
+    - Phương thức di chuyển (Đạp Mây, Ngự Kiếm, Cưỡi Phượng)
+    - Mẹo hay
+  - **MenuButton**: Nút ☰ góc trên phải
+  - **FPS Counter**: Hiển thị FPS khi bật trong Settings
+  - **ESC key**: Toggle menu mở/đóng
+  - Game tự động pause khi menu mở
+
+### Files mới:
+- `src/components/ui/menus/MenuButton.tsx`
+- `src/components/ui/menus/MainMenu.tsx`
+- `src/components/ui/menus/SettingsMenu.tsx`
+- `src/components/ui/menus/HelpMenu.tsx`
+- `src/components/ui/menus/index.ts`
+
+### Files đã sửa:
+- `src/stores/gameStore.ts` - Thêm activeMenu, showFPS, menu actions
+- `src/App.tsx` - Integrate menus, ESC handler, FPS counter
+- `src/styles/globals.css` - Volume slider styling
+- `src/utils/audioManager.ts` - Fix TypeScript error
+
+---
+
+## Session 31
 
 ### Đã hoàn thành:
 - ✅ **Fix Landing Sound Playing at Wrong Time**
@@ -325,6 +362,7 @@
 - ✅ ~~Add audio files~~ (Done - Session 21)
 - ✅ ~~Add mobile joystick controls~~ (Done - Session 24)
 - ✅ ~~Add remaining SFX~~ (Done - Session 25: sword-whoosh, phoenix-cry, ui-click, unlock)
+- ✅ ~~Add Menu System (Main, Settings, Help)~~ (Done - Session 32)
 
 ### Medium-term:
 - Performance optimization (bundle ~3.6MB cần giảm)
@@ -356,6 +394,12 @@ src/
 │   │   ├── ContactSection.tsx  # Social links + gates phía sau
 │   │   └── VanDinhSection.tsx  # Đỉnh cao + William panel + gates phía sau
 │   └── ui/
+│       ├── menus/              # Menu System
+│       │   ├── MenuButton.tsx  # Trigger button ☰
+│       │   ├── MainMenu.tsx    # Main menu dropdown
+│       │   ├── SettingsMenu.tsx # Settings panel
+│       │   ├── HelpMenu.tsx    # Help/controls guide
+│       │   └── index.ts        # Re-exports
 │       ├── LevelNavigator.tsx  # Navigation dọc (7 levels)
 │       ├── LoadingScreen.tsx
 │       ├── ProjectModal.tsx

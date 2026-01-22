@@ -111,7 +111,7 @@
 | Task | Status | Notes |
 |------|--------|-------|
 | HUD design | ✅ Done | Tu Vi, Phương Thức, Trạng Thái |
-| Menus | ⬜ Todo | Main, settings, help |
+| Menus | ✅ Done | Main, Settings, Help menus with ESC toggle |
 | Modals | ✅ Done | ProjectModal |
 | Tooltips | ✅ Done | Hover tooltips on projects |
 | Loading screen | ✅ Done | Vietnamese text, Cinzel font |
@@ -119,6 +119,7 @@
 | LevelNavigator | ✅ Done | Vertical cultivation levels with techniques |
 | Controls Help | ✅ Done | Vietnamese instructions |
 | Sound integration | ✅ Done | Howler.js, useAudio hook, AudioControls UI |
+| FPS Counter | ✅ Done | Toggle in Settings |
 | Accessibility | ⬜ Todo | |
 
 ---
@@ -220,7 +221,28 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 31 (Latest)
+### Session 2026-01-22 - Update 32 (Latest)
+```
+- Menu System (Main, Settings, Help):
+  - MainMenu: Dropdown góc trên phải
+    - Tiếp Tục, Cài Đặt, Hướng Dẫn, Tải Lại
+  - SettingsMenu: Cài đặt âm thanh + hiển thị
+    - Volume sliders: Master, Music, SFX
+    - Toggle: Hiện FPS, Debug Camera
+    - Nút Đặt Lại Mặc Định
+  - HelpMenu: Hướng dẫn chi tiết
+    - Điều khiển cơ bản, phương thức di chuyển, mẹo hay
+  - MenuButton: Nút ☰ góc trên phải
+  - FPS Counter: Toggle trong Settings
+  - ESC key toggle menu mở/đóng
+  - Game pause khi menu mở
+
+- New files: menus/MenuButton.tsx, MainMenu.tsx, SettingsMenu.tsx, HelpMenu.tsx, index.ts
+- Files changed: gameStore.ts, App.tsx, globals.css, audioManager.ts
+- Git commit: 082a1ef
+```
+
+### Session 2026-01-22 - Update 31
 ```
 - Fix Landing Sound Playing at Wrong Time:
   - Bug 1: Khi nhảy lên nghe tiếng land.mp3 thay vì jump.mp3
