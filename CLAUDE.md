@@ -27,8 +27,8 @@
 2. **About** (Luyện Khí) - Pagoda, InfoStones, Torii gates
 3. **Skills** (Trúc Cơ) - 4 pillars với clickable crystals + 2 thác nước
 4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals + 2 thác nước
-5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Trảm La Kiếm (Soul Slaying Swords)**
-6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau + **2 Thượng Cổ Đồng Chung (Ancient Divine Bell)**
+5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Thượng Cổ Đồng Chung (unlock Cưỡi Phượng)**
+6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau
 7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, William panel + **2 Cấm Phiên (Soul Banners)**
 
 ### Camera Controls:
@@ -54,9 +54,25 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 22
+## Recent Update (2026-01-22) - Session 23
 
 ### Đã hoàn thành:
+- ✅ **Fix Phoenix Mount Unlock Bug**
+  - Sửa lỗi unlock Cưỡi Phượng không hoạt động khi đang bay kiếm
+  - Nguyên nhân: Code tự động đổi `transportMode` khi unlock, gây xung đột
+  - Giờ chỉ unlock, không tự động chuyển mode
+
+- ✅ **Transport Mode Selector UI**
+  - Thêm UI clickable để chuyển đổi giữa các phương thức di chuyển
+  - Click vào "Phương Thức" ở góc trên trái để cycle qua các mode đã unlock
+  - Hiển thị icon 🔄 khi có nhiều mode
+  - Không cho đổi mode khi đang bay (phải hạ cánh trước)
+
+- ✅ **Cập nhật Unlock Prompt**
+  - Hướng dẫn rõ hơn khi unlock Cưỡi Phượng
+  - Chỉ dẫn click "Phương Thức" để chọn mode
+
+### Session 22:
 - ✅ **Simplify Flight Controls**
   - Q/Space để bay lên, E để bay xuống (bỏ Shift)
   - Update UI trong ControlsHelp và tutorial popups
