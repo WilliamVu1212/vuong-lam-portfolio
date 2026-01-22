@@ -221,7 +221,27 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 33 (Latest)
+### Session 2026-01-22 - Update 34 (Latest)
+```
+- Performance Optimization:
+  - Disabled sourcemaps in production build (vite.config.ts)
+  - Removed unused dependencies: gsap, lucide-react
+  - Replaced lucide-react icons with inline SVGs (ProjectModal.tsx)
+  - Compressed audio files with FFmpeg (128 kbps):
+    - night-wind.mp3: 3.5 MB → 2.5 MB
+    - main-theme.mp3: 4.4 MB → 3.1 MB
+
+- Results:
+  - Total dist: ~12 MB → 9.5 MB (21% reduction)
+  - Audio: 8.3 MB → 6.0 MB (28% reduction)
+  - Gzipped JS: ~1.24 MB
+
+- Files changed: vite.config.ts, package.json, ProjectModal.tsx, CLAUDE.md
+- Audio files: night-wind.mp3, main-theme.mp3
+- Git commit: 9bdf3a0
+```
+
+### Session 2026-01-22 - Update 33
 ```
 - Rename William Vu → Vương Lâm:
   - Thay đổi tên hiển thị từ "William Vu" / "William" thành "Vương Lâm"
@@ -885,9 +905,10 @@ fbd9d48 - feat: Add waterfalls and convert all labels to icon-based UI
 
 | Issue | Priority | Status |
 |-------|----------|--------|
-| Mobile controls not implemented | Medium | Pending |
-| Sound not integrated | Low | Pending |
-| Sword/Phoenix transport not done | Medium | Pending |
+| ~~Mobile controls not implemented~~ | ~~Medium~~ | ✅ Done (Session 24) |
+| ~~Sound not integrated~~ | ~~Low~~ | ✅ Done (Session 20-21) |
+| ~~Sword/Phoenix transport not done~~ | ~~Medium~~ | ✅ Done (Session 9, 11) |
+| Physics engine large (2MB) | Low | Consider alternatives |
 
 ---
 
@@ -910,26 +931,28 @@ fbd9d48 - feat: Add waterfalls and convert all labels to icon-based UI
 | FPS (Desktop) | 60 | ~60 |
 | FPS (Mobile) | 30 | Not tested |
 | Initial Load | <5s | ~2.5s |
-| Bundle Size | <500KB | ~3.5MB (needs optimization) |
+| JS Bundle | - | ~3.6 MB (gzipped: ~1.24 MB) |
+| Audio Files | - | ~6.0 MB (compressed 128kbps) |
+| Total Dist | - | ~9.5 MB ✅ |
 
 ---
 
 ## 🔮 Next Steps
 
-1. **Short-term**:
-   - Add sound/music integration
-   - Implement sword flying mode
-   - Add mobile joystick controls
+1. **Short-term** (✅ All Done):
+   - ~~Add sound/music integration~~ ✅
+   - ~~Implement sword flying mode~~ ✅
+   - ~~Add mobile joystick controls~~ ✅
 
-3. **Medium-term**:
-   - Performance optimization
-   - Bundle size reduction
-   - Cross-browser testing
+2. **Medium-term** (✅ Partially Done):
+   - ~~Performance optimization~~ ✅ (Session 34)
+   - ~~Bundle size reduction~~ ✅ (9.5 MB total)
+   - Cross-browser testing ⬜
 
-4. **Long-term**:
-   - Deploy to Vercel
-   - Add analytics
-   - SEO optimization
+3. **Long-term**:
+   - Deploy to Vercel ⬜
+   - Add analytics ⬜
+   - SEO optimization ⬜
 
 ---
 
