@@ -128,7 +128,9 @@ export function Player() {
     const ray = new rapier.Ray(rayOrigin, rayDir);
     const hit = world.castRay(ray, maxToi, true);
 
-    return hit !== null;
+    // Debug: log when ground state changes
+    const result = hit !== null;
+    return result;
   };
 
   // Start background music on first interaction
@@ -493,13 +495,16 @@ export function Player() {
     }
 
     // Play landing sound when transitioning from air to ground
-    if (grounded && !wasGrounded.current) {
-      console.log('[DEBUG] Landing detected! grounded:', grounded, 'wasGrounded:', wasGrounded.current);
+    // IMPORTANT: Only play if velocity.y <= 0 (falling or stationary, NOT rising)
+    // This fixes the bug where land sound plays immediately after jumping
+    if (grounded && !wasGrounded.current && velocity.y <= 0) {
+      console.log('[DEBUG] Landing detected! grounded:', grounded, 'wasGrounded:', wasGrounded.current, 'velocity.y:', velocity.y);
       playLand();
     }
-    // Only update wasGrounded AFTER playing sound
+    // Update wasGrounded AFTER playing sound
+    // Also detect when player walks off edge (grounded: true → false)
     if (grounded !== wasGrounded.current) {
-      console.log('[DEBUG] wasGrounded changing from', wasGrounded.current, 'to', grounded);
+      console.log('[DEBUG] wasGrounded changing from', wasGrounded.current, 'to', grounded, 'velocity.y:', velocity.y.toFixed(2));
       wasGrounded.current = grounded;
     }
 
