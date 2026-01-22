@@ -316,8 +316,9 @@ export function Player() {
       setPlayerPosition([position.x, position.y, position.z]);
       setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
 
-      // Exit flight mode if descending and close to ground
-      if (controls.descend && position.y < 3) {
+      // Exit flight mode if ONLY descending (không bấm ascend) và gần mặt đất
+      // Tránh trường hợp bấm Shift+Q (descend+ascend cùng lúc) mà bị exit
+      if (controls.descend && !controls.ascend && !controls.jump && position.y < 3) {
         exitSwordFlight();
       }
 
@@ -409,8 +410,9 @@ export function Player() {
       setPlayerPosition([position.x, position.y, position.z]);
       setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
 
-      // Exit flight mode if descending and close to ground
-      if (controls.descend && position.y < 3) {
+      // Exit flight mode if ONLY descending (không bấm ascend) và gần mặt đất
+      // Tránh trường hợp bấm Shift+Q (descend+ascend cùng lúc) mà bị exit
+      if (controls.descend && !controls.ascend && !controls.jump && position.y < 3) {
         exitBeastFlight();
       }
 
