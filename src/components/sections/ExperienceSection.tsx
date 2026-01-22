@@ -588,7 +588,9 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
   const playerPosition = useGameStore((state) => state.player.position);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
-  const { playUnlock } = useSoundEffects();
+  const setTransportMode = useGameStore((state) => state.setTransportMode);
+  const setPlayerFlying = useGameStore((state) => state.setPlayerFlying);
+  const { playUnlock, playPhoenixCry } = useSoundEffects();
 
   const isIce = type === 'ice';
   const isFire = type === 'fire';
@@ -687,11 +689,12 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
       // Auto-unlock when very close
       if (distance < 15 && !isUnlocked) {
         unlockTransport('beast');
-        // KHÔNG tự động chuyển transportMode ở đây
-        // Player sẽ tự chọn mode qua UI hoặc thoát bay kiếm rồi bấm F
+        setTransportMode('beast'); // Chuyển sang mode phượng hoàng
+        setPlayerFlying(true); // Tự động bay phượng luôn khi unlock
         setIsUnlocked(true);
         setShowPrompt(true);
         playUnlock();
+        playPhoenixCry(); // Play phoenix sound
       }
     }
   });
@@ -947,22 +950,22 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
           >
             {isUnlocked ? (
               <>
-                <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
+                <p className="text-white font-bold text-lg" style={{ fontFamily: '"Cormorant Garamond", Georgia, serif' }}>
                   🔥 Đã khai mở Cưỡi Phượng!
                 </p>
-                <p className="text-orange-100 text-sm mt-1">
+                <p className="text-orange-100 text-sm mt-1" style={{ fontFamily: 'system-ui, sans-serif' }}>
                   Click vào <span className="font-bold text-white">Phương Thức</span> ở góc trái để chọn
                 </p>
-                <p className="text-orange-200 text-xs mt-1">
+                <p className="text-orange-200 text-xs mt-1" style={{ fontFamily: 'system-ui, sans-serif' }}>
                   Sau đó nhấn <span className="font-bold text-white">F</span> để bay
                 </p>
               </>
             ) : (
               <>
-                <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
+                <p className="text-white font-bold text-lg" style={{ fontFamily: '"Cormorant Garamond", Georgia, serif' }}>
                   🔔 Thượng Cổ Đồng Chung
                 </p>
-                <p className="text-green-100 text-sm mt-1">
+                <p className="text-green-100 text-sm mt-1" style={{ fontFamily: 'system-ui, sans-serif' }}>
                   Đến gần để khai mở Cưỡi Linh Thú
                 </p>
               </>

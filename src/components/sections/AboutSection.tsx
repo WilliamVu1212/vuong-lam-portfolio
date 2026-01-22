@@ -544,7 +544,8 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
   const setTransportMode = useGameStore((state) => state.setTransportMode);
-  const { playUnlock } = useSoundEffects();
+  const setPlayerFlying = useGameStore((state) => state.setPlayerFlying);
+  const { playUnlock, playSwordWhoosh } = useSoundEffects();
 
   // Calculate world position of sword
   const worldPosition: [number, number, number] = [
@@ -576,8 +577,10 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
     if (distance < 12 && !isUnlocked) {
       unlockTransport('sword');
       setTransportMode('sword');
+      setPlayerFlying(true); // Tự động bay kiếm luôn khi unlock
       setIsUnlocked(true);
       playUnlock();
+      playSwordWhoosh(); // Play sword sound
     }
   });
 
@@ -657,7 +660,7 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
               borderRadius: '12px',
               padding: '16px 24px',
               color: '#FFD700',
-              fontFamily: 'Cinzel, serif',
+              fontFamily: '"Cormorant Garamond", Georgia, serif',
               fontSize: '18px',
               textAlign: 'center',
               whiteSpace: 'nowrap',
@@ -666,7 +669,7 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
             }}
           >
             <div style={{ marginBottom: '8px', fontSize: '22px' }}>⚔️ Trảm La Kiếm ⚔️</div>
-            <div style={{ color: '#F5E6D3', fontSize: '14px' }}>Đến gần để nhận Phi Kiếm</div>
+            <div style={{ color: '#F5E6D3', fontSize: '14px', fontFamily: 'system-ui, sans-serif' }}>Đến gần để nhận Phi Kiếm</div>
           </div>
         </Html>
       )}
@@ -681,7 +684,7 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
               borderRadius: '12px',
               padding: '16px 24px',
               color: '#00FF00',
-              fontFamily: 'Cinzel, serif',
+              fontFamily: '"Cormorant Garamond", Georgia, serif',
               fontSize: '18px',
               textAlign: 'center',
               whiteSpace: 'nowrap',
@@ -689,7 +692,7 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
             }}
           >
             <div>✓ Đã khai mở Ngự Kiếm!</div>
-            <div style={{ color: '#90EE90', fontSize: '14px', marginTop: '8px' }}>Nhấn F để bay</div>
+            <div style={{ color: '#90EE90', fontSize: '14px', marginTop: '8px', fontFamily: 'system-ui, sans-serif' }}>Nhấn F để bay</div>
           </div>
         </Html>
       )}

@@ -50,6 +50,9 @@ export function Player() {
   // Flight sound loop timing (để phát âm thanh liên tục khi bay di chuyển)
   const lastSwordSoundTime = useRef(0);
   const lastPhoenixSoundTime = useRef(0);
+
+  // Track previous flying state to detect external activation
+  const prevIsFlying = useRef(isFlying);
   const SWORD_SOUND_INTERVAL = 600; // ms - khoảng cách giữa các tiếng kiếm
   const PHOENIX_SOUND_INTERVAL = 1200; // ms - khoảng cách giữa các tiếng phượng
 
@@ -675,6 +678,30 @@ export function Player() {
 
     window.addEventListener('keydown', handleToggleFlight);
     return () => window.removeEventListener('keydown', handleToggleFlight);
+  }, [isFlying, transportMode]);
+
+  // Watch for external flight activation (e.g., from unlock triggers in sections)
+  useEffect(() => {
+    if (isFlying && !prevIsFlying.current && rigidBodyRef.current) {
+      // Flight was activated externally (not via F key), give initial boost
+      const rb = rigidBodyRef.current;
+      const velocity = rb.linvel();
+
+      if (transportMode === 'sword') {
+        // Initialize sword flight velocity and give upward boost
+        flightVelocity.current.set(velocity.x, Math.max(velocity.y, 10), velocity.z);
+        rb.setLinvel({ x: velocity.x, y: 15, z: velocity.z }, true);
+        rb.setGravityScale(0, true);
+        rb.setLinearDamping(0);
+      } else if (transportMode === 'beast') {
+        // Initialize beast flight velocity and give stronger upward boost
+        flightVelocity.current.set(velocity.x, Math.max(velocity.y, 15), velocity.z);
+        rb.setLinvel({ x: velocity.x, y: 20, z: velocity.z }, true);
+        rb.setGravityScale(0, true);
+        rb.setLinearDamping(0);
+      }
+    }
+    prevIsFlying.current = isFlying;
   }, [isFlying, transportMode]);
 
   return (
