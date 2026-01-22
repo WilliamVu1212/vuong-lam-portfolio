@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Preload, KeyboardControls } from '@react-three/drei';
 import Experience from './components/3d/Experience';
@@ -6,7 +6,8 @@ import LoadingScreen from './components/ui/LoadingScreen';
 import ProjectModal from './components/ui/ProjectModal';
 import LevelNavigator from './components/ui/LevelNavigator';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
-import { useUIStore, useGameStore } from './stores/gameStore';
+import { useUIStore, useGameStore, useAudioStore } from './stores/gameStore';
+import { useAudio, useBackgroundMusic, useSoundEffects } from './hooks/useAudio';
 import { CAMERA, COLORS } from './utils/constants';
 
 // Section positions for camera navigation
@@ -43,6 +44,167 @@ const keyboardMap = [
 function GameController() {
   useKeyboardControls();
   return null;
+}
+
+// Audio Controller - manages background music
+function AudioController() {
+  const { startAmbient } = useBackgroundMusic();
+  const { unlockAudio } = useAudio();
+  const hasStarted = useRef(false);
+
+  // Start ambient music when user interacts (audio context needs user gesture)
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (!hasStarted.current) {
+        unlockAudio();
+        startAmbient();
+        hasStarted.current = true;
+      }
+    };
+
+    // Listen for first interaction
+    window.addEventListener('click', handleFirstInteraction, { once: true });
+    window.addEventListener('keydown', handleFirstInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [unlockAudio, startAmbient]);
+
+  return null;
+}
+
+// Audio Controls Panel
+function AudioControls() {
+  const [isOpen, setIsOpen] = useState(false);
+  const isMuted = useAudioStore((state) => state.isMuted);
+  const masterVolume = useAudioStore((state) => state.masterVolume);
+  const musicVolume = useAudioStore((state) => state.musicVolume);
+  const sfxVolume = useAudioStore((state) => state.sfxVolume);
+  const toggleMute = useAudioStore((state) => state.toggleMute);
+  const setMasterVolume = useAudioStore((state) => state.setMasterVolume);
+  const setMusicVolume = useAudioStore((state) => state.setMusicVolume);
+  const setSfxVolume = useAudioStore((state) => state.setSfxVolume);
+
+  const { playUIClick } = useSoundEffects();
+
+  const handleToggleMute = () => {
+    toggleMute();
+    if (!isMuted) {
+      // Don't play sound when muting
+    } else {
+      playUIClick();
+    }
+  };
+
+  return (
+    <div className="absolute bottom-4 right-4">
+      {/* Toggle Button */}
+      <button
+        onClick={() => {
+          setIsOpen(!isOpen);
+          playUIClick();
+        }}
+        className="glass rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:scale-110 transition-transform"
+        title={isMuted ? 'Bật âm thanh' : 'Điều chỉnh âm thanh'}
+      >
+        {isMuted ? '🔇' : '🔊'}
+      </button>
+
+      {/* Volume Panel */}
+      {isOpen && (
+        <div
+          className="absolute bottom-14 right-0 glass rounded-lg p-4 min-w-[220px]"
+          style={{ animation: 'fadeIn 0.2s ease-out' }}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-hoa-quang font-display text-sm">🎵 Âm Thanh</p>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-tho-kim hover:text-xich-viem text-xs"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Mute Toggle */}
+          <button
+            onClick={handleToggleMute}
+            className={`w-full mb-4 py-2 rounded-lg font-body text-sm transition-all ${
+              isMuted
+                ? 'bg-red-900/50 text-red-400 border border-red-500/50'
+                : 'bg-green-900/50 text-green-400 border border-green-500/50'
+            }`}
+          >
+            {isMuted ? '🔇 Đã Tắt Tiếng' : '🔊 Đang Bật'}
+          </button>
+
+          {/* Master Volume */}
+          <div className="mb-3">
+            <div className="flex justify-between text-xs mb-1">
+              <span className="text-tho-kim">Tổng</span>
+              <span className="text-hoa-quang">{Math.round(masterVolume * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={masterVolume * 100}
+              onChange={(e) => setMasterVolume(Number(e.target.value) / 100)}
+              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #FF8C00 0%, #FF8C00 ${masterVolume * 100}%, #3D2424 ${masterVolume * 100}%, #3D2424 100%)`,
+              }}
+            />
+          </div>
+
+          {/* Music Volume */}
+          <div className="mb-3">
+            <div className="flex justify-between text-xs mb-1">
+              <span className="text-tho-kim">Nhạc Nền</span>
+              <span className="text-cyan-400">{Math.round(musicVolume * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={musicVolume * 100}
+              onChange={(e) => setMusicVolume(Number(e.target.value) / 100)}
+              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #00CED1 0%, #00CED1 ${musicVolume * 100}%, #3D2424 ${musicVolume * 100}%, #3D2424 100%)`,
+              }}
+            />
+          </div>
+
+          {/* SFX Volume */}
+          <div>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="text-tho-kim">Hiệu Ứng</span>
+              <span className="text-yellow-400">{Math.round(sfxVolume * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={sfxVolume * 100}
+              onChange={(e) => setSfxVolume(Number(e.target.value) / 100)}
+              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #FFD700 0%, #FFD700 ${sfxVolume * 100}%, #3D2424 ${sfxVolume * 100}%, #3D2424 100%)`,
+              }}
+            />
+          </div>
+
+          {/* Tip */}
+          <p className="text-xs text-tho-kim mt-3 text-center opacity-70">
+            Click vào game để bật nhạc
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function HUD() {
@@ -320,6 +482,9 @@ function App() {
         </KeyboardControls>
       </div>
 
+      {/* Audio Controller */}
+      <AudioController />
+
       {/* UI Overlay */}
       {!isLoading && (
         <div className="ui-overlay">
@@ -327,6 +492,7 @@ function App() {
           <ControlsHelp />
           <LevelNavigator onNavigate={handleNavigate} />
           <CameraDebugPanel />
+          <AudioControls />
         </div>
       )}
 

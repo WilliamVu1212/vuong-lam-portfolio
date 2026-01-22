@@ -5,6 +5,7 @@ import type { RapierRigidBody } from '@react-three/rapier';
 import { Vector3, Raycaster, Vector2, Plane } from 'three';
 import { useGameStore } from '@/stores/gameStore';
 import { useControls } from '@/hooks/useKeyboardControls';
+import { useSoundEffects } from '@/hooks/useAudio';
 import { FlyingSword } from './FlyingSword';
 import { RidingPhoenix } from './RidingPhoenix';
 import { PHYSICS, WORLD } from '@/utils/constants';
@@ -38,6 +39,10 @@ export function Player() {
   const isGrounded = useGameStore((state) => state.player.isGrounded);
   const isFlying = useGameStore((state) => state.player.isFlying);
   const transportMode = useGameStore((state) => state.transportMode);
+
+  // Sound effects
+  const { playJump, playLand, playSwordWhoosh, playPhoenixCry } = useSoundEffects();
+  const wasGrounded = useRef(isGrounded);
 
   // Movement vectors
   const moveDirection = useRef(new Vector3());
@@ -145,6 +150,9 @@ export function Player() {
 
       // Calculate trajectory velocity
       const velocity = calculateTrajectoryVelocity(playerPos, intersectPoint.x, intersectPoint.z);
+
+      // Play jump sound
+      playJump();
 
       // Disable damping during jump for accurate trajectory
       rb.setLinearDamping(0);
@@ -405,6 +413,12 @@ export function Player() {
       setPlayerGrounded(grounded);
     }
 
+    // Play landing sound when transitioning from air to ground
+    if (grounded && !wasGrounded.current) {
+      playLand();
+    }
+    wasGrounded.current = grounded;
+
     // Restore damping when landing from a target jump
     if (grounded && isJumpingToTarget) {
       rb.setLinearDamping(0.5);
@@ -470,6 +484,7 @@ export function Player() {
 
     // Keyboard jump
     if (controls.jump && grounded) {
+      playJump();
       rb.setLinvel(
         {
           x: velocity.x,
@@ -503,6 +518,9 @@ export function Player() {
     const rb = rigidBodyRef.current;
     const velocity = rb.linvel();
 
+    // Play sword whoosh sound
+    playSwordWhoosh();
+
     // Initialize flight velocity with current velocity
     flightVelocity.current.set(velocity.x, Math.max(velocity.y, 10), velocity.z);
 
@@ -531,6 +549,9 @@ export function Player() {
     if (!rigidBodyRef.current) return;
     const rb = rigidBodyRef.current;
     const velocity = rb.linvel();
+
+    // Play phoenix cry sound
+    playPhoenixCry();
 
     // Initialize flight velocity with current velocity + upward boost
     flightVelocity.current.set(velocity.x, Math.max(velocity.y, 15), velocity.z);

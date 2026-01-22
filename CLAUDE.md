@@ -2,7 +2,7 @@
 
 ## CURRENT STATUS (2026-01-22)
 
-**Overall Progress: 93%** - Phase 5 (UI & Polish)
+**Overall Progress: 95%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -54,23 +54,38 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 19
+## Recent Update (2026-01-22) - Session 20
 
 ### Đã hoàn thành:
-- ✅ **Camera góc nhìn từ trên xuống chéo**
-  - SECTION_CAMERA_POSITIONS với X=0 cho tất cả sections
-  - Camera follow với lookAhead để thấy đường đi phía trước
+- ✅ **Sound/Music Integration với Howler.js**
+  - Cài đặt Howler.js cho audio management
+  - Tạo `audioManager.ts` - centralized audio control
+  - Tạo `useAudio.ts` hook - React integration
+  - AudioStore đã có sẵn trong gameStore.ts
 
-- ✅ **Fix hướng di chuyển khi bay**
-  - Di chuyển theo world space cố định (không phụ thuộc camera)
-  - W=tiến (Z âm), S=lùi (Z dương), A/D=trái/phải
+- ✅ **Sound Effects (SFX)**
+  - Jump sound khi nhảy (keyboard + click-to-jump)
+  - Land sound khi tiếp đất
+  - Sword whoosh khi bật Ngự Kiếm
+  - Phoenix cry khi bật Cưỡi Phượng
+  - UI click sound
 
-- ✅ **Fix phím F toggle flight**
-  - Thêm check `e.repeat` để không bị toggle liên tục
+- ✅ **Audio Controls UI**
+  - Nút 🔊 ở góc dưới phải
+  - Panel điều chỉnh: Master, Music, SFX volume
+  - Mute/Unmute toggle
+  - Auto-start ambient khi user tương tác (browser requirement)
 
-- ✅ **Fix keyboard mapping**
-  - Cả 2 phím Shift đều dùng để bay xuống được
-  - Bỏ KeyF khỏi interact (tránh xung đột)
+- ✅ **Audio Files Structure**
+  - `public/sounds/ambient/` - Nhạc nền môi trường
+  - `public/sounds/music/` - Nhạc nền chính
+  - `public/sounds/sfx/` - Hiệu ứng âm thanh
+  - README.md hướng dẫn thêm audio files
+
+### Session 19:
+- ✅ Camera góc nhìn từ trên xuống chéo
+- ✅ Fix hướng di chuyển khi bay (world space)
+- ✅ Fix phím F toggle flight
 
 ### Session 18:
 - ✅ Fix góc nhìn ban đầu với X=0
@@ -102,7 +117,8 @@
 ## Next Steps (chưa làm)
 
 ### Short-term:
-- Add sound/music integration
+- ✅ ~~Add sound/music integration~~ (Done - Session 20)
+- Add actual audio files (xem `public/sounds/README.md`)
 - Add mobile joystick controls
 
 ### Medium-term:

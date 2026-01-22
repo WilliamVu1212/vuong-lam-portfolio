@@ -11,7 +11,7 @@
 | **Khởi tạo** | 2026-01-21 |
 | **Target Launch** | 8 tuần |
 | **Current Phase** | Phase 5 - UI & Polish |
-| **Overall Progress** | 92% |
+| **Overall Progress** | 95% |
 
 ---
 
@@ -118,7 +118,7 @@
 | Section transitions | ✅ Done | Smooth camera lerp |
 | LevelNavigator | ✅ Done | Vertical cultivation levels with techniques |
 | Controls Help | ✅ Done | Vietnamese instructions |
-| Sound integration | ⬜ Todo | |
+| Sound integration | ✅ Done | Howler.js, useAudio hook, AudioControls UI |
 | Accessibility | ⬜ Todo | |
 
 ---
@@ -220,7 +220,37 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 19 (Latest)
+### Session 2026-01-22 - Update 20 (Latest)
+```
+- Sound/Music Integration với Howler.js:
+  - Cài đặt howler và @types/howler
+  - Tạo audioManager.ts - centralized audio control với Howler.js
+  - Tạo useAudio.ts hook - React hooks cho audio (useAudio, useSoundEffects, useBackgroundMusic)
+  - AudioStore đã có sẵn trong gameStore.ts
+
+- Sound Effects trong Player.tsx:
+  - Jump sound khi nhảy (keyboard + click-to-jump)
+  - Land sound khi tiếp đất
+  - Sword whoosh khi bật Ngự Kiếm
+  - Phoenix cry khi bật Cưỡi Phượng
+
+- Audio Controls UI trong App.tsx:
+  - Nút 🔊 toggle ở góc dưới phải
+  - Panel điều chỉnh âm lượng: Master, Music, SFX
+  - Mute/Unmute toggle button
+  - AudioController tự động start ambient khi user tương tác
+
+- Audio Files Structure:
+  - public/sounds/ambient/ - Nhạc nền môi trường
+  - public/sounds/music/ - Nhạc nền chính
+  - public/sounds/sfx/ - Hiệu ứng âm thanh (jump, land, sword, phoenix, ui-click, unlock)
+  - README.md hướng dẫn thêm audio files
+
+- Files changed: App.tsx, Player.tsx, audioManager.ts (new), useAudio.ts (new)
+- New dependencies: howler, @types/howler
+```
+
+### Session 2026-01-22 - Update 19
 ```
 - Cải thiện Camera System với góc nhìn từ trên xuống chéo:
   - Điều chỉnh SECTION_CAMERA_POSITIONS với X=0 cho tất cả sections
