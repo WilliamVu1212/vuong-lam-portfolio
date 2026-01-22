@@ -38,25 +38,26 @@
 - **Camera Debug Panel** - Hiển thị tọa độ realtime để điều chỉnh
 
 ### Camera Config (constants.ts):
-- **Initial View**: Position [0, 76, 94], Target [0, 7, -191] - Toàn cảnh
+- **Initial View**: Position [0, 57, 85], Target [0, 6, -156] - Toàn cảnh (X=0 ở giữa)
 - **Walking**: distance 35, height 25
 - **Sword Flying**: distance 40, height 20
 - **Beast Flying**: distance 50, height 30
 
 ---
 
-## Recent Update (2026-01-22) - Session 17
+## Recent Update (2026-01-22) - Session 18
 
 ### Đã hoàn thành:
-- ✅ **Camera System cải thiện**
-  - Góc nhìn toàn cảnh khi vào game (thấy từ Phàm Nhân đến Vấn Đỉnh)
-  - Camera follow với góc nhìn rộng hơn khi di chuyển
-  - Camera Debug Panel hiển thị tọa độ realtime
+- ✅ **Fix góc nhìn ban đầu với X=0**
+  - Camera position: [0, 57, 85] (X=0 để ở giữa màn hình)
+  - Camera lookAt: [0, 6, -156]
 
-- ✅ **Camera Debug Panel UI**
-  - Hiển thị Position (X, Y, Z) và Target (X, Y, Z)
-  - Toggle show/hide
-  - Giúp user tự điều chỉnh góc nhìn
+- ✅ **Nút "Toàn Cảnh" reset về góc nhìn ban đầu**
+  - Khi bấm nút Toàn Cảnh → camera trả về đúng vị trí ban đầu
+
+### Session 17:
+- ✅ Camera System cải thiện với góc nhìn toàn cảnh
+- ✅ Camera Debug Panel UI
 
 ### Session 16:
 - ✅ Camera Follow Player khi di chuyển

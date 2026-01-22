@@ -220,7 +220,21 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 17 (Latest)
+### Session 2026-01-22 - Update 18 (Latest)
+```
+- Fix góc nhìn ban đầu với X=0 để ở giữa màn hình:
+  - Camera position: [0, 76, 94] → [0, 57, 85]
+  - Camera lookAt: [0, 7, -191] → [0, 6, -156]
+
+- Nút "Toàn Cảnh" giờ reset về đúng góc nhìn ban đầu:
+  - overview position: [200, 350, 100] → [0, 57, 85]
+  - overview lookAt: [0, 130, -325] → [0, 6, -156]
+
+- Files changed: App.tsx, Experience.tsx
+- Git commit: ed68f68
+```
+
+### Session 2026-01-22 - Update 17
 ```
 - Cải thiện Camera System với góc nhìn toàn cảnh:
   - Điều chỉnh camera follow config cho góc nhìn rộng hơn:
