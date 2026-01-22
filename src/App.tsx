@@ -48,40 +48,10 @@ function GameController() {
   return null;
 }
 
-// Audio Controller - manages background music
+// Audio Controller - just initializes audio system (no auto-play)
 function AudioController() {
-  const { startAmbient, startMainTheme } = useBackgroundMusic();
-  const { unlockAudio } = useAudio();
-  const hasStarted = useRef(false);
-
-  // Start music when user interacts (audio context needs user gesture)
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      if (!hasStarted.current) {
-        console.log('[Audio] First interaction detected, starting music...');
-        unlockAudio();
-        // Phát cả ambient và main theme
-        startAmbient();
-        startMainTheme();
-        hasStarted.current = true;
-        console.log('[Audio] Music started!');
-      }
-    };
-
-    // Listen for first interaction - capture phase để bắt sớm nhất
-    document.addEventListener('click', handleFirstInteraction, { capture: true });
-    document.addEventListener('keydown', handleFirstInteraction, { capture: true });
-    document.addEventListener('touchstart', handleFirstInteraction, { capture: true });
-    document.addEventListener('mousedown', handleFirstInteraction, { capture: true });
-
-    return () => {
-      document.removeEventListener('click', handleFirstInteraction, { capture: true });
-      document.removeEventListener('keydown', handleFirstInteraction, { capture: true });
-      document.removeEventListener('touchstart', handleFirstInteraction, { capture: true });
-      document.removeEventListener('mousedown', handleFirstInteraction, { capture: true });
-    };
-  }, [unlockAudio, startAmbient, startMainTheme]);
-
+  // Audio is now controlled entirely by AudioControls button
+  // Music starts when user clicks the sound button (OFF → ON)
   return null;
 }
 
@@ -90,12 +60,30 @@ function AudioControls() {
   const isMuted = useAudioStore((state) => state.isMuted);
   const toggleMute = useAudioStore((state) => state.toggleMute);
   const { playUIClick } = useSoundEffects();
+  const { forceStartAllMusic, stopAllMusic } = useBackgroundMusic();
+  const { unlockAudio } = useAudio();
 
   const handleToggle = () => {
+    const wasMuted = isMuted;
     toggleMute();
-    // Play click sound when unmuting
-    if (isMuted) {
-      playUIClick();
+
+    if (wasMuted) {
+      // Turning sound ON (OFF → ON)
+      // Small delay to ensure mute state is updated first
+      setTimeout(() => {
+        // Unlock audio context (required by browser)
+        unlockAudio();
+        // Force start music (bypasses mute check)
+        forceStartAllMusic();
+        // Play click sound to confirm sound is on
+        playUIClick();
+        console.log('[Audio] Sound ON - Music started!');
+      }, 50);
+    } else {
+      // Turning sound OFF (ON → OFF)
+      // Stop all music when muting
+      stopAllMusic();
+      console.log('[Audio] Sound OFF - Music stopped');
     }
   };
 

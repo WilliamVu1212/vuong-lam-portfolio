@@ -23,6 +23,9 @@ import {
   type TrackKey,
 } from '@/utils/audioManager';
 
+// Direct music control (bypasses mute check for force start)
+import { playMusic as directPlayMusic } from '@/utils/audioManager';
+
 /**
  * Main audio hook - provides audio control functions
  * Syncs with AudioStore for global state management
@@ -137,14 +140,16 @@ export const useSoundEffects = () => {
  * Hook for background music management
  */
 export const useBackgroundMusic = () => {
-  const { playBackgroundMusic, stopBackgroundMusic, pauseMusic, resumeMusic } = useAudio();
+  const { playBackgroundMusic, stopBackgroundMusic, pauseMusic, resumeMusic, isMuted } = useAudio();
   const ambientPlaying = useRef(false);
   const musicPlaying = useRef(false);
+  const hasEverStarted = useRef(false);
 
   const startAmbient = useCallback(() => {
     if (!ambientPlaying.current) {
       playBackgroundMusic('ambient', { fadeIn: 2000 });
       ambientPlaying.current = true;
+      hasEverStarted.current = true;
     }
   }, [playBackgroundMusic]);
 
@@ -152,6 +157,7 @@ export const useBackgroundMusic = () => {
     if (!musicPlaying.current) {
       playBackgroundMusic('music', { fadeIn: 3000 });
       musicPlaying.current = true;
+      hasEverStarted.current = true;
     }
   }, [playBackgroundMusic]);
 
@@ -162,12 +168,32 @@ export const useBackgroundMusic = () => {
     musicPlaying.current = false;
   }, [stopBackgroundMusic]);
 
+  // Force start all music - bypasses mute check
+  // Used when user clicks sound button (OFF → ON)
+  const forceStartAllMusic = useCallback(() => {
+    // Reset refs to allow restart
+    ambientPlaying.current = false;
+    musicPlaying.current = false;
+    // Use directPlayMusic to bypass mute check
+    directPlayMusic('ambient', { volume: 0.35, fadeIn: 1500 });
+    directPlayMusic('music', { volume: 0.35, fadeIn: 2000 });
+    ambientPlaying.current = true;
+    musicPlaying.current = true;
+    hasEverStarted.current = true;
+    console.log('[Audio] Force started all music');
+  }, []);
+
+  // Check if music has ever been started
+  const hasMusicStarted = useCallback(() => hasEverStarted.current, []);
+
   return {
     startAmbient,
     startMainTheme,
     stopAllMusic,
     pauseMusic,
     resumeMusic,
+    forceStartAllMusic,
+    hasMusicStarted,
   };
 };
 

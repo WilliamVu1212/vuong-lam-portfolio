@@ -311,7 +311,7 @@ interface AudioStore {
 }
 
 export const useAudioStore = create<AudioStore>()((set) => ({
-  isMuted: false,
+  isMuted: true, // Mặc định OFF khi vào game
   masterVolume: 0.7,
   musicVolume: 0.5,
   sfxVolume: 0.8,
