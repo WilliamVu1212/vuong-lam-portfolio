@@ -54,7 +54,41 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 39
+## Recent Update (2026-01-22) - Session 40
+
+### Đã hoàn thành:
+- ✅ **Cross-Browser Compatibility Improvements**
+  - **Backdrop Filter Vendor Prefix** (Safari support):
+    - Added `-webkit-backdrop-filter` to `.card` class in globals.css
+    - Added `-webkit-backdrop-filter` to `.glass` class in globals.css
+  - **WebGL Detection & Fallback**:
+    - Added `checkWebGLSupport()` function to detect WebGL 1/2 support
+    - Added `WebGLNotSupported` component with Vietnamese fallback message
+    - Shows helpful troubleshooting tips if WebGL is unavailable
+  - **Web Audio API Detection**:
+    - Added `isWebAudioSupported()` function in audioManager.ts
+    - Added `isHTML5AudioSupported()` fallback check
+    - Added `isAudioSupported()` combined check
+  - **Browserslist Config**: Already configured in package.json ✅
+
+### Browser Support:
+| Browser | WebGL | Audio | Backdrop Filter |
+|---------|-------|-------|-----------------|
+| Chrome 90+ | ✅ | ✅ | ✅ |
+| Firefox 90+ | ✅ | ✅ | ✅ |
+| Safari 15+ | ✅ | ✅ | ✅ (with -webkit-) |
+| Edge 90+ | ✅ | ✅ | ✅ |
+| Mobile Chrome | ✅ | ✅ | ✅ |
+| Mobile Safari | ✅ | ✅ | ✅ (with -webkit-) |
+
+### Files đã sửa:
+- `src/styles/globals.css` - Added -webkit-backdrop-filter
+- `src/App.tsx` - Added WebGL detection and fallback UI
+- `src/utils/audioManager.ts` - Added audio support detection functions
+
+---
+
+## Session 39
 
 ### Đã hoàn thành:
 - ✅ **Add Colliders for CherryTree and FloatingIsland**

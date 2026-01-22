@@ -134,6 +134,7 @@
     @apply rounded-xl p-6;
     background-color: var(--color-tertiary);
     border: 1px solid rgba(255, 68, 68, 0.2);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
 
@@ -145,6 +146,7 @@
   /* Glass Effect */
   .glass {
     background: rgba(45, 27, 27, 0.7);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 68, 68, 0.1);
   }

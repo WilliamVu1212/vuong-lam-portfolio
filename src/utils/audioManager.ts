@@ -6,6 +6,39 @@
 import { Howl, Howler } from 'howler';
 import { AUDIO } from './constants';
 
+// ==========================================
+// Browser Support Detection
+// ==========================================
+
+/**
+ * Check if Web Audio API is supported
+ */
+export const isWebAudioSupported = (): boolean => {
+  return !!(
+    window.AudioContext ||
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+  );
+};
+
+/**
+ * Check if HTML5 Audio is supported (fallback)
+ */
+export const isHTML5AudioSupported = (): boolean => {
+  try {
+    const audio = document.createElement('audio');
+    return !!audio.canPlayType;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Check overall audio support
+ */
+export const isAudioSupported = (): boolean => {
+  return isWebAudioSupported() || isHTML5AudioSupported();
+};
+
 // Sound types
 export type SFXKey = keyof typeof AUDIO.sfx;
 export type TrackKey = keyof typeof AUDIO.tracks;

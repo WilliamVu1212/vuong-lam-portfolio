@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Preload, KeyboardControls } from '@react-three/drei';
 import Experience from './components/3d/Experience';
@@ -12,6 +12,61 @@ import { useMobileDetect } from './hooks/useMobileDetect';
 import { useUIStore, useGameStore, useAudioStore } from './stores/gameStore';
 import { useAudio, useBackgroundMusic, useSoundEffects } from './hooks/useAudio';
 import { CAMERA, COLORS } from './utils/constants';
+
+// ==========================================
+// WebGL Support Detection
+// ==========================================
+const checkWebGLSupport = (): { supported: boolean; version: number } => {
+  try {
+    const canvas = document.createElement('canvas');
+    // Try WebGL 2 first
+    const gl2 = canvas.getContext('webgl2');
+    if (gl2) {
+      return { supported: true, version: 2 };
+    }
+    // Fallback to WebGL 1
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) {
+      return { supported: true, version: 1 };
+    }
+    return { supported: false, version: 0 };
+  } catch {
+    return { supported: false, version: 0 };
+  }
+};
+
+// WebGL Not Supported Fallback Component
+function WebGLNotSupported() {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#1A0A0A' }}>
+      <div className="text-center p-8 max-w-lg">
+        <div className="text-6xl mb-6">⚠️</div>
+        <h1
+          className="font-display text-3xl mb-4"
+          style={{ color: '#FFD700' }}
+        >
+          WebGL Không Được Hỗ Trợ
+        </h1>
+        <p className="text-co-chi mb-6 leading-relaxed">
+          Trình duyệt của bạn không hỗ trợ WebGL - công nghệ cần thiết để hiển thị đồ họa 3D.
+        </p>
+        <div className="space-y-4 text-left p-4 rounded-lg" style={{ background: 'rgba(45,27,27,0.8)' }}>
+          <p className="text-tho-kim text-sm font-accent">Hãy thử:</p>
+          <ul className="text-co-chi text-sm space-y-2 list-disc list-inside">
+            <li>Cập nhật trình duyệt lên phiên bản mới nhất</li>
+            <li>Sử dụng Chrome, Firefox, Edge, hoặc Safari</li>
+            <li>Kiểm tra driver card đồ họa đã được cập nhật</li>
+            <li>Tắt chế độ tiết kiệm pin (nếu có)</li>
+          </ul>
+        </div>
+        <div className="mt-6 text-tho-kim text-xs">
+          <p>Các trình duyệt được khuyến nghị:</p>
+          <p className="text-hoa-quang">Chrome 90+ | Firefox 90+ | Safari 15+ | Edge 90+</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Section positions for camera navigation
 // Góc nhìn từ trên xuống chéo, X=0 để ở giữa màn hình
@@ -365,6 +420,9 @@ function App() {
   const closeMenu = useUIStore((state) => state.closeMenu);
   const showFPS = useUIStore((state) => state.showFPS);
 
+  // WebGL support check (memoized to prevent recalculation)
+  const webglSupport = useMemo(() => checkWebGLSupport(), []);
+
   // Mobile detection
   const { isMobile: isMobileDevice, isTablet, isTouchDevice } = useMobileDetect();
 
@@ -415,6 +473,11 @@ function App() {
       setCameraTarget(cameraConfig.position, cameraConfig.lookAt);
     }
   }, [setCameraTarget]);
+
+  // Show fallback if WebGL is not supported
+  if (!webglSupport.supported) {
+    return <WebGLNotSupported />;
+  }
 
   return (
     <>
