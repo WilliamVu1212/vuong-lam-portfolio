@@ -1,8 +1,8 @@
 # Project: William Vu Portfolio
 
-## CURRENT STATUS (2026-01-21)
+## CURRENT STATUS (2026-01-22)
 
-**Overall Progress: 92%** - Phase 5 (UI & Polish)
+**Overall Progress: 93%** - Phase 5 (UI & Polish)
 
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
@@ -35,17 +35,31 @@
 - OrbitControls với zoom/rotate/pan
 - LevelNavigator để chuyển section (7 levels)
 - Camera animation tự dừng khi user tương tác
+- **Camera Debug Panel** - Hiển thị tọa độ realtime để điều chỉnh
+
+### Camera Config (constants.ts):
+- **Initial View**: Position [0, 76, 94], Target [0, 7, -191] - Toàn cảnh
+- **Walking**: distance 35, height 25
+- **Sword Flying**: distance 40, height 20
+- **Beast Flying**: distance 50, height 30
 
 ---
 
-## Recent Update (2026-01-21) - Session 16
+## Recent Update (2026-01-22) - Session 17
 
 ### Đã hoàn thành:
-- ✅ **Camera Follow Player khi di chuyển**
-  - Camera tự động follow player khi đang di chuyển (WASD)
-  - Camera dừng follow khi đứng yên hoặc user xoay camera
-  - Config: distance 15, height 8, smoothing 0.03
-  - Player velocity lưu vào store để detect movement
+- ✅ **Camera System cải thiện**
+  - Góc nhìn toàn cảnh khi vào game (thấy từ Phàm Nhân đến Vấn Đỉnh)
+  - Camera follow với góc nhìn rộng hơn khi di chuyển
+  - Camera Debug Panel hiển thị tọa độ realtime
+
+- ✅ **Camera Debug Panel UI**
+  - Hiển thị Position (X, Y, Z) và Target (X, Y, Z)
+  - Toggle show/hide
+  - Giúp user tự điều chỉnh góc nhìn
+
+### Session 16:
+- ✅ Camera Follow Player khi di chuyển
 
 ### Session 15:
 - ✅ Di chuyển vị trí 4 thác nước phân bố hợp lý
@@ -53,24 +67,13 @@
 ### Session 14:
 - ✅ Di chuyển Ngự Kiếm unlock từ Kết Đan xuống Trúc Cơ
 
-### Session 13:
-- ✅ Di chuyển vị trí unlock từ Kết Đan/Anh Biến sang vị trí mới
-
-### Session 12:
-- ✅ **Thượng Cổ Đồng Chung (Ancient Divine Bell)** - Thay thế Thần Phượng ở Anh Biến
-
-### Session 11:
-- ✅ **Cưỡi Linh Thú (Phoenix Mount System)** - Bay trên lưng Hỏa Phượng
-
-### Session 10:
-- ✅ **UX: Sword Unlock Hint** - Người chơi biết có Ngự Kiếm ở Hóa Thần
-
-### Session 9:
-- ✅ **Ngự Kiếm (Sword Flying Mode)** - Bay kiếm hoàn chỉnh
-
-### Session trước:
-- ✅ **Cấm Phiên (Soul Banner)** ở Vấn Đỉnh
-- ✅ **Trảm La Kiếm (Soul Slaying Sword)** ở Hóa Thần
+### Sessions trước:
+- Session 13: Di chuyển vị trí unlock từ Kết Đan/Anh Biến sang vị trí mới
+- Session 12: Thượng Cổ Đồng Chung (Ancient Divine Bell)
+- Session 11: Cưỡi Linh Thú (Phoenix Mount System)
+- Session 10: UX Sword Unlock Hint
+- Session 9: Ngự Kiếm (Sword Flying Mode)
+- Session 8: Cấm Phiên, Trảm La Kiếm
 
 ---
 

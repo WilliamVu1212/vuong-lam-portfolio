@@ -220,7 +220,35 @@
 
 ## Recent Changes
 
-### Session 2026-01-21 - Update 16 (Latest)
+### Session 2026-01-22 - Update 17 (Latest)
+```
+- Cải thiện Camera System với góc nhìn toàn cảnh:
+  - Điều chỉnh camera follow config cho góc nhìn rộng hơn:
+    - walking: distance 35, height 25 (trước: 15, 8)
+    - cloud: distance 30, height 20 (trước: 10, 5)
+    - sword: distance 40, height 20 (trước: 12, 5)
+    - beast: distance 50, height 30 (trước: 18, 10)
+  - Set camera ban đầu với góc nhìn toàn cảnh:
+    - Position: [0, 76, 94]
+    - Target: [0, 7, -191]
+    - Thấy được từ Phàm Nhân đến Vấn Đỉnh ngay khi vào game
+
+- Thêm Camera Debug Panel UI:
+  - Hiển thị realtime camera position (X, Y, Z)
+  - Hiển thị realtime camera target/lookAt (X, Y, Z)
+  - Toggle show/hide với nút 📷
+  - Giúp user tự điều chỉnh góc nhìn và lấy tọa độ
+
+- Cập nhật UIStore:
+  - Thêm showCameraDebug state (mặc định: true)
+  - Thêm cameraDebugInfo object
+  - Thêm toggleCameraDebug() và setCameraDebugInfo() actions
+
+- Files changed: App.tsx, Experience.tsx, gameStore.ts, constants.ts
+- Git commit: 520b38e
+```
+
+### Session 2026-01-21 - Update 16
 ```
 - Thêm tính năng Camera Follow Player khi di chuyển:
   - Camera tự động follow player khi đang di chuyển (velocity > 0.5)
