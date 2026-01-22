@@ -220,7 +220,24 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 28 (Latest)
+### Session 2026-01-22 - Update 29 (Latest)
+```
+- Auto-fly khi unlock Ngự Kiếm / Cưỡi Phượng:
+  - Khi unlock Ngự Kiếm → tự động bay kiếm luôn (không cần bấm F)
+  - Khi unlock Cưỡi Phượng → tự động chuyển mode + bay luôn
+  - Player.tsx: Thêm useEffect để detect external flight activation
+  - Initial upward boost (y=15 cho kiếm, y=20 cho phượng)
+
+- Fix font tiếng Việt trong unlock notifications:
+  - Đổi từ Cinzel sang Cormorant Garamond cho headers
+  - Dùng system-ui, sans-serif cho body text
+  - Giờ hiển thị đúng dấu tiếng Việt
+
+- Files changed: Player.tsx, AboutSection.tsx, ExperienceSection.tsx
+- Git commit: dd5b002
+```
+
+### Session 2026-01-22 - Update 28
 ```
 - Fix Audio Not Playing (Complete):
   - Bug 1: useAudio hook tạo isInitialized.current ref riêng mỗi instance
