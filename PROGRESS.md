@@ -130,7 +130,7 @@
 |------|--------|-------|
 | Performance optimization | ⬜ Todo | |
 | Mobile optimization | ⬜ Todo | |
-| Cross-browser testing | ⬜ Todo | |
+| Cross-browser testing | ✅ Done | WebGL detection, Audio API detection, Safari -webkit- prefixes |
 | Bug fixes | 🔄 In Progress | Fixed TypeScript errors, Cloud rendering |
 | SEO setup | ⬜ Todo | |
 | Analytics | ⬜ Todo | |
@@ -221,7 +221,31 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 39 (Latest)
+### Session 2026-01-22 - Update 40 (Latest)
+```
+- Cross-Browser Compatibility Improvements:
+  - Add -webkit-backdrop-filter to .card and .glass classes (Safari support)
+  - Add WebGL detection with checkWebGLSupport() function
+  - Add WebGLNotSupported component with Vietnamese fallback UI
+  - Add Web Audio API detection in audioManager.ts:
+    - isWebAudioSupported()
+    - isHTML5AudioSupported()
+    - isAudioSupported()
+  - Verify browserslist config in package.json
+
+- Browser Support Matrix:
+  | Browser | WebGL | Audio | Backdrop Filter |
+  |---------|-------|-------|-----------------|
+  | Chrome 90+ | ✅ | ✅ | ✅ |
+  | Firefox 90+ | ✅ | ✅ | ✅ |
+  | Safari 15+ | ✅ | ✅ | ✅ (with -webkit-) |
+  | Edge 90+ | ✅ | ✅ | ✅ |
+
+- Files changed: globals.css, App.tsx, audioManager.ts, CLAUDE.md
+- Git commit: 700d03e
+```
+
+### Session 2026-01-22 - Update 39
 ```
 - Add colliders for CherryTree and FloatingIsland:
   - CherryTree (AboutSection.tsx):
