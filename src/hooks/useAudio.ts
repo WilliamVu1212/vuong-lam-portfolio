@@ -79,8 +79,12 @@ export const useAudio = () => {
   // Play SFX with current volume settings
   const playSound = useCallback(
     (key: SFXKey, options?: { volume?: number; rate?: number }) => {
-      if (isMuted) return null;
+      if (isMuted) {
+        console.log(`[useAudio] playSound(${key}) blocked - isMuted=true`);
+        return null;
+      }
       const effectiveVolume = (options?.volume ?? 1) * sfxVolume * masterVolume;
+      console.log(`[useAudio] playSound(${key}) - volume: ${effectiveVolume.toFixed(2)}`);
       return playSFX(key, { ...options, volume: effectiveVolume });
     },
     [isMuted, sfxVolume, masterVolume]
@@ -128,8 +132,16 @@ export const useAudio = () => {
 export const useSoundEffects = () => {
   const { playSound } = useAudio();
 
-  const playJump = useCallback(() => playSound('jump'), [playSound]);
-  const playLand = useCallback(() => playSound('land'), [playSound]);
+  const playJump = useCallback(() => {
+    console.log('[SFX] Playing jump sound...');
+    return playSound('jump');
+  }, [playSound]);
+  const playLand = useCallback(() => {
+    console.log('[SFX] Playing land sound...');
+    const result = playSound('land');
+    console.log('[SFX] Land sound result:', result);
+    return result;
+  }, [playSound]);
   const playSwordWhoosh = useCallback(() => playSound('swordWhoosh'), [playSound]);
   const playPhoenixCry = useCallback(() => playSound('phoenixCry'), [playSound]);
   const playUIClick = useCallback(() => playSound('uiClick'), [playSound]);

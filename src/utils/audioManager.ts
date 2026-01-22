@@ -31,6 +31,10 @@ export const preloadSFX = (): void => {
         src: [src],
         preload: true,
         volume: 0.8,
+        html5: false, // Use Web Audio API for consistent behavior
+        onload: () => {
+          console.log(`[AudioManager] SFX loaded: ${key}`);
+        },
         onloaderror: (_id, error) => {
           console.warn(`[AudioManager] Failed to load SFX: ${key}`, error);
         },
@@ -53,6 +57,9 @@ export const playSFX = (
     return null;
   }
 
+  // Debug: check sound state
+  console.log(`[AudioManager] playSFX called for: ${key}, state: ${sound.state()}, duration: ${sound.duration()}`);
+
   if (options?.volume !== undefined) {
     sound.volume(options.volume);
   }
@@ -60,7 +67,9 @@ export const playSFX = (
     sound.rate(options.rate);
   }
 
-  return sound.play();
+  const id = sound.play();
+  console.log(`[AudioManager] SFX play() returned id: ${id} for ${key}`);
+  return id;
 };
 
 /**

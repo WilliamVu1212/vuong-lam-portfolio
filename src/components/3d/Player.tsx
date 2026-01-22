@@ -177,6 +177,9 @@ export function Player() {
       // Calculate trajectory velocity
       const velocity = calculateTrajectoryVelocity(playerPos, intersectPoint.x, intersectPoint.z);
 
+      // Reset wasGrounded so landing will be detected
+      wasGrounded.current = false;
+
       // Play jump sound
       playJump();
 
@@ -491,10 +494,14 @@ export function Player() {
 
     // Play landing sound when transitioning from air to ground
     if (grounded && !wasGrounded.current) {
-      console.log('[DEBUG] Landing detected! Playing land sound...');
+      console.log('[DEBUG] Landing detected! grounded:', grounded, 'wasGrounded:', wasGrounded.current);
       playLand();
     }
-    wasGrounded.current = grounded;
+    // Only update wasGrounded AFTER playing sound
+    if (grounded !== wasGrounded.current) {
+      console.log('[DEBUG] wasGrounded changing from', wasGrounded.current, 'to', grounded);
+      wasGrounded.current = grounded;
+    }
 
     // Restore damping when landing from a target jump
     if (grounded && isJumpingToTarget) {
@@ -561,6 +568,8 @@ export function Player() {
 
     // Keyboard jump
     if (controls.jump && grounded) {
+      console.log('[DEBUG] Keyboard jump! Setting wasGrounded to false');
+      wasGrounded.current = false; // Force reset so landing will be detected
       playJump();
       rb.setLinvel(
         {
@@ -598,6 +607,9 @@ export function Player() {
     // Play sword whoosh sound
     playSwordWhoosh();
 
+    // Reset wasGrounded so landing sound will play when exiting flight
+    wasGrounded.current = false;
+
     // Initialize flight velocity with current velocity
     flightVelocity.current.set(velocity.x, Math.max(velocity.y, 10), velocity.z);
 
@@ -629,6 +641,9 @@ export function Player() {
 
     // Play phoenix cry sound
     playPhoenixCry();
+
+    // Reset wasGrounded so landing sound will play when exiting flight
+    wasGrounded.current = false;
 
     // Initialize flight velocity with current velocity + upward boost
     flightVelocity.current.set(velocity.x, Math.max(velocity.y, 15), velocity.z);
@@ -686,6 +701,9 @@ export function Player() {
       // Flight was activated externally (not via F key), give initial boost
       const rb = rigidBodyRef.current;
       const velocity = rb.linvel();
+
+      // Reset wasGrounded so landing sound will play when exiting flight
+      wasGrounded.current = false;
 
       if (transportMode === 'sword') {
         // Initialize sword flight velocity and give upward boost
