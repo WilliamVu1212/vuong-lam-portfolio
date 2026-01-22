@@ -54,7 +54,26 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 36
+## Recent Update (2026-01-22) - Session 37
+
+### Đã hoàn thành:
+- ✅ **Fix Player Falling Through Objects**
+  - Thêm physics colliders cho các objects để player không "thọt lỏm" vào bên trong
+  - **Pagoda (AboutSection)**: 7 colliders cho base, 3 tầng, 3 đỉnh mái
+  - **ToriiGate (AboutSection)**: 4 colliders cho 2 cột, xà ngang, mái
+  - **CentralAltar (SkillsSection)**: 3 colliders cho 3 tầng bệ thờ
+  - **CornerPillar (VanDinhSection)**: 2 colliders mỗi cột (thân + đỉnh)
+  - **ImmortalThrone (VanDinhSection)**: 4 colliders cho 3 tầng + cột trung tâm
+  - Player giờ có thể đứng/nhảy lên tất cả các objects này
+
+### Files đã sửa:
+- `src/components/sections/AboutSection.tsx` - Colliders cho Pagoda + ToriiGate
+- `src/components/sections/SkillsSection.tsx` - Colliders cho CentralAltar
+- `src/components/sections/VanDinhSection.tsx` - Colliders cho CornerPillar + ImmortalThrone
+
+---
+
+## Session 36
 
 ### Đã hoàn thành:
 - ✅ **Sword Cultivator Player (Kiếm Tu)**
