@@ -71,7 +71,36 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 43
+## Recent Update (2026-01-22) - Session 44
+
+### Đã hoàn thành:
+- ✅ **Biển Chỉ Dẫn (Guide Signs)**
+  - Thêm 2 biển chỉ dẫn nổi bật trong thế giới 3D giúp người chơi tìm đến unlock locations
+  - **Biển 1**: Chỉ đến **Trảm La Kiếm** (AboutSection) để unlock Ngự Kiếm
+    - Vị trí: `[0, 20, -50]`
+    - Màu vàng kim (#FFD700)
+    - Icon: ⚔️
+    - Tự ẩn khi đã unlock sword
+  - **Biển 2**: Chỉ đến **Thượng Cổ Đồng Chung** (ExperienceSection) để unlock Cưỡi Phượng
+    - Vị trí: `[0, 120, -350]`
+    - Màu xanh lục (#00FF88)
+    - Icon: 🔔
+    - Tự ẩn khi đã unlock beast
+  - **Features**:
+    - Floating animation (Float component)
+    - Mũi tên 3D bouncing chỉ hướng
+    - Light beam thẳng đứng
+    - Sparkles particles
+    - HTML label với text tiếng Việt
+    - CSS animations (bounce, pulse)
+
+### Files đã sửa:
+- `src/components/3d/Experience.tsx` - Thêm GuideSigns, GuideSign components
+- `src/styles/globals.css` - Thêm bounce, pulse animations
+
+---
+
+## Session 43
 
 ### Đã hoàn thành:
 - ✅ **Fix Phoenix Unlock - Both Bells Work**

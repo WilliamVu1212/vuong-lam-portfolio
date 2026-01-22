@@ -6,6 +6,7 @@ import {
   Sparkles,
   OrbitControls,
   shaderMaterial,
+  Html,
 } from '@react-three/drei';
 import {
   EffectComposer,
@@ -467,6 +468,9 @@ function WorldContent() {
 
       {/* Energy Orbs */}
       <EnergyOrbs />
+
+      {/* Guide Signs - Biển chỉ dẫn đến Kiếm và Chuông */}
+      <GuideSigns />
     </>
   );
 }
@@ -750,6 +754,239 @@ function EnergyOrbs() {
         </Float>
       ))}
     </>
+  );
+}
+
+// ==================== GUIDE SIGNS - Biển Chỉ Dẫn ====================
+function GuideSigns() {
+  const unlockedTransports = useGameStore((state) => state.unlockedTransports);
+  const hasSword = unlockedTransports.includes('sword');
+  const hasBeast = unlockedTransports.includes('beast');
+
+  return (
+    <>
+      {/* Biển chỉ dẫn đến Kiếm - hiện khi chưa unlock Ngự Kiếm */}
+      {!hasSword && (
+        <GuideSign
+          position={[0, 20, -50]}
+          targetName="Trảm La Kiếm"
+          targetDescription="Đến gần để khai mở Ngự Kiếm"
+          arrowDirection={[0, 0, -1]}
+          color="#FFD700"
+          icon="⚔️"
+        />
+      )}
+
+      {/* Biển chỉ dẫn đến Chuông - hiện khi chưa unlock Phượng Hoàng */}
+      {!hasBeast && (
+        <GuideSign
+          position={[0, 120, -350]}
+          targetName="Thượng Cổ Đồng Chung"
+          targetDescription="Đến gần để khai mở Cưỡi Phượng"
+          arrowDirection={[0, 0, -1]}
+          color="#00FF88"
+          icon="🔔"
+        />
+      )}
+    </>
+  );
+}
+
+interface GuideSignProps {
+  position: [number, number, number];
+  targetName: string;
+  targetDescription: string;
+  arrowDirection: [number, number, number];
+  color: string;
+  icon: string;
+}
+
+function GuideSign({ position, targetName, targetDescription, color, icon }: GuideSignProps) {
+  const signRef = useRef<THREE.Group>(null);
+  const arrowRef = useRef<THREE.Group>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
+  const beamRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+
+    // Sign floating animation
+    if (signRef.current) {
+      signRef.current.position.y = position[1] + Math.sin(t * 0.8) * 2;
+      signRef.current.rotation.y = Math.sin(t * 0.3) * 0.1;
+    }
+
+    // Arrow bouncing animation (pointing forward)
+    if (arrowRef.current) {
+      arrowRef.current.position.z = -3 - Math.sin(t * 3) * 1;
+    }
+
+    // Glow pulse
+    if (glowRef.current) {
+      const mat = glowRef.current.material as THREE.MeshBasicMaterial;
+      mat.opacity = 0.3 + Math.sin(t * 2) * 0.15;
+    }
+
+    // Beam rotation
+    if (beamRef.current) {
+      beamRef.current.rotation.y = t * 0.5;
+    }
+  });
+
+  return (
+    <group position={position}>
+      <Float speed={1.5} floatIntensity={0.5}>
+        <group ref={signRef}>
+          {/* Main post */}
+          <mesh position={[0, -8, 0]}>
+            <cylinderGeometry args={[0.5, 0.8, 16, 8]} />
+            <meshStandardMaterial
+              color="#2D1B1B"
+              emissive={color}
+              emissiveIntensity={0.3}
+              metalness={0.6}
+              roughness={0.4}
+            />
+          </mesh>
+
+          {/* Sign board */}
+          <mesh position={[0, 2, 0]}>
+            <boxGeometry args={[12, 6, 0.5]} />
+            <meshStandardMaterial
+              color="#1A0A0A"
+              emissive={color}
+              emissiveIntensity={0.2}
+              metalness={0.4}
+              roughness={0.6}
+            />
+          </mesh>
+
+          {/* Sign board border glow */}
+          <mesh ref={glowRef} position={[0, 2, 0.3]}>
+            <planeGeometry args={[12.5, 6.5]} />
+            <meshBasicMaterial
+              color={color}
+              transparent
+              opacity={0.3}
+            />
+          </mesh>
+
+          {/* Top ornament */}
+          <mesh position={[0, 6, 0]}>
+            <octahedronGeometry args={[1.2, 0]} />
+            <meshStandardMaterial
+              color={color}
+              emissive={color}
+              emissiveIntensity={1.5}
+              metalness={0.8}
+              roughness={0.2}
+            />
+          </mesh>
+
+          {/* Arrow pointing forward */}
+          <group ref={arrowRef} position={[0, -2, -3]}>
+            {/* Arrow body */}
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.3, 0.3, 3, 8]} />
+              <meshStandardMaterial
+                color={color}
+                emissive={color}
+                emissiveIntensity={1}
+                metalness={0.7}
+                roughness={0.3}
+              />
+            </mesh>
+            {/* Arrow head */}
+            <mesh position={[0, 0, -2]} rotation={[Math.PI / 2, 0, 0]}>
+              <coneGeometry args={[0.8, 2, 8]} />
+              <meshStandardMaterial
+                color={color}
+                emissive={color}
+                emissiveIntensity={1.5}
+                metalness={0.8}
+                roughness={0.2}
+              />
+            </mesh>
+          </group>
+
+          {/* Vertical light beam */}
+          <mesh ref={beamRef} position={[0, 15, 0]}>
+            <cylinderGeometry args={[0.2, 1, 30, 16, 1, true]} />
+            <meshBasicMaterial
+              color={color}
+              transparent
+              opacity={0.15}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+
+          {/* Light */}
+          <pointLight position={[0, 5, 2]} color={color} intensity={3} distance={30} />
+
+          {/* Sparkles */}
+          <Sparkles
+            count={40}
+            scale={[15, 20, 10]}
+            position={[0, 5, 0]}
+            size={2}
+            speed={0.8}
+            color={color}
+          />
+        </group>
+      </Float>
+
+      {/* HTML Label - always facing camera */}
+      <Float speed={1.5} floatIntensity={0.5}>
+        <group position={[0, Math.sin(0) * 2, 0]}>
+          <Html position={[0, 8, 0]} center distanceFactor={80}>
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(26,10,10,0.95) 0%, rgba(45,27,27,0.95) 100%)',
+                border: `2px solid ${color}`,
+                borderRadius: '12px',
+                padding: '12px 20px',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+                boxShadow: `0 0 30px ${color}80`,
+                animation: 'pulse 2s ease-in-out infinite',
+              }}
+            >
+              <div style={{ fontSize: '28px', marginBottom: '6px' }}>{icon}</div>
+              <div
+                style={{
+                  color: color,
+                  fontFamily: '"Cormorant Garamond", Georgia, serif',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  marginBottom: '4px',
+                }}
+              >
+                {targetName}
+              </div>
+              <div
+                style={{
+                  color: '#F5E6D3',
+                  fontFamily: 'system-ui, sans-serif',
+                  fontSize: '12px',
+                }}
+              >
+                {targetDescription}
+              </div>
+              <div
+                style={{
+                  color: color,
+                  fontSize: '20px',
+                  marginTop: '6px',
+                  animation: 'bounce 1s ease-in-out infinite',
+                }}
+              >
+                ▼
+              </div>
+            </div>
+          </Html>
+        </group>
+      </Float>
+    </group>
   );
 }
 
