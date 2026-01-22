@@ -222,14 +222,17 @@
 
 ### Session 2026-01-22 - Update 22 (Latest)
 ```
-- Fix Flight Mode Exit Bug:
-  - Sửa lỗi bấm Shift+Q (descend+ascend) cùng lúc bị thoát chế độ bay
-  - Trước: controls.descend && position.y < 3 → exit flight
-  - Sau: controls.descend && !controls.ascend && !controls.jump && position.y < 3 → exit flight
-  - Áp dụng cho cả sword flight và beast flight trong Player.tsx
+- Simplify Flight Controls:
+  - Đổi keyboard mapping: Q/Space bay lên, E bay xuống (bỏ Shift)
+  - Update UI trong ControlsHelp và tutorial popups (Ngự Kiếm + Cưỡi Phượng)
+  - Đổi font button từ Cinzel Decorative sang serif cho tiếng Việt
 
-- Files changed: Player.tsx
-- Git commit: ddaee00
+- Fix Flight Mode Exit Bug:
+  - Sửa lỗi bấm cả 2 phím cùng lúc bị thoát chế độ bay
+  - Logic mới: Chỉ exit khi CHỈ bấm descend (không bấm ascend/jump)
+
+- Files changed: Player.tsx, App.tsx, constants.ts, CLAUDE.md
+- Git commits: ddaee00, 9774d8b
 ```
 
 ### Session 2026-01-22 - Update 21

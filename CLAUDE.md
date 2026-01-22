@@ -57,8 +57,13 @@
 ## Recent Update (2026-01-22) - Session 22
 
 ### Đã hoàn thành:
+- ✅ **Simplify Flight Controls**
+  - Q/Space để bay lên, E để bay xuống (bỏ Shift)
+  - Update UI trong ControlsHelp và tutorial popups
+  - Sửa font button cho tiếng Việt hiển thị đẹp hơn
+
 - ✅ **Fix Flight Mode Exit Bug**
-  - Sửa lỗi bấm Shift+Q (descend+ascend) cùng lúc bị thoát chế độ bay
+  - Sửa lỗi bấm cả 2 phím cùng lúc bị thoát chế độ bay
   - Logic mới: Chỉ exit flight khi CHỈ bấm descend (không bấm ascend/jump)
   - Áp dụng cho cả Ngự Kiếm và Cưỡi Phượng
 
