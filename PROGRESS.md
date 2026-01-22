@@ -227,12 +227,16 @@
   - Update UI trong ControlsHelp và tutorial popups (Ngự Kiếm + Cưỡi Phượng)
   - Đổi font button từ Cinzel Decorative sang serif cho tiếng Việt
 
-- Fix Flight Mode Exit Bug:
-  - Sửa lỗi bấm cả 2 phím cùng lúc bị thoát chế độ bay
-  - Logic mới: Chỉ exit khi CHỈ bấm descend (không bấm ascend/jump)
+- Fix Flight Bounds Logic:
+  - Chỉ chặn khi đi RA XA bounds, cho phép đi VỀ PHÍA TRONG bounds
+  - Player có thể thoát khi bị kẹt ngoài vùng cho phép
+
+- Remove Auto-Exit Flight:
+  - Bỏ tự động thoát bay khi giữ E gần mặt đất
+  - CHỈ thoát chế độ bay khi bấm F
 
 - Files changed: Player.tsx, App.tsx, constants.ts, CLAUDE.md
-- Git commits: ddaee00, 9774d8b
+- Git commits: ddaee00, 9774d8b, 963d41d, 7d34c1b
 ```
 
 ### Session 2026-01-22 - Update 21

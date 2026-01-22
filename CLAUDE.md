@@ -62,10 +62,16 @@
   - Update UI trong ControlsHelp và tutorial popups
   - Sửa font button cho tiếng Việt hiển thị đẹp hơn
 
+- ✅ **Fix Flight Bounds Logic**
+  - Sửa logic bounds: chỉ chặn khi đi RA XA bounds, cho phép đi VỀ PHÍA TRONG
+  - Player có thể thoát khi bị kẹt ngoài bounds
+
+- ✅ **Remove Auto-Exit Flight**
+  - Bỏ tự động thoát bay khi giữ E gần mặt đất
+  - CHỈ thoát chế độ bay khi bấm F (manual toggle)
+
 - ✅ **Fix Flight Mode Exit Bug**
   - Sửa lỗi bấm cả 2 phím cùng lúc bị thoát chế độ bay
-  - Logic mới: Chỉ exit flight khi CHỈ bấm descend (không bấm ascend/jump)
-  - Áp dụng cho cả Ngự Kiếm và Cưỡi Phượng
 
 ### Session 21:
 - ✅ **Audio Files Added**
