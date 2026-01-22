@@ -221,7 +221,58 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 35 (Latest)
+### Session 2026-01-22 - Update 38 (Latest)
+```
+- Add comprehensive physics colliders to all 3D objects:
+  - SoulSlayingSword pedestal + top surface (AboutSection.tsx)
+  - WaterfallColliders - left cliff, right cliff, bottom rocks for all 4 waterfalls (Experience.tsx)
+  - SoulBanner poles (VanDinhSection.tsx)
+  - CentralFlame pedestal + pillar + tops (ExperienceSection.tsx)
+  - ExperienceMonument base + body (ExperienceSection.tsx)
+  - BellPedestal tiers + tops (ExperienceSection.tsx)
+  - ContactAltar base + pedestal + display panel (VanDinhSection.tsx)
+  - CelestialGate pillars + arch (VanDinhSection.tsx)
+  - SkillPillar body + top (SkillsSection.tsx)
+  - CentralCrystal altar steps (ContactSection.tsx)
+  - HeavenlyGate pillars + arch (ContactSection.tsx)
+  - CentralBridge monument + top (ProjectsSection.tsx)
+
+- Files changed: Experience.tsx, AboutSection.tsx, ExperienceSection.tsx,
+                 VanDinhSection.tsx, SkillsSection.tsx, ContactSection.tsx,
+                 ProjectsSection.tsx
+- Git commit: cf0a026
+```
+
+### Session 2026-01-22 - Update 37
+```
+- Fix player falling through objects by adding physics colliders:
+  - Pagoda: 7 colliders for base, 3 floors, and 3 roofs
+  - ToriiGate: 4 colliders (left pillar, right pillar, top beam, roof)
+  - CentralAltar: 3 colliders (base, middle, top sections)
+  - CornerPillar: 2 colliders per pillar (body + top surface)
+  - ImmortalThrone: 4 colliders (3 tiers + central pillar top)
+
+- Files changed: AboutSection.tsx, SkillsSection.tsx, VanDinhSection.tsx
+- Git commit: 9eda556
+```
+
+### Session 2026-01-22 - Update 36
+```
+- Replace Fire Spirit with Sword Cultivator (Kiếm Tu) player character:
+  - SwordCultivator.tsx với các thành phần:
+    - White-haired cultivator with 50 flowing hair strands
+    - Gray/purple robes with glowing purple belt
+    - Crown with cyan gem
+    - Lightning particles around body
+    - Ground crystals when standing
+    - Hair animation stronger when flying
+  - Removed FireSpirit.tsx
+
+- Files changed: Player.tsx, SwordCultivator.tsx (new), FireSpirit.tsx (deleted)
+- Git commit: 9f773a8
+```
+
+### Session 2026-01-22 - Update 35
 ```
 - Fire Spirit Player (Hồn Hỏa):
   - Thay thế capsule player bằng thực thể năng lượng lửa animated
@@ -1001,4 +1052,4 @@ src/
 
 ---
 
-> **Last Updated:** 2026-01-21
+> **Last Updated:** 2026-01-22

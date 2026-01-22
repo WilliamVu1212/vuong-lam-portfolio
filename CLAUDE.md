@@ -54,7 +54,36 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 37
+## Recent Update (2026-01-22) - Session 38
+
+### Đã hoàn thành:
+- ✅ **Add Comprehensive Physics Colliders to All 3D Objects**
+  - Thêm colliders cho TẤT CẢ các objects còn thiếu để player không "thọt lỏm"
+  - **SoulSlayingSword (AboutSection)**: Pedestal collider + top surface
+  - **WaterfallColliders (Experience)**: Left cliff, right cliff, bottom rocks cho 4 thác nước
+  - **SoulBanner (VanDinhSection)**: Pole colliders cho 2 cột phướn
+  - **CentralFlame (ExperienceSection)**: Base pedestal + pillar + tops
+  - **ExperienceMonument (ExperienceSection)**: Base + body colliders cho 3 monuments
+  - **BellPedestal (ExperienceSection)**: Platform tiers + tops
+  - **ContactAltar (VanDinhSection)**: Base + pedestal + display panel
+  - **CelestialGate (VanDinhSection)**: Left pillar + right pillar + top arch cho 3 gates
+  - **SkillPillar (SkillsSection)**: Main pillar + top cap cho 4 pillars
+  - **CentralCrystal (ContactSection)**: Altar base + steps + pedestal tops
+  - **HeavenlyGate (ContactSection)**: Left pillar + right pillar + top arch cho 3 gates
+  - **CentralBridge (ProjectsSection)**: Monument collider + top surface
+
+### Files đã sửa:
+- `src/components/3d/Experience.tsx` - WaterfallColliders component
+- `src/components/sections/AboutSection.tsx` - SoulSlayingSword colliders
+- `src/components/sections/ExperienceSection.tsx` - CentralFlame, ExperienceMonument, BellPedestal colliders
+- `src/components/sections/VanDinhSection.tsx` - SoulBanner, ContactAltar, CelestialGate colliders
+- `src/components/sections/SkillsSection.tsx` - SkillPillar colliders
+- `src/components/sections/ContactSection.tsx` - CentralCrystal, HeavenlyGate colliders
+- `src/components/sections/ProjectsSection.tsx` - CentralBridge monument colliders
+
+---
+
+## Session 37
 
 ### Đã hoàn thành:
 - ✅ **Fix Player Falling Through Objects**
