@@ -1,4 +1,4 @@
-# Project: William Vu Portfolio
+# Project: Vương Lâm Portfolio
 
 ## CURRENT STATUS (2026-01-22)
 
@@ -29,7 +29,7 @@
 4. **Projects** (Kết Đan + Nguyên Anh) - 6 floating islands với clickable crystals + 2 thác nước
 5. **Experience** (Hóa Thần) - 3 monuments + 2 certification stones + **2 Thượng Cổ Đồng Chung (unlock Cưỡi Phượng)**
 6. **Contact** (Anh Biến) - Cloud palace, social links, gates phía sau
-7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, William panel + **2 Cấm Phiên (Soul Banners)**
+7. **Vấn Đỉnh** - Peak platform, throne, celestial gates, Vương Lâm panel + **2 Cấm Phiên (Soul Banners)**
 
 ### Camera Controls:
 - OrbitControls với zoom/rotate/pan
@@ -392,7 +392,7 @@ src/
 │   │   ├── ExperienceSection.tsx # 3 monuments + 2 stones + 2 Phoenix Flames
 │   │   ├── AboutSection.tsx
 │   │   ├── ContactSection.tsx  # Social links + gates phía sau
-│   │   └── VanDinhSection.tsx  # Đỉnh cao + William panel + gates phía sau
+│   │   └── VanDinhSection.tsx  # Đỉnh cao + Vương Lâm panel + gates phía sau
 │   └── ui/
 │       ├── menus/              # Menu System
 │       │   ├── MenuButton.tsx  # Trigger button ☰

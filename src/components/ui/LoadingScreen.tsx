@@ -25,7 +25,7 @@ function LoadingScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        William Vu
+        Vương Lâm
       </motion.h1>
 
       {/* Subtitle */}

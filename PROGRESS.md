@@ -764,7 +764,7 @@
 
 ### Session 2026-01-21 - Update 5
 ```
-- Đổi tên VUONG LAM thành William Vu (index.html, LoadingScreen.tsx)
+- Đổi tên thành Vương Lâm (index.html, LoadingScreen.tsx)
 - Bỏ phần tiếng Anh ở Loading Screen
 - Thêm Phoenix Flames (Phượng Hỏa) vào section Hóa Thần (ExperienceSection):
   - 2 phượng hoàng năng lượng 2 bên (tím trái, xanh lơ phải)
@@ -784,7 +784,7 @@
 - Đặt chữ "Vấn Đỉnh" lên trên cổng giữa (main gate) thay vì ở Immortal Throne
 - Thêm font "Dancing Script" - font thư pháp hỗ trợ tiếng Việt đầy đủ (chữ Đ hiển thị đúng)
 - Cập nhật Contact panel ở Vấn Đỉnh:
-  - Tiêu đề: "William" (font thư pháp Dancing Script, màu cyan)
+  - Tiêu đề: "Vương Lâm" (font thư pháp Dancing Script, màu cyan)
   - Câu nói Tiên Nghịch 4 dòng (font thư pháp, màu vàng gold):
     "Thuận là Phàm / Nghịch là Tiên / Nghịch Thiên thành Tiên / Nghịch Tiên thành Cổ"
   - Bỏ form input (tên, email, tin nhắn, nút gửi)
@@ -855,7 +855,7 @@
 ### Git Commits
 ```
 248595d - feat: Add Soul Banner to Van Dinh, replace Phoenix with Tram La Kiem
-29a74aa - feat: Add Phoenix Flames to Hoa Than section, rename to William Vu
+29a74aa - feat: Add Phoenix Flames to Hoa Than section, rename to Vương Lâm
 be6d1cf - feat: Move gates to back, add Dancing Script font for Vietnamese support
 78a9b6a - feat: Add Vietnamese diacritics, move contact form to Van Dinh
 12e3604 - feat: Add Van Dinh section, new fonts, rename realms & remove diacritics
@@ -934,7 +934,7 @@ src/
 │   │   ├── ExperienceSection.tsx # Experience (glow orbs)
 │   │   ├── AboutSection.tsx
 │   │   ├── ContactSection.tsx  # Social links + gates phía sau
-│   │   └── VanDinhSection.tsx  # Đỉnh cao + William panel + gates phía sau
+│   │   └── VanDinhSection.tsx  # Đỉnh cao + Vương Lâm panel + gates phía sau
 │   └── ui/
 │       ├── LevelNavigator.tsx  # Navigation với cultivation levels
 │       ├── LoadingScreen.tsx

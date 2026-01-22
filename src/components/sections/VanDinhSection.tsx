@@ -437,7 +437,7 @@ function ContactAltar({ position }: ContactAltarProps) {
                 textShadow: '0 0 15px #00CED180'
               }}
             >
-              William
+              Vương Lâm
             </h3>
             <div
               className="text-center leading-relaxed"
