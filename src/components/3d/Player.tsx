@@ -8,6 +8,7 @@ import { useControls } from '@/hooks/useKeyboardControls';
 import { useSoundEffects, useBackgroundMusic, useAudio } from '@/hooks/useAudio';
 import { FlyingSword } from './FlyingSword';
 import { RidingPhoenix } from './RidingPhoenix';
+import { FireSpirit } from './FireSpirit';
 import { PHYSICS, WORLD } from '@/utils/constants';
 
 const MOVE_SPEED = 8;
@@ -741,35 +742,8 @@ export function Player() {
       >
         <CapsuleCollider args={[0.5, 0.5]} />
 
-        {/* Player visual */}
-        <mesh castShadow>
-          <capsuleGeometry args={[0.5, 1, 8, 16]} />
-          <meshStandardMaterial
-            color="#FF6B35"
-            emissive="#FF4444"
-            emissiveIntensity={0.3}
-            roughness={0.4}
-            metalness={0.6}
-          />
-        </mesh>
-
-        {/* Glow effect */}
-        <mesh scale={1.2}>
-          <capsuleGeometry args={[0.5, 1, 8, 16]} />
-          <meshBasicMaterial
-            color="#FF4444"
-            transparent
-            opacity={0.2}
-          />
-        </mesh>
-
-        {/* Point light on player */}
-        <pointLight
-          color="#FF6B35"
-          intensity={1}
-          distance={10}
-          position={[0, 0.5, 0]}
-        />
+        {/* Fire Spirit - Player visual */}
+        <FireSpirit isFlying={isFlying} />
 
         {/* Flying Sword - renders under player when flying sword mode */}
         <FlyingSword velocity={flightVelocity.current} />
