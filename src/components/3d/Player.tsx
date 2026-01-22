@@ -294,18 +294,28 @@ export function Player() {
         flightVelocity.current.z *= scale;
       }
 
-      // World bounds clamping
-      const nextX = position.x + flightVelocity.current.x * delta;
-      const nextY = position.y + flightVelocity.current.y * delta;
-      const nextZ = position.z + flightVelocity.current.z * delta;
+      // World bounds clamping - CHỈ chặn khi đang đi RA XA bounds
+      // Cho phép di chuyển VỀ PHÍA TRONG bounds (để player thoát khi bị kẹt ngoài)
+      const minYSword = WORLD.bounds.minY + 5;
 
-      if (nextX < WORLD.bounds.minX || nextX > WORLD.bounds.maxX) {
+      // X: chỉ chặn khi đang ở ngoài VÀ đang đi xa hơn
+      if (position.x < WORLD.bounds.minX && flightVelocity.current.x < 0) {
+        flightVelocity.current.x = 0;
+      } else if (position.x > WORLD.bounds.maxX && flightVelocity.current.x > 0) {
         flightVelocity.current.x = 0;
       }
-      if (nextY < WORLD.bounds.minY + 5 || nextY > WORLD.bounds.maxY) {
+
+      // Y: cho phép bay LÊN khi đang ở dưới minY, chỉ chặn bay XUỐNG
+      if (position.y < minYSword && flightVelocity.current.y < 0) {
+        flightVelocity.current.y = 0;
+      } else if (position.y > WORLD.bounds.maxY && flightVelocity.current.y > 0) {
         flightVelocity.current.y = 0;
       }
-      if (nextZ < WORLD.bounds.minZ || nextZ > WORLD.bounds.maxZ) {
+
+      // Z: chỉ chặn khi đang ở ngoài VÀ đang đi xa hơn
+      if (position.z < WORLD.bounds.minZ && flightVelocity.current.z < 0) {
+        flightVelocity.current.z = 0;
+      } else if (position.z > WORLD.bounds.maxZ && flightVelocity.current.z > 0) {
         flightVelocity.current.z = 0;
       }
 
@@ -323,11 +333,8 @@ export function Player() {
       setPlayerPosition([position.x, position.y, position.z]);
       setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
 
-      // Exit flight mode if ONLY descending (không bấm ascend) và gần mặt đất
-      // Tránh trường hợp bấm Shift+Q (descend+ascend cùng lúc) mà bị exit
-      if (controls.descend && !controls.ascend && !controls.jump && position.y < 3) {
-        exitSwordFlight();
-      }
+      // CHỈ thoát chế độ bay khi bấm F (xử lý ở useEffect bên dưới)
+      // Không tự động thoát khi bay xuống gần mặt đất
 
       return; // Skip ground movement logic
     }
@@ -395,18 +402,28 @@ export function Player() {
         flightVelocity.current.z *= scale;
       }
 
-      // World bounds clamping
-      const nextX = position.x + flightVelocity.current.x * delta;
-      const nextY = position.y + flightVelocity.current.y * delta;
-      const nextZ = position.z + flightVelocity.current.z * delta;
+      // World bounds clamping - CHỈ chặn khi đang đi RA XA bounds
+      // Cho phép di chuyển VỀ PHÍA TRONG bounds (để player thoát khi bị kẹt ngoài)
+      const minYBeast = WORLD.bounds.minY + 5;
 
-      if (nextX < WORLD.bounds.minX || nextX > WORLD.bounds.maxX) {
+      // X: chỉ chặn khi đang ở ngoài VÀ đang đi xa hơn
+      if (position.x < WORLD.bounds.minX && flightVelocity.current.x < 0) {
+        flightVelocity.current.x = 0;
+      } else if (position.x > WORLD.bounds.maxX && flightVelocity.current.x > 0) {
         flightVelocity.current.x = 0;
       }
-      if (nextY < WORLD.bounds.minY + 5 || nextY > WORLD.bounds.maxY) {
+
+      // Y: cho phép bay LÊN khi đang ở dưới minY, chỉ chặn bay XUỐNG
+      if (position.y < minYBeast && flightVelocity.current.y < 0) {
+        flightVelocity.current.y = 0;
+      } else if (position.y > WORLD.bounds.maxY && flightVelocity.current.y > 0) {
         flightVelocity.current.y = 0;
       }
-      if (nextZ < WORLD.bounds.minZ || nextZ > WORLD.bounds.maxZ) {
+
+      // Z: chỉ chặn khi đang ở ngoài VÀ đang đi xa hơn
+      if (position.z < WORLD.bounds.minZ && flightVelocity.current.z < 0) {
+        flightVelocity.current.z = 0;
+      } else if (position.z > WORLD.bounds.maxZ && flightVelocity.current.z > 0) {
         flightVelocity.current.z = 0;
       }
 
@@ -424,11 +441,8 @@ export function Player() {
       setPlayerPosition([position.x, position.y, position.z]);
       setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
 
-      // Exit flight mode if ONLY descending (không bấm ascend) và gần mặt đất
-      // Tránh trường hợp bấm Shift+Q (descend+ascend cùng lúc) mà bị exit
-      if (controls.descend && !controls.ascend && !controls.jump && position.y < 3) {
-        exitBeastFlight();
-      }
+      // CHỈ thoát chế độ bay khi bấm F (xử lý ở useEffect bên dưới)
+      // Không tự động thoát khi bay xuống gần mặt đất
 
       return; // Skip ground movement logic
     }
