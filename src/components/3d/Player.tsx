@@ -19,7 +19,7 @@ const GRAVITY = 30; // Must match Rapier gravity (negative Y) in Experience.tsx
 const SWORD_MAX_SPEED = PHYSICS.sword.maxSpeed;
 const SWORD_ACCELERATION = PHYSICS.sword.acceleration;
 const SWORD_DECELERATION = PHYSICS.sword.deceleration;
-const SWORD_VERTICAL_SPEED = 25;
+const SWORD_VERTICAL_SPEED = PHYSICS.sword.verticalSpeed;
 
 // Beast (Phoenix) flight constants
 const BEAST_MAX_SPEED = PHYSICS.beast.maxSpeed;

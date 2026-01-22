@@ -42,20 +42,21 @@ export const PHYSICS = {
     maxFallSpeed: -50,
   },
 
-  // Sword flying
+  // Sword flying - Giảm tốc độ để tránh lag
   sword: {
-    maxSpeed: 50,
-    acceleration: 20,
-    deceleration: 15,
+    maxSpeed: 35,          // Giảm từ 50 xuống 35
+    acceleration: 12,      // Giảm từ 20 xuống 12
+    deceleration: 10,      // Giảm từ 15 xuống 10
+    verticalSpeed: 18,     // Tốc độ bay lên/xuống (mới thêm, giảm từ 25)
     turnSpeed: 3,
     tiltAngle: 0.3,
   },
 
-  // Beast riding
+  // Beast riding - Giảm tốc độ để tránh lag
   beast: {
-    maxSpeed: 80,
-    acceleration: 15,
-    verticalSpeed: 30,
+    maxSpeed: 50,          // Giảm từ 80 xuống 50
+    acceleration: 10,      // Giảm từ 15 xuống 10
+    verticalSpeed: 20,     // Giảm từ 30 xuống 20
     turnSpeed: 2,
   },
 } as const;
