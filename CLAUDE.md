@@ -71,7 +71,21 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 42
+## Recent Update (2026-01-22) - Session 43
+
+### Đã hoàn thành:
+- ✅ **Fix Phoenix Unlock - Both Bells Work**
+  - **Bug**: Chỉ chuông bên phải (fire) mới unlock được Cưỡi Phượng
+  - **Fix**: Bỏ điều kiện `isFire &&` để CẢ HAI chuông đều unlock được
+  - Thêm tên chuông cụ thể: "Thanh Minh Chung" (trái, ice) và "Hoàng Kim Chung" (phải, fire)
+  - Prompt màu sắc khác nhau theo loại chuông (ice=cyan, fire=lime)
+
+### Files đã sửa:
+- `src/components/sections/ExperienceSection.tsx` - Unlock logic cho cả 2 chuông
+
+---
+
+## Session 42
 
 ### Đã hoàn thành:
 - ✅ **Mobile Menu Position Fix**
