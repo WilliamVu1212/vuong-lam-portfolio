@@ -5,6 +5,7 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { experiences, certifications } from '@/data/content';
 import { useGameStore } from '@/stores/gameStore';
+import { useSoundEffects } from '@/hooks/useAudio';
 import type { Experience, Certification } from '@/types';
 
 interface ExperienceSectionProps {
@@ -587,6 +588,7 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
   const playerPosition = useGameStore((state) => state.player.position);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
+  const { playUnlock } = useSoundEffects();
 
   const isIce = type === 'ice';
   const isFire = type === 'fire';
@@ -689,6 +691,7 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
         // Player sẽ tự chọn mode qua UI hoặc thoát bay kiếm rồi bấm F
         setIsUnlocked(true);
         setShowPrompt(true);
+        playUnlock();
       }
     }
   });

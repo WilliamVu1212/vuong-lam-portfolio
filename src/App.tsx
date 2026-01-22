@@ -87,133 +87,28 @@ function AudioController() {
 
 // Audio Controls Panel
 function AudioControls() {
-  const [isOpen, setIsOpen] = useState(false);
   const isMuted = useAudioStore((state) => state.isMuted);
-  const masterVolume = useAudioStore((state) => state.masterVolume);
-  const musicVolume = useAudioStore((state) => state.musicVolume);
-  const sfxVolume = useAudioStore((state) => state.sfxVolume);
   const toggleMute = useAudioStore((state) => state.toggleMute);
-  const setMasterVolume = useAudioStore((state) => state.setMasterVolume);
-  const setMusicVolume = useAudioStore((state) => state.setMusicVolume);
-  const setSfxVolume = useAudioStore((state) => state.setSfxVolume);
-
   const { playUIClick } = useSoundEffects();
 
-  const handleToggleMute = () => {
+  const handleToggle = () => {
     toggleMute();
-    if (!isMuted) {
-      // Don't play sound when muting
-    } else {
+    // Play click sound when unmuting
+    if (isMuted) {
       playUIClick();
     }
   };
 
   return (
-    <div className="absolute bottom-4 right-4">
-      {/* Toggle Button */}
-      <button
-        onClick={() => {
-          setIsOpen(!isOpen);
-          playUIClick();
-        }}
-        className="glass rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:scale-110 transition-transform"
-        title={isMuted ? 'Bật âm thanh' : 'Điều chỉnh âm thanh'}
-      >
-        {isMuted ? '🔇' : '🔊'}
-      </button>
-
-      {/* Volume Panel */}
-      {isOpen && (
-        <div
-          className="absolute bottom-14 right-0 glass rounded-lg p-4 min-w-[220px]"
-          style={{ animation: 'fadeIn 0.2s ease-out' }}
-        >
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-hoa-quang font-display text-sm">🎵 Âm Thanh</p>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-tho-kim hover:text-xich-viem text-xs"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Mute Toggle */}
-          <button
-            onClick={handleToggleMute}
-            className={`w-full mb-4 py-2 rounded-lg font-body text-sm transition-all ${
-              isMuted
-                ? 'bg-red-900/50 text-red-400 border border-red-500/50'
-                : 'bg-green-900/50 text-green-400 border border-green-500/50'
-            }`}
-          >
-            {isMuted ? '🔇 Đã Tắt Tiếng' : '🔊 Đang Bật'}
-          </button>
-
-          {/* Master Volume */}
-          <div className="mb-3">
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-tho-kim">Tổng</span>
-              <span className="text-hoa-quang">{Math.round(masterVolume * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={masterVolume * 100}
-              onChange={(e) => setMasterVolume(Number(e.target.value) / 100)}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-              style={{
-                background: `linear-gradient(to right, #FF8C00 0%, #FF8C00 ${masterVolume * 100}%, #3D2424 ${masterVolume * 100}%, #3D2424 100%)`,
-              }}
-            />
-          </div>
-
-          {/* Music Volume */}
-          <div className="mb-3">
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-tho-kim">Nhạc Nền</span>
-              <span className="text-cyan-400">{Math.round(musicVolume * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={musicVolume * 100}
-              onChange={(e) => setMusicVolume(Number(e.target.value) / 100)}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-              style={{
-                background: `linear-gradient(to right, #00CED1 0%, #00CED1 ${musicVolume * 100}%, #3D2424 ${musicVolume * 100}%, #3D2424 100%)`,
-              }}
-            />
-          </div>
-
-          {/* SFX Volume */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-tho-kim">Hiệu Ứng</span>
-              <span className="text-yellow-400">{Math.round(sfxVolume * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={sfxVolume * 100}
-              onChange={(e) => setSfxVolume(Number(e.target.value) / 100)}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-              style={{
-                background: `linear-gradient(to right, #FFD700 0%, #FFD700 ${sfxVolume * 100}%, #3D2424 ${sfxVolume * 100}%, #3D2424 100%)`,
-              }}
-            />
-          </div>
-
-          {/* Tip */}
-          <p className="text-xs text-tho-kim mt-3 text-center opacity-70">
-            Click vào game để bật nhạc
-          </p>
-        </div>
-      )}
-    </div>
+    <button
+      onClick={handleToggle}
+      className={`absolute bottom-4 right-4 glass rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:scale-110 transition-all ${
+        isMuted ? 'opacity-60' : ''
+      }`}
+      title={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
+    >
+      {isMuted ? '🔇' : '🔊'}
+    </button>
   );
 }
 
@@ -225,6 +120,7 @@ function HUD() {
   const isGrounded = useGameStore((state) => state.player.isGrounded);
   const isFlying = useGameStore((state) => state.player.isFlying);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
+  const { playUIClick } = useSoundEffects();
 
   const levelNames: Record<string, string> = {
     pham_nhan: 'Phàm Nhân',
@@ -243,6 +139,9 @@ function HUD() {
 
   // Cycle through unlocked transport modes
   const cycleTransportMode = () => {
+    // Play UI click sound
+    playUIClick();
+
     // Nếu đang bay, thoát bay trước khi đổi mode
     if (isFlying) {
       setPlayerFlying(false);

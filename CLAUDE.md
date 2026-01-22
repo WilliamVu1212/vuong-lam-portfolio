@@ -54,7 +54,25 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 24
+## Recent Update (2026-01-22) - Session 25
+
+### Đã hoàn thành:
+- ✅ **Complete SFX Integration**
+  - Thêm `playUnlock` sound khi unlock Ngự Kiếm (AboutSection.tsx)
+  - Thêm `playUnlock` sound khi unlock Cưỡi Phượng (ExperienceSection.tsx)
+  - Thêm `playUIClick` sound cho LevelNavigator (all level nodes + overview button)
+  - Thêm `playUIClick` sound cho Transport Mode selector (HUD)
+  - AudioControls đã có sẵn playUIClick
+
+### Files đã sửa:
+- `src/components/sections/AboutSection.tsx` - Import useSoundEffects, playUnlock on sword unlock
+- `src/components/sections/ExperienceSection.tsx` - Import useSoundEffects, playUnlock on beast unlock
+- `src/components/ui/LevelNavigator.tsx` - Import useSoundEffects, playUIClick on navigate
+- `src/App.tsx` - playUIClick in HUD cycleTransportMode
+
+---
+
+## Session 24
 
 ### Đã hoàn thành:
 - ✅ **Mobile Joystick Controls**
@@ -197,7 +215,7 @@
 - ✅ ~~Add sound/music integration~~ (Done - Session 20)
 - ✅ ~~Add audio files~~ (Done - Session 21)
 - ✅ ~~Add mobile joystick controls~~ (Done - Session 24)
-- Add remaining SFX: sword-whoosh, phoenix-cry, ui-click, unlock
+- ✅ ~~Add remaining SFX~~ (Done - Session 25: sword-whoosh, phoenix-cry, ui-click, unlock)
 
 ### Medium-term:
 - Performance optimization (bundle ~3.6MB cần giảm)

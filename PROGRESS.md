@@ -220,7 +220,19 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 24 (Latest)
+### Session 2026-01-22 - Update 25 (Latest)
+```
+- Complete SFX Integration:
+  - playUnlock sound khi unlock Ngự Kiếm (AboutSection.tsx)
+  - playUnlock sound khi unlock Cưỡi Phượng (ExperienceSection.tsx)
+  - playUIClick sound cho LevelNavigator (all navigation)
+  - playUIClick sound cho Transport Mode selector (HUD)
+  - All 6 SFX now integrated: jump, land, swordWhoosh, phoenixCry, uiClick, unlock
+
+- Files changed: AboutSection.tsx, ExperienceSection.tsx, LevelNavigator.tsx, App.tsx
+```
+
+### Session 2026-01-22 - Update 24
 ```
 - Mobile Joystick Controls với nipplejs:
   - Dual joystick layout cho mobile/tablet

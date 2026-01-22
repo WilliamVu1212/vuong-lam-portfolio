@@ -4,6 +4,7 @@ import { Float, Sparkles, Html } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useGameStore } from '@/stores/gameStore';
+import { useSoundEffects } from '@/hooks/useAudio';
 
 interface AboutSectionProps {
   position?: [number, number, number];
@@ -543,6 +544,7 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
   const setTransportMode = useGameStore((state) => state.setTransportMode);
+  const { playUnlock } = useSoundEffects();
 
   // Calculate world position of sword
   const worldPosition: [number, number, number] = [
@@ -575,6 +577,7 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
       unlockTransport('sword');
       setTransportMode('sword');
       setIsUnlocked(true);
+      playUnlock();
     }
   });
 

@@ -1,5 +1,6 @@
 import { cultivationTechniques } from '@/data/content';
 import { useGameStore } from '@/stores/gameStore';
+import { useSoundEffects } from '@/hooks/useAudio';
 
 interface LevelNavigatorProps {
   onNavigate?: (sectionId: string) => void;
@@ -62,6 +63,13 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const swordUnlocked = unlockedTransports.includes('sword');
   const beastUnlocked = unlockedTransports.includes('beast');
+  const { playUIClick } = useSoundEffects();
+
+  // Wrapper to play sound on navigate
+  const handleNavigate = (sectionId: string) => {
+    playUIClick();
+    onNavigate?.(sectionId);
+  };
 
   return (
     <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
@@ -76,7 +84,7 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
             <LevelNode
               key={level.id}
               level={level}
-              onNavigate={onNavigate}
+              onNavigate={handleNavigate}
               swordUnlocked={swordUnlocked}
               beastUnlocked={beastUnlocked}
             />
@@ -86,7 +94,7 @@ export function LevelNavigator({ onNavigate }: LevelNavigatorProps) {
 
       {/* Overview button */}
       <button
-        onClick={() => onNavigate?.('overview')}
+        onClick={() => handleNavigate('overview')}
         className="mt-4 w-full glass rounded-lg px-3 py-2 text-center hover:bg-white/10 transition-all"
         title="Nhìn toàn cảnh"
       >
