@@ -47,6 +47,12 @@ export function Player() {
   const musicStarted = useRef(false);
   const wasGrounded = useRef(isGrounded);
 
+  // Flight sound loop timing (để phát âm thanh liên tục khi bay di chuyển)
+  const lastSwordSoundTime = useRef(0);
+  const lastPhoenixSoundTime = useRef(0);
+  const SWORD_SOUND_INTERVAL = 600; // ms - khoảng cách giữa các tiếng kiếm
+  const PHOENIX_SOUND_INTERVAL = 1200; // ms - khoảng cách giữa các tiếng phượng
+
   // Movement vectors
   const moveDirection = useRef(new Vector3());
   const frontVector = useRef(new Vector3());
@@ -333,6 +339,16 @@ export function Player() {
       setPlayerPosition([position.x, position.y, position.z]);
       setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
 
+      // Play sword whoosh sound loop khi đang di chuyển
+      const currentSpeed = Math.sqrt(
+        flightVelocity.current.x ** 2 + flightVelocity.current.z ** 2
+      );
+      const now = Date.now();
+      if (currentSpeed > 5 && now - lastSwordSoundTime.current > SWORD_SOUND_INTERVAL) {
+        playSwordWhoosh();
+        lastSwordSoundTime.current = now;
+      }
+
       // CHỈ thoát chế độ bay khi bấm F (xử lý ở useEffect bên dưới)
       // Không tự động thoát khi bay xuống gần mặt đất
 
@@ -440,6 +456,16 @@ export function Player() {
       // Update store
       setPlayerPosition([position.x, position.y, position.z]);
       setPlayerVelocity([flightVelocity.current.x, flightVelocity.current.y, flightVelocity.current.z]);
+
+      // Play phoenix cry sound loop khi đang di chuyển
+      const currentSpeedBeast = Math.sqrt(
+        flightVelocity.current.x ** 2 + flightVelocity.current.z ** 2
+      );
+      const nowBeast = Date.now();
+      if (currentSpeedBeast > 5 && nowBeast - lastPhoenixSoundTime.current > PHOENIX_SOUND_INTERVAL) {
+        playPhoenixCry();
+        lastPhoenixSoundTime.current = nowBeast;
+      }
 
       // CHỈ thoát chế độ bay khi bấm F (xử lý ở useEffect bên dưới)
       // Không tự động thoát khi bay xuống gần mặt đất
