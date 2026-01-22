@@ -54,7 +54,24 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 25
+## Recent Update (2026-01-22) - Session 26
+
+### Đã hoàn thành:
+- ✅ **Fix Sound Toggle Button**
+  - Mặc định Sound OFF (🔇) khi vào game
+  - Click nút sound → ON: Nhạc nền phát ngay lập tức
+  - Click nút sound → OFF: Nhạc dừng hoàn toàn
+  - `forceStartAllMusic()` bypass mute check để đảm bảo nhạc phát
+  - Đơn giản hóa AudioController (bỏ auto-play khi tương tác)
+
+### Files đã sửa:
+- `src/stores/gameStore.ts` - `isMuted: true` (mặc định OFF)
+- `src/hooks/useAudio.ts` - Thêm `forceStartAllMusic()` bypass mute check
+- `src/App.tsx` - Sửa AudioControls để start/stop music đúng cách
+
+---
+
+## Session 25
 
 ### Đã hoàn thành:
 - ✅ **Complete SFX Integration**

@@ -220,7 +220,20 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 25 (Latest)
+### Session 2026-01-22 - Update 26 (Latest)
+```
+- Fix Sound Toggle Button:
+  - Mặc định Sound OFF (🔇) khi vào game
+  - Click nút sound → ON: Nhạc nền + SFX hoạt động ngay
+  - Click nút sound → OFF: Nhạc dừng hoàn toàn
+  - forceStartAllMusic() bypass mute check để đảm bảo nhạc phát
+  - Đơn giản hóa AudioController (bỏ auto-play khi tương tác)
+
+- Files changed: gameStore.ts, useAudio.ts, App.tsx
+- Git commit: 2e7d964
+```
+
+### Session 2026-01-22 - Update 25
 ```
 - Complete SFX Integration:
   - playUnlock sound khi unlock Ngự Kiếm (AboutSection.tsx)
