@@ -24,24 +24,35 @@ import {
   type TrackKey,
 } from '@/utils/audioManager';
 
+// Module-level flag to ensure audio is only initialized once across all hook instances
+let audioInitialized = false;
+let audioInstanceCount = 0;
+
 /**
  * Main audio hook - provides audio control functions
  * Syncs with AudioStore for global state management
  */
 export const useAudio = () => {
   const { isMuted, masterVolume, musicVolume, sfxVolume } = useAudioStore();
-  const isInitialized = useRef(false);
 
-  // Initialize audio system once
+  // Initialize audio system once (module-level, not per-instance)
   useEffect(() => {
-    if (!isInitialized.current) {
+    audioInstanceCount++;
+
+    if (!audioInitialized) {
       initAudio();
-      isInitialized.current = true;
+      audioInitialized = true;
+      console.log('[useAudio] Audio initialized (first instance)');
     }
 
     return () => {
-      cleanupAudio();
-      isInitialized.current = false;
+      audioInstanceCount--;
+      // Only cleanup when ALL instances are unmounted
+      if (audioInstanceCount === 0) {
+        cleanupAudio();
+        audioInitialized = false;
+        console.log('[useAudio] Audio cleaned up (last instance)');
+      }
     };
   }, []);
 

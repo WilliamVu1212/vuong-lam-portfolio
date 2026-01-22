@@ -88,9 +88,18 @@ export const preloadMusic = (): void => {
         preload: true,
         loop: true,
         volume: 0.5,
-        html5: true, // Better for long audio files
+        html5: false, // Use Web Audio API instead of HTML5 Audio
+        onload: () => {
+          console.log(`[AudioManager] Music loaded: ${key}`);
+        },
         onloaderror: (_id, error) => {
           console.warn(`[AudioManager] Failed to load music: ${key}`, error);
+        },
+        onplay: () => {
+          console.log(`[AudioManager] Music ACTUALLY playing: ${key}`);
+        },
+        onplayerror: (_id, error) => {
+          console.error(`[AudioManager] Play error for ${key}:`, error);
         },
       });
       music.set(key, track);
@@ -112,22 +121,39 @@ export const playMusic = (
     return;
   }
 
+  // Debug: Check audio context state
+  console.log(`[AudioManager] Audio context state: ${Howler.ctx?.state}`);
+  console.log(`[AudioManager] Howler muted: ${Howler._muted}`);
+  console.log(`[AudioManager] Track state: ${track.state()}`);
+
   // Don't restart if already playing
   if (track.playing()) {
     console.log(`[AudioManager] Track already playing: ${key}`);
     return;
   }
 
+  // Ensure audio context is running
+  if (Howler.ctx?.state === 'suspended') {
+    console.log(`[AudioManager] Resuming suspended audio context...`);
+    Howler.ctx.resume();
+  }
+
+  // Unmute Howler globally before playing
+  Howler.mute(false);
+
   const targetVolume = options?.volume ?? 0.5;
 
-  if (options?.fadeIn) {
-    track.volume(0);
-    track.play();
-    track.fade(0, targetVolume, options.fadeIn);
-  } else {
-    track.volume(targetVolume);
-    track.play();
-  }
+  // Set volume (don't use fadeIn for now to test basic playback)
+  track.volume(targetVolume);
+
+  // Play and get the sound ID
+  const soundId = track.play();
+  console.log(`[AudioManager] Called play() for ${key}, soundId: ${soundId}, volume: ${targetVolume}`);
+
+  // Check if actually playing after a short delay
+  setTimeout(() => {
+    console.log(`[AudioManager] After 500ms - ${key} playing: ${track.playing()}`);
+  }, 500);
 
   playingTracks.add(key);
   console.log(`[AudioManager] Started playing: ${key}, volume: ${targetVolume}`);
@@ -277,9 +303,18 @@ export const isAudioUnlocked = (): boolean => {
 
 /**
  * Unlock audio context (call on first user interaction)
+ * Returns a promise that resolves when audio is unlocked
  */
-export const unlockAudio = (): void => {
+export const unlockAudio = async (): Promise<void> => {
   if (Howler.ctx?.state === 'suspended') {
-    Howler.ctx.resume();
+    console.log('[AudioManager] Unlocking audio context...');
+    try {
+      await Howler.ctx.resume();
+      console.log('[AudioManager] Audio context unlocked! State:', Howler.ctx.state);
+    } catch (err) {
+      console.error('[AudioManager] Failed to unlock audio context:', err);
+    }
+  } else {
+    console.log('[AudioManager] Audio context already running:', Howler.ctx?.state);
   }
 };
