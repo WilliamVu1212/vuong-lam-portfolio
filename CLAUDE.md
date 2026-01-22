@@ -54,9 +54,25 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 20
+## Recent Update (2026-01-22) - Session 21
 
 ### Đã hoàn thành:
+- ✅ **Audio Files Added**
+  - `night-wind.mp3` - Nhạc nền ambient (Suno)
+  - `main-theme.mp3` - Nhạc nền chính Tiên Hiệp (Suno)
+  - `jump.mp3` - Tiếng nhảy (Pixabay)
+  - `land.mp3` - Tiếng tiếp đất (Pixabay)
+
+- ✅ **Auto-play Music on First Interaction**
+  - Nhạc tự động phát khi click vào game lần đầu
+  - Phát cả ambient + main theme cùng lúc
+  - Fix bug: separate tracking cho ambient và music
+
+- ✅ **Music Trigger từ Player.tsx**
+  - Khi click để nhảy, nhạc cũng được trigger
+  - Giải quyết vấn đề event bị canvas bắt mất
+
+### Session 20:
 - ✅ **Sound/Music Integration với Howler.js**
   - Cài đặt Howler.js cho audio management
   - Tạo `audioManager.ts` - centralized audio control
@@ -118,7 +134,8 @@
 
 ### Short-term:
 - ✅ ~~Add sound/music integration~~ (Done - Session 20)
-- Add actual audio files (xem `public/sounds/README.md`)
+- ✅ ~~Add audio files~~ (Done - Session 21)
+- Add remaining SFX: sword-whoosh, phoenix-cry, ui-click, unlock
 - Add mobile joystick controls
 
 ### Medium-term:

@@ -220,7 +220,26 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 20 (Latest)
+### Session 2026-01-22 - Update 21 (Latest)
+```
+- Audio Files Added:
+  - night-wind.mp3 - Nhạc nền ambient (tạo từ Suno)
+  - main-theme.mp3 - Nhạc nền chính Tiên Hiệp ethereal (tạo từ Suno)
+  - jump.mp3 - Tiếng nhảy whoosh (tải từ Pixabay)
+  - land.mp3 - Tiếng tiếp đất (tải từ Pixabay)
+
+- Auto-play Music on First Interaction:
+  - App.tsx: Thêm mousedown event listener
+  - Player.tsx: Trigger music khi click để nhảy
+  - useAudio.ts: Tách ambientPlaying và musicPlaying refs
+
+- Files changed: App.tsx, Player.tsx, useAudio.ts
+- New files: public/sounds/ambient/night-wind.mp3, public/sounds/music/main-theme.mp3,
+             public/sounds/sfx/jump.mp3, public/sounds/sfx/land.mp3
+- Git commit: 64fc8ed
+```
+
+### Session 2026-01-22 - Update 20
 ```
 - Sound/Music Integration với Howler.js:
   - Cài đặt howler và @types/howler
