@@ -54,24 +54,42 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 35
+## Recent Update (2026-01-22) - Session 36
 
 ### Đã hoàn thành:
-- ✅ **Fire Spirit Player (Hồn Hỏa)**
-  - Thay thế capsule đơn giản bằng thực thể năng lượng lửa
-  - **Inner Core**: Icosahedron vàng-cam phát sáng, pulse animation
-  - **Middle/Outer Layers**: Transparent glow effects, xoay ngược nhau
-  - **Energy Wisps**: 5 quả cầu nhỏ bay xoay quanh core
-  - **Orbit Rings**: 3 vòng trang trí nghiêng
-  - **Fire Particles**: 20 particles lửa bay lên liên tục
-  - **Point Lights**: 2 đèn động tạo glow effect
-  - Intensity tăng 30% khi đang bay
+- ✅ **Sword Cultivator Player (Kiếm Tu)**
+  - Thay thế Fire Spirit bằng nhân vật tu tiên tóc trắng dài
+  - **Body/Robes**: Áo choàng xám/tím với đai tím phát sáng
+  - **Head**: Đầu với mũ miện vàng, ngọc cyan
+  - **Flowing White Hair**: 50 sợi tóc trắng dài (1.2-2.6 units) phát sáng
+    - 3 lớp: inner (15), middle (20), outer (15)
+    - Glow layer bao quanh mỗi sợi
+    - Hair aura phía sau đầu
+    - 2 point lights trắng chiếu vào tóc
+    - Animation bay trong gió, mạnh hơn khi flying
+  - **Aura Ring**: Vầng hào quang tím/cyan phía sau
+  - **Lightning Particles**: 16 particles sét tím/cyan nhấp nháy
+  - **Ground Crystals**: 6 tinh thể tím ở chân (khi đứng yên)
+  - **Point Lights**: 4 đèn (tím, cyan, 2 trắng cho tóc)
+  - Intensity tăng 50% khi đang bay
 
 ### Files mới:
-- `src/components/3d/FireSpirit.tsx` - Fire Spirit component
+- `src/components/3d/SwordCultivator.tsx` - Sword Cultivator component
+
+### Files đã xóa:
+- `src/components/3d/FireSpirit.tsx` - Đã thay thế bởi SwordCultivator
 
 ### Files đã sửa:
-- `src/components/3d/Player.tsx` - Import và sử dụng FireSpirit
+- `src/components/3d/Player.tsx` - Import và sử dụng SwordCultivator
+
+---
+
+## Session 35
+
+### Đã hoàn thành:
+- ✅ **Fire Spirit Player (Hồn Hỏa)** - Đã thay thế bởi SwordCultivator ở Session 36
+  - Thay thế capsule đơn giản bằng thực thể năng lượng lửa animated
+  - Inner Core, Middle/Outer Layers, Energy Wisps, Orbit Rings, Fire Particles
 
 ---
 

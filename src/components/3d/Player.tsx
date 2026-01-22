@@ -8,7 +8,7 @@ import { useControls } from '@/hooks/useKeyboardControls';
 import { useSoundEffects, useBackgroundMusic, useAudio } from '@/hooks/useAudio';
 import { FlyingSword } from './FlyingSword';
 import { RidingPhoenix } from './RidingPhoenix';
-import { FireSpirit } from './FireSpirit';
+import { SwordCultivator } from './SwordCultivator';
 import { PHYSICS, WORLD } from '@/utils/constants';
 
 const MOVE_SPEED = 8;
@@ -742,8 +742,8 @@ export function Player() {
       >
         <CapsuleCollider args={[0.5, 0.5]} />
 
-        {/* Fire Spirit - Player visual */}
-        <FireSpirit isFlying={isFlying} />
+        {/* Sword Cultivator - Player visual */}
+        <SwordCultivator isFlying={isFlying} />
 
         {/* Flying Sword - renders under player when flying sword mode */}
         <FlyingSword velocity={flightVelocity.current} />
