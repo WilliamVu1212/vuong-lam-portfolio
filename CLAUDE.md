@@ -54,7 +54,25 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 30
+## Recent Update (2026-01-22) - Session 31
+
+### Đã hoàn thành:
+- ✅ **Fix Landing Sound Playing at Wrong Time**
+  - **Bug 1:** Khi nhảy lên nghe tiếng land.mp3 thay vì jump.mp3
+    - Nguyên nhân: Sau khi nhảy, player vẫn trong tầm raycast (1.1 units), `grounded` vẫn = true
+    - Do `wasGrounded` đã reset = false → điều kiện `grounded && !wasGrounded` = true → `playLand()` bị gọi sai
+  - **Fix:** Thêm check `velocity.y <= 0` vào landing detection
+    - Chỉ play land sound khi player đang rơi hoặc đứng yên, KHÔNG phải đang bay lên
+  - **Bug 2:** Không có tiếng land khi rơi từ cao xuống (đã fix cùng logic)
+  - Cập nhật file land.mp3
+
+### Files đã sửa:
+- `src/components/3d/Player.tsx` - Thêm velocity.y check cho landing detection
+- `public/sounds/sfx/land.mp3` - Cập nhật audio file
+
+---
+
+## Session 30
 
 ### Đã hoàn thành:
 - ✅ **Fix Landing Sound Not Playing**

@@ -220,7 +220,22 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 30 (Latest)
+### Session 2026-01-22 - Update 31 (Latest)
+```
+- Fix Landing Sound Playing at Wrong Time:
+  - Bug 1: Khi nhảy lên nghe tiếng land.mp3 thay vì jump.mp3
+    - Nguyên nhân: Player vẫn trong tầm raycast sau khi nhảy
+    - grounded vẫn = true, wasGrounded = false → playLand() bị gọi sai
+  - Bug 2: Không có tiếng land khi rơi từ cao xuống
+  - Fix: Thêm check velocity.y <= 0 vào landing detection
+    - Chỉ play land sound khi đang rơi/đứng yên, không phải đang bay lên
+  - Cập nhật file land.mp3
+
+- Files changed: Player.tsx, land.mp3
+- Git commit: 4c181be
+```
+
+### Session 2026-01-22 - Update 30
 ```
 - Fix Landing Sound Not Playing:
   - Bug: wasGrounded.current không được reset khi nhảy
