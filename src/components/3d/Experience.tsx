@@ -770,7 +770,7 @@ function GuideSigns() {
         <GuideSign
           position={[0, 20, -50]}
           targetName="Trảm La Kiếm"
-          targetDescription="Đến gần để khai mở Ngự Kiếm"
+          targetDescription="Đến gần 2 thanh kiếm ở trên để khai mở Ngự Kiếm"
           arrowDirection={[0, 0, -1]}
           color="#FFD700"
           icon="⚔️"
@@ -782,7 +782,7 @@ function GuideSigns() {
         <GuideSign
           position={[0, 120, -350]}
           targetName="Thượng Cổ Đồng Chung"
-          targetDescription="Đến gần để khai mở Cưỡi Phượng"
+          targetDescription="Đến gần 2 cái chuông ở trên để khai mở Cưỡi Phượng"
           arrowDirection={[0, 0, -1]}
           color="#00FF88"
           icon="🔔"

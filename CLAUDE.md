@@ -71,7 +71,19 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 44
+## Recent Update (2026-01-22) - Session 45
+
+### Đã hoàn thành:
+- ✅ **Cập nhật text biển chỉ dẫn rõ ràng hơn**
+  - **Biển 1** (Kiếm): "Đến gần 2 thanh kiếm ở trên để khai mở Ngự Kiếm"
+  - **Biển 2** (Chuông): "Đến gần 2 cái chuông ở trên để khai mở Cưỡi Phượng"
+
+### Files đã sửa:
+- `src/components/3d/Experience.tsx` - Update targetDescription cho GuideSigns
+
+---
+
+## Session 44
 
 ### Đã hoàn thành:
 - ✅ **Biển Chỉ Dẫn (Guide Signs)**
