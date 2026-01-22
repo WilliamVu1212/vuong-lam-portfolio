@@ -66,11 +66,15 @@
   - Thêm UI clickable để chuyển đổi giữa các phương thức di chuyển
   - Click vào "Phương Thức" ở góc trên trái để cycle qua các mode đã unlock
   - Hiển thị icon 🔄 khi có nhiều mode
-  - Không cho đổi mode khi đang bay (phải hạ cánh trước)
+  - Cho phép đổi mode ngay cả khi đang bay (auto exit flight)
 
 - ✅ **Cập nhật Unlock Prompt**
   - Hướng dẫn rõ hơn khi unlock Cưỡi Phượng
   - Chỉ dẫn click "Phương Thức" để chọn mode
+
+- ✅ **Giảm tốc độ bay để tránh lag**
+  - Ngự Kiếm: maxSpeed 50→35, acceleration 20→12, verticalSpeed 25→18
+  - Phượng Hoàng: maxSpeed 80→50, acceleration 15→10, verticalSpeed 30→20
 
 ### Session 22:
 - ✅ **Simplify Flight Controls**
