@@ -122,8 +122,8 @@ function CameraController() {
     if (controls && !hasSetInitialLookAt.current) {
       const orbitControls = controls as any;
       if (orbitControls.target) {
-        // Nhìn vào giữa thế giới - toàn cảnh từ Phàm Nhân đến Vấn Đỉnh
-        orbitControls.target.set(0, 7, -191);
+        // Nhìn vào giữa thế giới - toàn cảnh từ Phàm Nhân đến Vấn Đỉnh (X=0 để ở giữa)
+        orbitControls.target.set(0, 6, -156);
         hasSetInitialLookAt.current = true;
       }
     }

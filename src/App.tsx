@@ -18,7 +18,8 @@ const SECTION_CAMERA_POSITIONS: Record<string, { position: [number, number, numb
   experience: { position: [0, 200, -400], lookAt: [0, 150, -450] },
   contact: { position: [0, 250, -500], lookAt: [0, 200, -550] },
   vandinh: { position: [0, 310, -600], lookAt: [0, 260, -650] },
-  overview: { position: [200, 350, 100], lookAt: [0, 130, -325] }, // Bird's eye view
+  // Toàn Cảnh - Khớp với góc nhìn ban đầu khi vào game
+  overview: { position: [0, 57, 85], lookAt: [0, 6, -156] },
 };
 
 // Keyboard control map for drei's KeyboardControls
@@ -290,8 +291,8 @@ function App() {
               fov: CAMERA.fov,
               near: CAMERA.near,
               far: CAMERA.far,
-              // Góc nhìn toàn cảnh - thấy từ Phàm Nhân đến Vấn Đỉnh
-              position: [0, 76, 94],
+              // Góc nhìn toàn cảnh - thấy từ Phàm Nhân đến Vấn Đỉnh (X=0 để ở giữa)
+              position: [0, 57, 85],
             }}
             gl={{
               antialias: true,
