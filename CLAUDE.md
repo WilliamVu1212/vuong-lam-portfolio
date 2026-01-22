@@ -71,7 +71,24 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 40
+## Recent Update (2026-01-22) - Session 41
+
+### Đã hoàn thành:
+- ✅ **Mobile UI Fixes**
+  - **HelpMenu Responsive**: Đổi từ `w-[450px]` sang `w-[90vw] sm:w-[450px]` - fix menu bị lệch/cắt trên mobile
+  - **SettingsMenu Responsive**: Đổi từ `w-[400px]` sang `w-[90vw] sm:w-[400px]`
+  - **MobileControls Joystick Fix**: Fix stale closure issue với right joystick (LÊN/XUỐNG)
+    - Vấn đề: nipplejs callback capture `isFlying` tại thời điểm tạo, không update khi state thay đổi
+    - Fix: Sử dụng `useRef` để lưu latest `isFlying` value, callback đọc từ ref
+
+### Files đã sửa:
+- `src/components/ui/menus/HelpMenu.tsx` - Responsive width
+- `src/components/ui/menus/SettingsMenu.tsx` - Responsive width
+- `src/components/ui/MobileControls.tsx` - Fix stale closure với isFlyingRef
+
+---
+
+## Session 40
 
 ### Đã hoàn thành:
 - ✅ **Cross-Browser Compatibility Improvements**

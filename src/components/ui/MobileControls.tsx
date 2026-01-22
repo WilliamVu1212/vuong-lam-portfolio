@@ -36,6 +36,12 @@ export function MobileControls() {
 
   const isFlying = player.isFlying;
 
+  // Ref to avoid stale closure in joystick callbacks
+  const isFlyingRef = useRef(isFlying);
+  useEffect(() => {
+    isFlyingRef.current = isFlying;
+  }, [isFlying]);
+
   // Debug log để kiểm tra state
   useEffect(() => {
     console.log('[MobileControls] isFlying:', isFlying, 'transportMode:', transportMode);
@@ -83,9 +89,15 @@ export function MobileControls() {
   }, []);
 
   // Handle right joystick (vertical control for flight)
+  // Uses ref to avoid stale closure - joystick callback is only set once
   const handleRightMove = useCallback(
     (_evt: Event, data: nipplejs.JoystickOutputData) => {
-      if (!isFlying) return;
+      // Use ref to get latest isFlying value (avoids stale closure)
+      if (!isFlyingRef.current) {
+        // Still track the input even when not flying (for debug)
+        console.log('[MobileControls] Right joystick moved but not flying');
+        return;
+      }
 
       const { force, angle } = data;
 
@@ -98,10 +110,11 @@ export function MobileControls() {
       // Only care about vertical (Y) component
       const y = Math.sin(angle.radian) * force;
 
+      console.log('[MobileControls] Vertical input - y:', y.toFixed(2), 'ascend:', y > THRESHOLD, 'descend:', y < -THRESHOLD);
       setControl('ascend', y > THRESHOLD);
       setControl('descend', y < -THRESHOLD);
     },
-    [setControl, isFlying]
+    [setControl] // Remove isFlying dependency - using ref instead
   );
 
   const handleRightEnd = useCallback(() => {
