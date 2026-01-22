@@ -220,7 +220,20 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 26 (Latest)
+### Session 2026-01-22 - Update 27 (Latest)
+```
+- Fix Background Music Not Playing:
+  - Bug: playMusic() chỉ cho phép 1 track tại 1 thời điểm
+  - Khi gọi playMusic('music'), nó tự động dừng playMusic('ambient')
+  - Fix: Thay currentMusicTrack (string) → playingTracks (Set)
+  - Giờ ambient + main theme chơi đồng thời khi bật sound
+  - Thêm stopAllTracks() function để dừng toàn bộ nhạc
+
+- Files changed: audioManager.ts, useAudio.ts, App.tsx
+- Git commit: ec9b623
+```
+
+### Session 2026-01-22 - Update 26
 ```
 - Fix Sound Toggle Button:
   - Mặc định Sound OFF (🔇) khi vào game

@@ -54,7 +54,23 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 26
+## Recent Update (2026-01-22) - Session 27
+
+### Đã hoàn thành:
+- ✅ **Fix Background Music Not Playing**
+  - Bug: `playMusic()` chỉ cho phép 1 track, gọi track thứ 2 sẽ dừng track trước
+  - Fix: Thay `currentMusicTrack: string` → `playingTracks: Set<string>`
+  - Giờ ambient + main theme chơi đồng thời khi bật sound
+  - Thêm `stopAllTracks()` function để dừng toàn bộ nhạc
+
+### Files đã sửa:
+- `src/utils/audioManager.ts` - Support multiple simultaneous tracks
+- `src/hooks/useAudio.ts` - Update `forceStartAllMusic()` và `stopAllMusic()`
+- `src/App.tsx` - Remove unused `useRef` import
+
+---
+
+## Session 26
 
 ### Đã hoàn thành:
 - ✅ **Fix Sound Toggle Button**
