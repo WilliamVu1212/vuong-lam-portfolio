@@ -45,7 +45,7 @@
 | Jump mechanics | ✅ Done | WASD + Space to jump |
 | Test environment | ✅ Done | Physics debug available |
 | State management | ✅ Done | Zustand: gameStore, UIStore, audioStore |
-| Mobile detection | ⬜ Todo | |
+| Mobile detection | ✅ Done | useMobileDetect hook |
 
 ---
 
@@ -89,7 +89,7 @@
 | Cưỡi linh thú - Flight controls | ✅ Done | WASD + Space/Q + Shift/E + F |
 | Cưỡi linh thú - Fire trail | ✅ Done | Particle effects |
 | Transition animations | ✅ Done | CSS animations in globals.css |
-| Mobile controls | ⬜ Todo | Joystick |
+| Mobile controls | ✅ Done | nipplejs dual joystick + action buttons |
 
 ---
 
@@ -220,7 +220,33 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 22 (Latest)
+### Session 2026-01-22 - Update 24 (Latest)
+```
+- Mobile Joystick Controls với nipplejs:
+  - Dual joystick layout cho mobile/tablet
+  - Left joystick: Di chuyển (W/A/S/D equivalent)
+  - Right joystick: Vertical control (ascend/descend khi bay)
+  - Action buttons: Jump, Fly Toggle, Transport Mode
+  - Auto-detect mobile/tablet devices
+  - Ctrl+M debug shortcut để toggle mobile mode trên desktop
+
+- UI Improvements:
+  - Gold joystick (#FFD700) cho movement
+  - Cyan joystick (#00CED1) cho vertical control
+  - Glow effects khi active
+  - Direction indicators (▲▼◀▶)
+  - Hide keyboard ControlsHelp + CameraDebug trên mobile
+
+- New files:
+  - src/components/ui/MobileControls.tsx
+  - src/hooks/useMobileDetect.ts
+  - src/types/nipplejs.d.ts
+
+- Files changed: App.tsx, gameStore.ts, constants.ts, CLAUDE.md
+- Git commit: bfc97ec
+```
+
+### Session 2026-01-22 - Update 22
 ```
 - Simplify Flight Controls:
   - Đổi keyboard mapping: Q/Space bay lên, E bay xuống (bỏ Shift)
