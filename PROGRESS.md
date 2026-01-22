@@ -141,6 +141,110 @@
 
 ---
 
+## 🎨 Graphics Improvement Plan (Session 41+)
+
+> **Mục tiêu**: Nâng cấp đồ họa với Post-Processing & Adaptive Quality System
+
+### Hiện Trạng Đồ Họa
+
+| Thành phần | Hiện có | Đánh giá |
+|------------|---------|----------|
+| Post-processing | Bloom (1.5) + Vignette | ⭐⭐ Cơ bản |
+| Lighting | 1 Directional + 3 Point + Hemisphere | ⭐⭐⭐ Tốt |
+| Shadows | 2048x2048 shadow map | ⭐⭐⭐ Tốt |
+| Custom Shaders | 1 (Waterfall) | ⭐ Thiếu |
+| Environment/HDR | Không có | ❌ Thiếu |
+| Tone Mapping | Mặc định | ⭐ Chưa tối ưu |
+
+### Kế Hoạch Triển Khai
+
+| Step | Task | Priority | Status | Files |
+|------|------|----------|--------|-------|
+| 1 | Quality System Foundation | 🔴 Critical | ⬜ Todo | `gameStore.ts`, `constants.ts` |
+| 2 | PostProcessing Component | 🔴 Critical | ⬜ Todo | `PostProcessing.tsx` (new) |
+| 3 | Depth of Field | 🟡 High | ⬜ Todo | `PostProcessing.tsx` |
+| 4 | SSAO | 🟡 High | ⬜ Todo | `PostProcessing.tsx` |
+| 5 | Tone Mapping & Color | 🟢 Medium | ⬜ Todo | `App.tsx`, `PostProcessing.tsx` |
+| 6 | God Rays | 🔵 Optional | ⬜ Todo | `PostProcessing.tsx` |
+| 7 | Chromatic Aberration | 🔵 Optional | ⬜ Todo | `PostProcessing.tsx` |
+| 8 | Settings UI | 🟢 Medium | ⬜ Todo | `SettingsMenu.tsx` |
+| 9 | Test & Polish | 🟢 Medium | ⬜ Todo | - |
+
+### Step 1: Quality System Foundation
+
+**Files cần sửa:**
+- `src/stores/gameStore.ts` - Thêm graphicsQuality state
+- `src/utils/constants.ts` - Thêm GRAPHICS_QUALITY presets
+
+**GRAPHICS_QUALITY presets:**
+```typescript
+export const GRAPHICS_QUALITY = {
+  ultra: { shadows: 2048, ssao: true, dof: true, bloom: 1.5, godRays: true, chromaticAberration: true },
+  high: { shadows: 1024, ssao: true, dof: true, bloom: 1.2, godRays: true, chromaticAberration: false },
+  medium: { shadows: 512, ssao: false, dof: false, bloom: 1.0, godRays: false, chromaticAberration: false },
+  low: { shadows: 256, ssao: false, dof: false, bloom: 0.5, godRays: false, chromaticAberration: false },
+}
+```
+
+### Step 2: PostProcessing Component
+
+**File mới:** `src/components/3d/PostProcessing.tsx`
+
+```tsx
+export function PostProcessing() {
+  const quality = useGraphicsStore((s) => s.graphicsQuality)
+  const settings = GRAPHICS_QUALITY[quality]
+
+  return (
+    <EffectComposer>
+      <Bloom intensity={settings.bloom} luminanceThreshold={0.3} mipmapBlur />
+      {settings.dof && <DepthOfField focusDistance={0.01} focalLength={0.015} bokehScale={3} />}
+      {settings.ssao && <SSAO samples={16} radius={0.1} intensity={15} />}
+      {settings.godRays && <GodRays sun={sunRef} samples={30} />}
+      {settings.chromaticAberration && <ChromaticAberration offset={[0.002, 0.002]} />}
+      <Vignette offset={0.1} darkness={0.5} />
+    </EffectComposer>
+  )
+}
+```
+
+### Step 3-7: Post-Processing Effects
+
+| Effect | Mục đích | Config |
+|--------|----------|--------|
+| **Depth of Field** | Blur background, focus player | `focusDistance: 0.01, bokehScale: 3` |
+| **SSAO** | Soft shadows, chiều sâu | `samples: 16, intensity: 15` |
+| **Tone Mapping** | Color grading ấm áp | `ACESFilmicToneMapping, exposure: 1.2` |
+| **God Rays** | Tia sáng atmospheric | `samples: 30, density: 0.96` |
+| **Chromatic Aberration** | Hiệu ứng ma thuật | `offset: [0.002, 0.002]` |
+
+### Step 8: Settings UI
+
+**Thêm vào `SettingsMenu.tsx`:**
+- Dropdown chọn Graphics Quality: Auto, Ultra, High, Medium, Low
+- Auto-detection based on device performance
+
+### Success Criteria
+
+- ✅ FPS >= 60 trên desktop (Ultra/High)
+- ✅ FPS >= 30 trên mobile (Medium/Low)
+- ✅ Visual improvement rõ rệt
+- ✅ No crashes hoặc WebGL errors
+- ✅ Smooth quality switching
+
+### Files Sẽ Thay Đổi
+
+| File | Thay đổi |
+|------|----------|
+| `src/stores/gameStore.ts` | Thêm GraphicsStore |
+| `src/utils/constants.ts` | Thêm GRAPHICS_QUALITY |
+| `src/components/3d/PostProcessing.tsx` | **Tạo mới** |
+| `src/components/3d/Experience.tsx` | Import PostProcessing |
+| `src/App.tsx` | Tone mapping, auto-detection |
+| `src/components/ui/menus/SettingsMenu.tsx` | Quality selector UI |
+
+---
+
 ## 📁 Files Created
 
 ### Config Files

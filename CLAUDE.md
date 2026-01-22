@@ -4,6 +4,23 @@
 
 **Overall Progress: 95%** - Phase 5 (UI & Polish)
 
+### 🎨 CURRENT FOCUS: Graphics Improvement (Session 41+)
+
+**Mục tiêu**: Nâng cấp đồ họa với Post-Processing & Adaptive Quality System
+
+| Step | Task | Status |
+|------|------|--------|
+| 1 | Quality System Foundation | ⬜ Todo |
+| 2 | PostProcessing Component | ⬜ Todo |
+| 3 | Depth of Field | ⬜ Todo |
+| 4 | SSAO | ⬜ Todo |
+| 5 | Tone Mapping | ⬜ Todo |
+| 6 | God Rays (Optional) | ⬜ Todo |
+| 7 | Chromatic Aberration (Optional) | ⬜ Todo |
+| 8 | Settings UI | ⬜ Todo |
+
+**Chi tiết**: Xem PROGRESS.md → "Graphics Improvement Plan"
+
 ### Dự án là gì?
 - Portfolio Interactive 3D kiểu Tiên Hiệp với Three.js
 - User "tu tiên" qua các cảnh giới, khám phá portfolio trong thế giới 3D
