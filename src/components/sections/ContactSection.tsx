@@ -138,6 +138,22 @@ function CentralCrystal({ position }: CentralCrystalProps) {
 
   return (
     <group position={position}>
+      {/* Physics colliders for CentralCrystal */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Main altar base collider */}
+        <CuboidCollider args={[7, 1.5, 7]} position={[0, 1.5, 0]} />
+        {/* Altar base top */}
+        <CuboidCollider args={[6, 0.25, 6]} position={[0, 3, 0]} />
+        {/* Step 1 */}
+        <CuboidCollider args={[5, 0.25, 5]} position={[0, 4.1, 0]} />
+        {/* Step 2 */}
+        <CuboidCollider args={[4, 0.25, 4]} position={[0, 5.6, 0]} />
+        {/* Step 3 */}
+        <CuboidCollider args={[3, 0.25, 3]} position={[0, 7.1, 0]} />
+        {/* Central pedestal top */}
+        <CuboidCollider args={[2, 0.25, 2]} position={[0, 9.5, 0]} />
+      </RigidBody>
+
       {/* Main altar base */}
       <mesh position={[0, 1.5, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[6, 8, 3, 8]} />
@@ -416,6 +432,16 @@ function HeavenlyGate({ position, rotation, scale }: HeavenlyGateProps) {
 
   return (
     <group ref={gateRef} position={position} rotation={[0, rotation, 0]} scale={scale}>
+      {/* Physics colliders for HeavenlyGate */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Left pillar collider */}
+        <CuboidCollider args={[0.8, 6, 0.8]} position={[-4, 6, 0]} />
+        {/* Right pillar collider */}
+        <CuboidCollider args={[0.8, 6, 0.8]} position={[4, 6, 0]} />
+        {/* Top arch collider */}
+        <CuboidCollider args={[5, 0.5, 0.75]} position={[0, 12.5, 0]} />
+      </RigidBody>
+
       {/* Left pillar */}
       <mesh position={[-4, 6, 0]} castShadow>
         <cylinderGeometry args={[0.6, 0.8, 12, 8]} />

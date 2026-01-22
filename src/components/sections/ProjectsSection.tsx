@@ -460,6 +460,10 @@ function CentralBridge() {
       {/* Central platform */}
       <RigidBody type="fixed" colliders={false}>
         <CuboidCollider args={[15, 1, 15]} position={[0, 0, 0]} />
+        {/* Central monument collider */}
+        <CuboidCollider args={[2.5, 4, 2.5]} position={[0, 4, 0]} />
+        {/* Monument top - player can stand */}
+        <CuboidCollider args={[2, 0.25, 2]} position={[0, 8, 0]} />
       </RigidBody>
 
       {/* Platform visual */}

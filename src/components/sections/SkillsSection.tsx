@@ -288,6 +288,14 @@ function SkillPillar({ position, category, index }: SkillPillarProps) {
       ref={pillarRef}
       position={position}
     >
+      {/* Physics colliders for SkillPillar */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Main pillar collider */}
+        <CuboidCollider args={[2.2, 8, 2.2]} position={[0, 8, 0]} />
+        {/* Top cap - player can stand */}
+        <CuboidCollider args={[2.5, 0.25, 2.5]} position={[0, 16.5, 0]} />
+      </RigidBody>
+
       {/* Clickable area - invisible but larger for easier clicking */}
       <mesh position={[0, 10, 0]} visible={false}>
         <cylinderGeometry args={[5, 5, 25, 8]} />

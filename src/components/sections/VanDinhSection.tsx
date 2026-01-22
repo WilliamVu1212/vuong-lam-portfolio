@@ -354,6 +354,16 @@ function ContactAltar({ position }: ContactAltarProps) {
 
   return (
     <group position={position}>
+      {/* Physics colliders for ContactAltar */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Altar base collider */}
+        <CuboidCollider args={[5.5, 1.5, 5.5]} position={[0, 1.5, 0]} />
+        {/* Altar pedestal top */}
+        <CuboidCollider args={[4, 0.25, 4]} position={[0, 5, 0]} />
+        {/* Display panel collider */}
+        <CuboidCollider args={[4, 3.5, 0.5]} position={[0, 7, 3]} />
+      </RigidBody>
+
       {/* Altar base */}
       <mesh position={[0, 1.5, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[5, 6, 3, 8]} />
@@ -559,6 +569,12 @@ function SoulBanner({ position, rotation = 0, side }: SoulBannerProps) {
 
   return (
     <group ref={bannerRef} position={position} rotation={[0, rotation, 0]}>
+      {/* Physics colliders for SoulBanner pole */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Main pole collider */}
+        <CuboidCollider args={[0.6, 30, 0.6]} position={[0, 30, 0]} />
+      </RigidBody>
+
       {/* === CÂY CỘT CHÍNH (POLE) === */}
       {/* Main pole - bamboo style */}
       <mesh position={[0, 30, 0]} castShadow>
@@ -1011,6 +1027,16 @@ function CelestialGate({ position, scale, rotation = 0, showTitle = false }: Cel
 
   return (
     <group ref={gateRef} position={position} rotation={[0, rotation, 0]} scale={scale}>
+      {/* Physics colliders for CelestialGate */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Left pillar collider */}
+        <CuboidCollider args={[1, 8, 1]} position={[-5, 8, 0]} />
+        {/* Right pillar collider */}
+        <CuboidCollider args={[1, 8, 1]} position={[5, 8, 0]} />
+        {/* Top arch collider */}
+        <CuboidCollider args={[6, 0.75, 0.75]} position={[0, 16.5, 0]} />
+      </RigidBody>
+
       {/* Left pillar */}
       <mesh position={[-5, 8, 0]} castShadow>
         <cylinderGeometry args={[0.8, 1, 16, 8]} />

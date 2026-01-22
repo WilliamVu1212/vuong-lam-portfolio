@@ -356,6 +356,9 @@ function Experience() {
         <ExperienceSection />
         <ContactSection />
         <VanDinhSection />
+
+        {/* Waterfall cliff colliders (waterfalls visual is in WorldContent) */}
+        <WaterfallColliders />
       </Physics>
 
       {/* Visual World Content (no physics) */}
@@ -912,6 +915,41 @@ function Waterfall({ position, height = 30, width = 8, color1 = '#4488FF', color
         <meshStandardMaterial color="#3D2424" roughness={0.9} />
       </mesh>
     </group>
+  );
+}
+
+// Waterfall Cliff Colliders - separate from visual Waterfall component
+function WaterfallColliders() {
+  // Waterfall positions and dimensions
+  const waterfalls = [
+    { pos: [-100, 115, -260] as [number, number, number], height: 35, width: 10 },
+    { pos: [100, 115, -260] as [number, number, number], height: 35, width: 10 },
+    { pos: [-100, 130, -340] as [number, number, number], height: 40, width: 12 },
+    { pos: [100, 130, -340] as [number, number, number], height: 40, width: 12 },
+  ];
+
+  return (
+    <>
+      {waterfalls.map((wf, index) => (
+        <RigidBody key={index} type="fixed" colliders={false} position={wf.pos}>
+          {/* Left cliff collider */}
+          <CuboidCollider
+            args={[2, (wf.height + 5) / 2, 1.5]}
+            position={[-wf.width / 2 - 2, 0, -1]}
+          />
+          {/* Right cliff collider */}
+          <CuboidCollider
+            args={[2, (wf.height + 5) / 2, 1.5]}
+            position={[wf.width / 2 + 2, 0, -1]}
+          />
+          {/* Bottom rocks collider */}
+          <CuboidCollider
+            args={[wf.width * 0.6, 1.5, 2]}
+            position={[0, -wf.height / 2 - 1, 2]}
+          />
+        </RigidBody>
+      ))}
+    </>
   );
 }
 

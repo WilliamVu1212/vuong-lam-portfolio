@@ -137,6 +137,18 @@ function CentralFlame({ position }: CentralFlameProps) {
 
   return (
     <group position={position}>
+      {/* Physics colliders for CentralFlame */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Base pedestal collider */}
+        <CuboidCollider args={[4.5, 2, 4.5]} position={[0, 2, 0]} />
+        {/* Base pedestal top */}
+        <CuboidCollider args={[4, 0.25, 4]} position={[0, 4, 0]} />
+        {/* Flame pillar collider */}
+        <CuboidCollider args={[2.5, 4, 2.5]} position={[0, 8, 0]} />
+        {/* Pillar top */}
+        <CuboidCollider args={[2, 0.25, 2]} position={[0, 12, 0]} />
+      </RigidBody>
+
       {/* Base pedestal */}
       <mesh position={[0, 2, 0]} castShadow>
         <cylinderGeometry args={[4, 5, 4, 6]} />
@@ -298,6 +310,16 @@ function ExperienceMonument({ experience, position, index }: ExperienceMonumentP
         ref={monumentRef}
         position={position}
       >
+        {/* Physics colliders for ExperienceMonument */}
+        <RigidBody type="fixed" colliders={false}>
+          {/* Base collider */}
+          <CuboidCollider args={[4.5, 1, 4.5]} position={[0, 1, 0]} />
+          {/* Base top - player can stand */}
+          <CuboidCollider args={[4, 0.25, 4]} position={[0, 2, 0]} />
+          {/* Main body collider */}
+          <CuboidCollider args={[2.5, 4, 0.75]} position={[0, 6, 0]} />
+        </RigidBody>
+
         {/* Base */}
         <mesh position={[0, 1, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[4, 5, 2, 6]} />
@@ -1049,6 +1071,18 @@ function BellPedestal({ colors }: { colors: BellColors }) {
 
   return (
     <group position={[0, -5, 0]}>
+      {/* Physics colliders for BellPedestal */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Main platform collider */}
+        <CuboidCollider args={[16, 2.5, 16]} position={[0, 0, 0]} />
+        {/* Platform top - player can stand */}
+        <CuboidCollider args={[14, 0.25, 14]} position={[0, 2.5, 0]} />
+        {/* Upper tier collider */}
+        <CuboidCollider args={[13, 1, 13]} position={[0, 3, 0]} />
+        {/* Upper tier top - player can stand */}
+        <CuboidCollider args={[12, 0.25, 12]} position={[0, 4, 0]} />
+      </RigidBody>
+
       {/* Main platform - octagonal */}
       <mesh receiveShadow>
         <cylinderGeometry args={[15, 18, 5, 8]} />

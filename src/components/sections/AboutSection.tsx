@@ -567,6 +567,10 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
   const [showPrompt, setShowPrompt] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
+  // Collider constants
+  const PEDESTAL_HEIGHT = 6;
+  const PEDESTAL_RADIUS = 6;
+
   const playerPosition = useGameStore((state) => state.player.position);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
@@ -723,6 +727,14 @@ function SoulSlayingSword({ position, sectionPosition }: SoulSlayingSwordProps) 
           </div>
         </Html>
       )}
+
+      {/* Physics colliders for SoulSlayingSword */}
+      <RigidBody type="fixed" colliders={false}>
+        {/* Pedestal collider */}
+        <CuboidCollider args={[PEDESTAL_RADIUS, PEDESTAL_HEIGHT / 2, PEDESTAL_RADIUS]} position={[0, PEDESTAL_HEIGHT / 2, 0]} />
+        {/* Pedestal top surface - player can stand on */}
+        <CuboidCollider args={[5.5, 0.25, 5.5]} position={[0, PEDESTAL_HEIGHT, 0]} />
+      </RigidBody>
 
       {/* === BASE PEDESTAL === */}
       <mesh position={[0, 3, 0]} castShadow>
