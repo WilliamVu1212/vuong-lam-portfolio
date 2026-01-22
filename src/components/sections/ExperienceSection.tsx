@@ -587,7 +587,6 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
   const playerPosition = useGameStore((state) => state.player.position);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
   const unlockTransport = useGameStore((state) => state.unlockTransport);
-  const setTransportMode = useGameStore((state) => state.setTransportMode);
 
   const isIce = type === 'ice';
   const isFire = type === 'fire';
@@ -686,7 +685,8 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
       // Auto-unlock when very close
       if (distance < 15 && !isUnlocked) {
         unlockTransport('beast');
-        setTransportMode('beast');
+        // KHÔNG tự động chuyển transportMode ở đây
+        // Player sẽ tự chọn mode qua UI hoặc thoát bay kiếm rồi bấm F
         setIsUnlocked(true);
         setShowPrompt(true);
       }
@@ -936,19 +936,22 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
             className="px-4 py-3 rounded-lg text-center whitespace-nowrap animate-fadeIn"
             style={{
               background: isUnlocked
-                ? 'linear-gradient(135deg, rgba(0,206,209,0.95), rgba(64,224,208,0.9))'
+                ? 'linear-gradient(135deg, rgba(255,140,0,0.95), rgba(255,100,0,0.9))'
                 : 'linear-gradient(135deg, rgba(0,255,136,0.95), rgba(102,255,204,0.9))',
-              border: `2px solid ${isUnlocked ? '#00FFFF' : '#00FF88'}`,
-              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(0,255,255,0.5)' : 'rgba(0,255,136,0.5)'}`,
+              border: `2px solid ${isUnlocked ? '#FF8C00' : '#00FF88'}`,
+              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(255,140,0,0.5)' : 'rgba(0,255,136,0.5)'}`,
             }}
           >
             {isUnlocked ? (
               <>
                 <p className="text-white font-bold text-lg" style={{ fontFamily: 'Cinzel' }}>
-                  ✓ Đã khai mở Cưỡi Phượng!
+                  🔥 Đã khai mở Cưỡi Phượng!
                 </p>
-                <p className="text-cyan-100 text-sm mt-1">
-                  Nhấn <span className="font-bold text-white">F</span> để bay trên lưng Hỏa Phượng
+                <p className="text-orange-100 text-sm mt-1">
+                  Click vào <span className="font-bold text-white">Phương Thức</span> ở góc trái để chọn
+                </p>
+                <p className="text-orange-200 text-xs mt-1">
+                  Sau đó nhấn <span className="font-bold text-white">F</span> để bay
                 </p>
               </>
             ) : (
