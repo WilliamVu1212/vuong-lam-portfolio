@@ -6,6 +6,7 @@ import LoadingScreen from './components/ui/LoadingScreen';
 import ProjectModal from './components/ui/ProjectModal';
 import LevelNavigator from './components/ui/LevelNavigator';
 import { MobileControls } from './components/ui/MobileControls';
+import { MenuButton, MainMenu, SettingsMenu, HelpMenu } from './components/ui/menus';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
 import { useMobileDetect } from './hooks/useMobileDetect';
 import { useUIStore, useGameStore, useAudioStore } from './stores/gameStore';
@@ -359,6 +360,10 @@ function App() {
   const setCameraTarget = useUIStore((state) => state.setCameraTarget);
   const setIsMobile = useUIStore((state) => state.setIsMobile);
   const isMobile = useUIStore((state) => state.isMobile);
+  const activeMenu = useUIStore((state) => state.activeMenu);
+  const openMenu = useUIStore((state) => state.openMenu);
+  const closeMenu = useUIStore((state) => state.closeMenu);
+  const showFPS = useUIStore((state) => state.showFPS);
 
   // Mobile detection
   const { isMobile: isMobileDevice, isTablet, isTouchDevice } = useMobileDetect();
@@ -369,18 +374,30 @@ function App() {
     setIsMobile(shouldShowMobile);
   }, [isMobileDevice, isTablet, isTouchDevice, setIsMobile]);
 
-  // Debug: Ctrl+M to toggle mobile mode for testing
+  // ESC key handler for menu toggle
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Debug: Ctrl+M to toggle mobile mode for testing
       if (e.ctrlKey && e.key === 'm') {
         e.preventDefault();
         setIsMobile(!isMobile);
         console.log('[Debug] Mobile mode:', !isMobile ? 'ON' : 'OFF');
+        return;
+      }
+
+      // ESC key to toggle menu
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (activeMenu) {
+          closeMenu();
+        } else {
+          openMenu('main');
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobile, setIsMobile]);
+  }, [isMobile, setIsMobile, activeMenu, openMenu, closeMenu]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -446,11 +463,20 @@ function App() {
           {/* Show keyboard controls help on desktop, hide on mobile */}
           {!isMobile && <ControlsHelp />}
           <LevelNavigator onNavigate={handleNavigate} />
-          {/* Hide camera debug on mobile */}
+          {/* Menu button - hide camera debug button, use menu instead */}
+          <MenuButton />
+          {/* Show camera debug panel only when enabled in settings */}
           {!isMobile && <CameraDebugPanel />}
           <AudioControls />
+          {/* FPS Counter */}
+          {showFPS && <FPSCounter />}
         </div>
       )}
+
+      {/* Menus */}
+      <MainMenu />
+      <SettingsMenu />
+      <HelpMenu />
 
       {/* Mobile Controls - only on mobile/tablet */}
       {!isLoading && isMobile && <MobileControls />}
@@ -467,33 +493,59 @@ function App() {
   );
 }
 
+// FPS Counter
+function FPSCounter() {
+  const [fps, setFps] = useState(0);
+
+  useEffect(() => {
+    let frameCount = 0;
+    let lastTime = performance.now();
+    let animationId: number;
+
+    const updateFPS = () => {
+      frameCount++;
+      const currentTime = performance.now();
+      if (currentTime - lastTime >= 1000) {
+        setFps(frameCount);
+        frameCount = 0;
+        lastTime = currentTime;
+      }
+      animationId = requestAnimationFrame(updateFPS);
+    };
+
+    animationId = requestAnimationFrame(updateFPS);
+    return () => cancelAnimationFrame(animationId);
+  }, []);
+
+  return (
+    <div
+      className="absolute top-16 right-4 glass rounded-lg px-3 py-2"
+      style={{
+        background: 'rgba(26, 10, 10, 0.8)',
+        border: '1px solid rgba(255, 215, 0, 0.3)',
+      }}
+    >
+      <span className="text-xs font-mono" style={{ color: fps >= 50 ? '#00FF00' : fps >= 30 ? '#FFD700' : '#FF4444' }}>
+        FPS: {fps}
+      </span>
+    </div>
+  );
+}
+
 // Camera Debug Panel - Hiển thị tọa độ camera realtime
 function CameraDebugPanel() {
   const showCameraDebug = useUIStore((state) => state.showCameraDebug);
-  const toggleCameraDebug = useUIStore((state) => state.toggleCameraDebug);
   const cameraDebugInfo = useUIStore((state) => state.cameraDebugInfo);
 
+  // Only show when enabled in settings
   if (!showCameraDebug) {
-    return (
-      <button
-        onClick={toggleCameraDebug}
-        className="absolute top-4 right-4 glass rounded-lg px-3 py-2 text-xs text-tho-kim hover:text-co-chi transition-colors"
-      >
-        📷 Show Camera
-      </button>
-    );
+    return null;
   }
 
   return (
-    <div className="absolute top-4 right-4 glass rounded-lg px-4 py-3 min-w-[200px]">
-      <div className="flex justify-between items-center mb-3">
+    <div className="absolute top-16 right-4 glass rounded-lg px-4 py-3 min-w-[200px]" style={{ marginTop: '40px' }}>
+      <div className="mb-3">
         <p className="text-hoa-quang text-sm font-display">📷 Camera Debug</p>
-        <button
-          onClick={toggleCameraDebug}
-          className="text-tho-kim hover:text-xich-viem text-xs"
-        >
-          ✕
-        </button>
       </div>
 
       <div className="space-y-2 text-xs font-mono">

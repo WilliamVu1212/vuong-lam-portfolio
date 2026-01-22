@@ -132,7 +132,6 @@ export const playMusic = (
 
   // Debug: Check audio context state
   console.log(`[AudioManager] Audio context state: ${Howler.ctx?.state}`);
-  console.log(`[AudioManager] Howler muted: ${Howler._muted}`);
   console.log(`[AudioManager] Track state: ${track.state()}`);
 
   // Don't restart if already playing

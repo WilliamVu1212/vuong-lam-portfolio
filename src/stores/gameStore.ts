@@ -181,6 +181,9 @@ export const useGameStore = create<GameStore>()(
 // UI Store - UI state separate from game
 // ==========================================
 
+// Menu types
+type MenuType = 'main' | 'settings' | 'help';
+
 interface UIStore {
   // Modal
   isModalOpen: boolean;
@@ -190,6 +193,7 @@ interface UIStore {
   // Menu
   isMenuOpen: boolean;
   isPaused: boolean;
+  activeMenu: MenuType | null;
 
   // Loading
   isLoading: boolean;
@@ -198,6 +202,7 @@ interface UIStore {
   // Debug
   isDebugMode: boolean;
   showCameraDebug: boolean;
+  showFPS: boolean;
 
   // Mobile
   isMobile: boolean;
@@ -223,6 +228,12 @@ interface UIStore {
   setIsMobile: (isMobile: boolean) => void;
   setCameraTarget: (position: [number, number, number] | null, lookAt?: [number, number, number] | null) => void;
   setCameraDebugInfo: (position: [number, number, number], target: [number, number, number]) => void;
+
+  // Menu actions
+  openMenu: (menu: MenuType) => void;
+  closeMenu: () => void;
+  setShowFPS: (show: boolean) => void;
+  resetSettings: () => void;
 }
 
 export const useUIStore = create<UIStore>()((set) => ({
@@ -232,10 +243,12 @@ export const useUIStore = create<UIStore>()((set) => ({
   modalData: null,
   isMenuOpen: false,
   isPaused: false,
+  activeMenu: null,
   isLoading: true,
   loadingProgress: 0,
   isDebugMode: false,
-  showCameraDebug: true, // Mặc định bật để debug camera
+  showCameraDebug: false, // Mặc định tắt
+  showFPS: false,
   isMobile: false,
   cameraTarget: null,
   cameraLookAt: null,
@@ -290,6 +303,29 @@ export const useUIStore = create<UIStore>()((set) => ({
   setCameraDebugInfo: (position, target) =>
     set({
       cameraDebugInfo: { position, target },
+    }),
+
+  // Menu actions
+  openMenu: (menu) =>
+    set({
+      activeMenu: menu,
+      isMenuOpen: true,
+      isPaused: true,
+    }),
+
+  closeMenu: () =>
+    set({
+      activeMenu: null,
+      isMenuOpen: false,
+      isPaused: false,
+    }),
+
+  setShowFPS: (show) => set({ showFPS: show }),
+
+  resetSettings: () =>
+    set({
+      showFPS: false,
+      showCameraDebug: false,
     }),
 }));
 
