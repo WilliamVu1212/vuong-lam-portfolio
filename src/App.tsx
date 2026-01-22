@@ -219,6 +219,7 @@ function HUD() {
   const cultivationLevel = useGameStore((state) => state.cultivationLevel);
   const transportMode = useGameStore((state) => state.transportMode);
   const setTransportMode = useGameStore((state) => state.setTransportMode);
+  const setPlayerFlying = useGameStore((state) => state.setPlayerFlying);
   const isGrounded = useGameStore((state) => state.player.isGrounded);
   const isFlying = useGameStore((state) => state.player.isFlying);
   const unlockedTransports = useGameStore((state) => state.unlockedTransports);
@@ -236,10 +237,14 @@ function HUD() {
 
   const swordUnlocked = unlockedTransports.includes('sword');
   const beastUnlocked = unlockedTransports.includes('beast');
+  const hasMultipleModes = (swordUnlocked ? 1 : 0) + (beastUnlocked ? 1 : 0) >= 1;
 
   // Cycle through unlocked transport modes
   const cycleTransportMode = () => {
-    if (isFlying) return; // Không cho đổi mode khi đang bay
+    // Nếu đang bay, thoát bay trước khi đổi mode
+    if (isFlying) {
+      setPlayerFlying(false);
+    }
 
     const modes: ('cloud' | 'sword' | 'beast')[] = ['cloud'];
     if (swordUnlocked) modes.push('sword');
@@ -262,13 +267,13 @@ function HUD() {
 
       {/* Transport Mode - Clickable to cycle */}
       <div
-        className={`glass rounded-lg px-4 py-2 ${(swordUnlocked || beastUnlocked) && !isFlying ? 'cursor-pointer hover:border hover:border-hoa-quang transition-all' : ''}`}
-        onClick={cycleTransportMode}
-        title={(swordUnlocked || beastUnlocked) && !isFlying ? 'Click để đổi phương thức' : ''}
+        className={`glass rounded-lg px-4 py-2 ${hasMultipleModes ? 'cursor-pointer hover:border hover:border-hoa-quang transition-all' : ''}`}
+        onClick={hasMultipleModes ? cycleTransportMode : undefined}
+        title={hasMultipleModes ? 'Click để đổi phương thức' : ''}
       >
         <p className="text-tho-kim text-xs font-accent">
           Phương Thức
-          {(swordUnlocked || beastUnlocked) && !isFlying && <span className="ml-1 text-hoa-quang">🔄</span>}
+          {hasMultipleModes && <span className="ml-1 text-hoa-quang">🔄</span>}
         </p>
         <p className="text-co-chi font-body">
           {transportMode === 'cloud' && 'Đạp Mây ☁️'}
@@ -276,7 +281,7 @@ function HUD() {
           {transportMode === 'beast' && 'Cưỡi Phượng 🔥'}
         </p>
         {/* Sub-text showing available modes */}
-        {(swordUnlocked || beastUnlocked) && !isFlying && (
+        {hasMultipleModes && (
           <p className="text-xs text-tho-kim opacity-60 mt-1">
             {swordUnlocked && transportMode !== 'sword' && '⚔️ '}
             {beastUnlocked && transportMode !== 'beast' && '🔥 '}
