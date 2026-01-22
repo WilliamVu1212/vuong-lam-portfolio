@@ -197,10 +197,17 @@ interface UIStore {
 
   // Debug
   isDebugMode: boolean;
+  showCameraDebug: boolean;
 
   // Camera target for navigation
   cameraTarget: [number, number, number] | null;
   cameraLookAt: [number, number, number] | null;
+
+  // Camera debug info (realtime)
+  cameraDebugInfo: {
+    position: [number, number, number];
+    target: [number, number, number];
+  };
 
   // Actions
   openModal: (type: UIStore['modalType'], data?: unknown) => void;
@@ -209,7 +216,9 @@ interface UIStore {
   setPaused: (paused: boolean) => void;
   setLoading: (loading: boolean, progress?: number) => void;
   toggleDebug: () => void;
+  toggleCameraDebug: () => void;
   setCameraTarget: (position: [number, number, number] | null, lookAt?: [number, number, number] | null) => void;
+  setCameraDebugInfo: (position: [number, number, number], target: [number, number, number]) => void;
 }
 
 export const useUIStore = create<UIStore>()((set) => ({
@@ -222,8 +231,13 @@ export const useUIStore = create<UIStore>()((set) => ({
   isLoading: true,
   loadingProgress: 0,
   isDebugMode: false,
+  showCameraDebug: true, // Mặc định bật để debug camera
   cameraTarget: null,
   cameraLookAt: null,
+  cameraDebugInfo: {
+    position: [0, 0, 0],
+    target: [0, 0, 0],
+  },
 
   // Actions
   openModal: (type, data) =>
@@ -258,10 +272,17 @@ export const useUIStore = create<UIStore>()((set) => ({
 
   toggleDebug: () => set((state) => ({ isDebugMode: !state.isDebugMode })),
 
+  toggleCameraDebug: () => set((state) => ({ showCameraDebug: !state.showCameraDebug })),
+
   setCameraTarget: (position, lookAt = null) =>
     set({
       cameraTarget: position,
       cameraLookAt: lookAt,
+    }),
+
+  setCameraDebugInfo: (position, target) =>
+    set({
+      cameraDebugInfo: { position, target },
     }),
 }));
 

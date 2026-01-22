@@ -290,7 +290,8 @@ function App() {
               fov: CAMERA.fov,
               near: CAMERA.near,
               far: CAMERA.far,
-              position: [0, 8, 15],
+              // Góc nhìn toàn cảnh - thấy từ Phàm Nhân đến Vấn Đỉnh
+              position: [0, 76, 94],
             }}
             gl={{
               antialias: true,
@@ -315,6 +316,7 @@ function App() {
           <HUD />
           <ControlsHelp />
           <LevelNavigator onNavigate={handleNavigate} />
+          <CameraDebugPanel />
         </div>
       )}
 
@@ -327,6 +329,69 @@ function App() {
       {/* Phoenix Unlock Tutorial */}
       <PhoenixUnlockTutorial />
     </>
+  );
+}
+
+// Camera Debug Panel - Hiển thị tọa độ camera realtime
+function CameraDebugPanel() {
+  const showCameraDebug = useUIStore((state) => state.showCameraDebug);
+  const toggleCameraDebug = useUIStore((state) => state.toggleCameraDebug);
+  const cameraDebugInfo = useUIStore((state) => state.cameraDebugInfo);
+
+  if (!showCameraDebug) {
+    return (
+      <button
+        onClick={toggleCameraDebug}
+        className="absolute top-4 right-4 glass rounded-lg px-3 py-2 text-xs text-tho-kim hover:text-co-chi transition-colors"
+      >
+        📷 Show Camera
+      </button>
+    );
+  }
+
+  return (
+    <div className="absolute top-4 right-4 glass rounded-lg px-4 py-3 min-w-[200px]">
+      <div className="flex justify-between items-center mb-3">
+        <p className="text-hoa-quang text-sm font-display">📷 Camera Debug</p>
+        <button
+          onClick={toggleCameraDebug}
+          className="text-tho-kim hover:text-xich-viem text-xs"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="space-y-2 text-xs font-mono">
+        {/* Camera Position */}
+        <div className="p-2 rounded" style={{ background: 'rgba(0,206,209,0.1)' }}>
+          <p className="text-cyan-400 mb-1">Position (camera):</p>
+          <p className="text-co-chi">
+            X: <span className="text-yellow-400">{cameraDebugInfo.position[0]}</span>
+            {' | '}
+            Y: <span className="text-yellow-400">{cameraDebugInfo.position[1]}</span>
+            {' | '}
+            Z: <span className="text-yellow-400">{cameraDebugInfo.position[2]}</span>
+          </p>
+        </div>
+
+        {/* Camera Target (LookAt) */}
+        <div className="p-2 rounded" style={{ background: 'rgba(255,140,0,0.1)' }}>
+          <p className="text-orange-400 mb-1">Target (lookAt):</p>
+          <p className="text-co-chi">
+            X: <span className="text-yellow-400">{cameraDebugInfo.target[0]}</span>
+            {' | '}
+            Y: <span className="text-yellow-400">{cameraDebugInfo.target[1]}</span>
+            {' | '}
+            Z: <span className="text-yellow-400">{cameraDebugInfo.target[2]}</span>
+          </p>
+        </div>
+
+        {/* Copy values hint */}
+        <div className="text-tho-kim text-center pt-2 border-t border-gray-700">
+          Xoay/zoom camera để tìm góc nhìn bạn muốn
+        </div>
+      </div>
+    </div>
   );
 }
 

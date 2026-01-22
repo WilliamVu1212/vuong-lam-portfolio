@@ -67,12 +67,12 @@ export const CAMERA = {
   near: 0.1,
   far: 2000,
 
-  // Follow camera offsets
+  // Follow camera offsets - Góc nhìn rộng để thấy tổng quan đường đi
   follow: {
-    walking: { distance: 15, height: 8, smoothing: 0.03 },
-    cloud: { distance: 10, height: 5, smoothing: 0.1 },
-    sword: { distance: 12, height: 5, smoothing: 0.05 },
-    beast: { distance: 18, height: 10, smoothing: 0.08 },
+    walking: { distance: 35, height: 25, smoothing: 0.025 },  // Xa hơn, cao hơn để thấy overview
+    cloud: { distance: 30, height: 20, smoothing: 0.08 },     // Đạp mây cần thấy rộng
+    sword: { distance: 40, height: 20, smoothing: 0.04 },     // Bay kiếm nhìn rộng hơn
+    beast: { distance: 50, height: 30, smoothing: 0.06 },     // Cưỡi phượng nhìn xa nhất
   },
 } as const;
 

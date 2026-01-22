@@ -99,6 +99,8 @@ function CameraController() {
   const cameraTarget = useUIStore((state) => state.cameraTarget);
   const cameraLookAt = useUIStore((state) => state.cameraLookAt);
   const setCameraTarget = useUIStore((state) => state.setCameraTarget);
+  const setCameraDebugInfo = useUIStore((state) => state.setCameraDebugInfo);
+  const showCameraDebug = useUIStore((state) => state.showCameraDebug);
 
   // Player state for camera follow
   const playerPosition = useGameStore((state) => state.player.position);
@@ -113,6 +115,19 @@ function CameraController() {
   const interactionTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPlayerPos = useRef(new THREE.Vector3(0, 5, 0));
   const isInitialized = useRef(false);
+  const hasSetInitialLookAt = useRef(false);
+
+  // Set initial camera lookAt to center of world on first load
+  useEffect(() => {
+    if (controls && !hasSetInitialLookAt.current) {
+      const orbitControls = controls as any;
+      if (orbitControls.target) {
+        // Nhìn vào giữa thế giới - toàn cảnh từ Phàm Nhân đến Vấn Đỉnh
+        orbitControls.target.set(0, 7, -191);
+        hasSetInitialLookAt.current = true;
+      }
+    }
+  }, [controls]);
 
   // Stop animation when user interacts with controls (zoom, rotate, pan)
   useEffect(() => {
@@ -245,6 +260,26 @@ function CameraController() {
     }
 
     lastPlayerPos.current.copy(playerPos);
+  });
+
+  // Update camera debug info every frame
+  useFrame(() => {
+    if (showCameraDebug && controls) {
+      const orbitControls = controls as any;
+      const target = orbitControls.target || new THREE.Vector3();
+      setCameraDebugInfo(
+        [
+          Math.round(camera.position.x),
+          Math.round(camera.position.y),
+          Math.round(camera.position.z),
+        ],
+        [
+          Math.round(target.x),
+          Math.round(target.y),
+          Math.round(target.z),
+        ]
+      );
+    }
   });
 
   return null;
