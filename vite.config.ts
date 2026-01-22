@@ -23,7 +23,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -31,7 +31,6 @@ export default defineConfig({
           react: ['react', 'react-dom'],
           r3f: ['@react-three/fiber', '@react-three/drei'],
           physics: ['@react-three/rapier'],
-          animation: ['gsap', 'framer-motion'],
         },
       },
     },

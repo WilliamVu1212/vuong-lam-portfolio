@@ -54,7 +54,37 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 33
+## Recent Update (2026-01-22) - Session 34
+
+### Đã hoàn thành:
+- ✅ **Performance Optimization**
+  - Disabled sourcemaps in production build (vite.config.ts)
+  - Removed unused dependencies: `gsap`, `lucide-react`
+  - Replaced lucide-react icons with inline SVGs in ProjectModal.tsx
+  - Removed animation chunk from vite build config
+
+### Bundle Analysis:
+| Chunk | Size | Gzipped |
+|-------|------|---------|
+| physics | 2.08 MB | 769 KB |
+| three | 667 KB | 173 KB |
+| index | 497 KB | 145 KB |
+| r3f | 451 KB | 150 KB |
+| **Total JS** | **~3.72 MB** | **~1.24 MB** |
+
+### Audio Files (unchanged):
+- night-wind.mp3: 3.5 MB
+- main-theme.mp3: 4.4 MB
+- (FFmpeg not available for compression)
+
+### Files đã sửa:
+- `vite.config.ts` - Disabled sourcemap, removed animation chunk
+- `package.json` - Removed gsap, lucide-react
+- `src/components/ui/ProjectModal.tsx` - Inline SVG icons
+
+---
+
+## Session 33
 
 ### Đã hoàn thành:
 - ✅ **Rename William Vu → Vương Lâm**
@@ -384,7 +414,9 @@
 - ✅ ~~Add Menu System (Main, Settings, Help)~~ (Done - Session 32)
 
 ### Medium-term:
-- Performance optimization (bundle ~3.6MB cần giảm)
+- ✅ ~~Performance optimization~~ (Partial - Session 34: removed gsap, lucide-react, disabled sourcemaps)
+  - JS Bundle: ~3.72 MB (gzipped: ~1.24 MB)
+  - ⬜ Audio compression cần FFmpeg (optional)
 - Cross-browser testing
 - Deploy to Vercel
 
