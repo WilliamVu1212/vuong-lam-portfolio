@@ -54,7 +54,31 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 23
+## Recent Update (2026-01-22) - Session 24
+
+### Đã hoàn thành:
+- ✅ **Mobile Joystick Controls**
+  - Dual joystick layout với nipplejs library
+  - Left joystick: Di chuyển W/A/S/D
+  - Right joystick: Vertical control (ascend/descend khi bay)
+  - Action buttons: Jump, Fly Toggle, Transport Mode
+  - Auto-detect mobile/tablet devices
+  - Hide keyboard ControlsHelp + CameraDebug trên mobile
+  - Xích Hỏa theme styling (red/gold)
+
+### Files mới:
+- `src/components/ui/MobileControls.tsx` - Main mobile UI component
+- `src/hooks/useMobileDetect.ts` - Mobile device detection hook
+- `src/types/nipplejs.d.ts` - TypeScript declarations for nipplejs
+
+### Files đã sửa:
+- `src/stores/gameStore.ts` - Thêm isMobile state
+- `src/utils/constants.ts` - Thêm mobile config
+- `src/App.tsx` - Render MobileControls, hide desktop UI on mobile
+
+---
+
+## Session 23
 
 ### Đã hoàn thành:
 - ✅ **Fix Phoenix Mount Unlock Bug**
@@ -172,8 +196,8 @@
 ### Short-term:
 - ✅ ~~Add sound/music integration~~ (Done - Session 20)
 - ✅ ~~Add audio files~~ (Done - Session 21)
+- ✅ ~~Add mobile joystick controls~~ (Done - Session 24)
 - Add remaining SFX: sword-whoosh, phoenix-cry, ui-click, unlock
-- Add mobile joystick controls
 
 ### Medium-term:
 - Performance optimization (bundle ~3.6MB cần giảm)
@@ -207,7 +231,12 @@ src/
 │   └── ui/
 │       ├── LevelNavigator.tsx  # Navigation dọc (7 levels)
 │       ├── LoadingScreen.tsx
-│       └── ProjectModal.tsx
+│       ├── ProjectModal.tsx
+│       └── MobileControls.tsx  # Mobile joystick + buttons
+├── hooks/
+│   ├── useKeyboardControls.ts  # Keyboard input
+│   ├── useMobileDetect.ts      # Mobile device detection
+│   └── useAudio.ts             # Audio hooks
 ├── stores/gameStore.ts         # Zustand (game, UI, audio)
 ├── data/content.ts             # Content data (7 cảnh giới)
 └── App.tsx                     # Main app

@@ -199,6 +199,9 @@ interface UIStore {
   isDebugMode: boolean;
   showCameraDebug: boolean;
 
+  // Mobile
+  isMobile: boolean;
+
   // Camera target for navigation
   cameraTarget: [number, number, number] | null;
   cameraLookAt: [number, number, number] | null;
@@ -217,6 +220,7 @@ interface UIStore {
   setLoading: (loading: boolean, progress?: number) => void;
   toggleDebug: () => void;
   toggleCameraDebug: () => void;
+  setIsMobile: (isMobile: boolean) => void;
   setCameraTarget: (position: [number, number, number] | null, lookAt?: [number, number, number] | null) => void;
   setCameraDebugInfo: (position: [number, number, number], target: [number, number, number]) => void;
 }
@@ -232,6 +236,7 @@ export const useUIStore = create<UIStore>()((set) => ({
   loadingProgress: 0,
   isDebugMode: false,
   showCameraDebug: true, // Mặc định bật để debug camera
+  isMobile: false,
   cameraTarget: null,
   cameraLookAt: null,
   cameraDebugInfo: {
@@ -273,6 +278,8 @@ export const useUIStore = create<UIStore>()((set) => ({
   toggleDebug: () => set((state) => ({ isDebugMode: !state.isDebugMode })),
 
   toggleCameraDebug: () => set((state) => ({ showCameraDebug: !state.showCameraDebug })),
+
+  setIsMobile: (isMobile) => set({ isMobile }),
 
   setCameraTarget: (position, lookAt = null) =>
     set({

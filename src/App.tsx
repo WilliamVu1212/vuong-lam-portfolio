@@ -5,7 +5,9 @@ import Experience from './components/3d/Experience';
 import LoadingScreen from './components/ui/LoadingScreen';
 import ProjectModal from './components/ui/ProjectModal';
 import LevelNavigator from './components/ui/LevelNavigator';
+import { MobileControls } from './components/ui/MobileControls';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
+import { useMobileDetect } from './hooks/useMobileDetect';
 import { useUIStore, useGameStore, useAudioStore } from './stores/gameStore';
 import { useAudio, useBackgroundMusic, useSoundEffects } from './hooks/useAudio';
 import { CAMERA, COLORS } from './utils/constants';
@@ -470,6 +472,30 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const setUILoading = useUIStore((state) => state.setLoading);
   const setCameraTarget = useUIStore((state) => state.setCameraTarget);
+  const setIsMobile = useUIStore((state) => state.setIsMobile);
+  const isMobile = useUIStore((state) => state.isMobile);
+
+  // Mobile detection
+  const { isMobile: isMobileDevice, isTablet, isTouchDevice } = useMobileDetect();
+
+  // Update store when mobile status changes
+  useEffect(() => {
+    const shouldShowMobile = isMobileDevice || isTablet || (isTouchDevice && window.innerWidth < 1024);
+    setIsMobile(shouldShowMobile);
+  }, [isMobileDevice, isTablet, isTouchDevice, setIsMobile]);
+
+  // Debug: Ctrl+M to toggle mobile mode for testing
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'm') {
+        e.preventDefault();
+        setIsMobile(!isMobile);
+        console.log('[Debug] Mobile mode:', !isMobile ? 'ON' : 'OFF');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobile, setIsMobile]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -532,12 +558,17 @@ function App() {
       {!isLoading && (
         <div className="ui-overlay">
           <HUD />
-          <ControlsHelp />
+          {/* Show keyboard controls help on desktop, hide on mobile */}
+          {!isMobile && <ControlsHelp />}
           <LevelNavigator onNavigate={handleNavigate} />
-          <CameraDebugPanel />
+          {/* Hide camera debug on mobile */}
+          {!isMobile && <CameraDebugPanel />}
           <AudioControls />
         </div>
       )}
+
+      {/* Mobile Controls - only on mobile/tablet */}
+      {!isLoading && isMobile && <MobileControls />}
 
       {/* Modals */}
       <ProjectModal />

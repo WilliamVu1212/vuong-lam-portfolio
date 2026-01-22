@@ -268,8 +268,20 @@ export const CONTROLS = {
 
   // Touch/Mobile
   touch: {
-    joystickSize: 120,
-    joystickDeadzone: 0.1,
+    joystickSize: 100,
+    joystickDeadzone: 0.15,
+  },
+
+  // Mobile UI
+  mobile: {
+    joystickSize: 100,
+    joystickColor: 'rgba(255, 68, 68, 0.6)', // Xích Hỏa theme
+    joystickBackColor: 'rgba(26, 10, 10, 0.7)', // Dark background
+    buttonSize: 56,
+    buttonSpacing: 12,
+    deadzone: 0.15,
+    // Threshold for direction detection (0-1)
+    directionThreshold: 0.3,
   },
 } as const;
 
