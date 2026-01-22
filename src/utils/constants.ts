@@ -67,12 +67,15 @@ export const CAMERA = {
   near: 0.1,
   far: 2000,
 
-  // Follow camera offsets - Góc nhìn rộng để thấy tổng quan đường đi
+  // Follow camera offsets - Góc nhìn từ trên xuống chéo để bao quát toàn cảnh
+  // distance: khoảng cách phía sau player (Z offset)
+  // height: độ cao so với player (Y offset)
+  // lookAhead: khoảng cách nhìn về phía trước player (giúp thấy đường đi)
   follow: {
-    walking: { distance: 35, height: 25, smoothing: 0.025 },  // Xa hơn, cao hơn để thấy overview
-    cloud: { distance: 30, height: 20, smoothing: 0.08 },     // Đạp mây cần thấy rộng
-    sword: { distance: 40, height: 20, smoothing: 0.04 },     // Bay kiếm nhìn rộng hơn
-    beast: { distance: 50, height: 30, smoothing: 0.06 },     // Cưỡi phượng nhìn xa nhất
+    walking: { distance: 45, height: 35, lookAhead: 30, smoothing: 0.025 },  // Góc nhìn bao quát từ trên
+    cloud: { distance: 40, height: 30, lookAhead: 25, smoothing: 0.08 },     // Đạp mây
+    sword: { distance: 55, height: 40, lookAhead: 35, smoothing: 0.04 },     // Bay kiếm nhìn rộng
+    beast: { distance: 65, height: 50, lookAhead: 40, smoothing: 0.06 },     // Cưỡi phượng nhìn xa nhất
   },
 } as const;
 
@@ -251,8 +254,8 @@ export const CONTROLS = {
     right: ['KeyD', 'ArrowRight'],
     jump: ['Space'],
     ascend: ['Space', 'KeyQ'],
-    descend: ['ShiftLeft', 'KeyE'],
-    interact: ['KeyF', 'Enter'],
+    descend: ['ShiftLeft', 'ShiftRight', 'KeyE'],  // Cả 2 phím Shift + E
+    interact: ['Enter'],  // Bỏ KeyF vì F dùng để toggle flight
     pause: ['Escape'],
   },
 

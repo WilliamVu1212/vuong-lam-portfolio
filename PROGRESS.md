@@ -220,7 +220,34 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 18 (Latest)
+### Session 2026-01-22 - Update 19 (Latest)
+```
+- Cải thiện Camera System với góc nhìn từ trên xuống chéo:
+  - Điều chỉnh SECTION_CAMERA_POSITIONS với X=0 cho tất cả sections
+  - Góc nhìn bao quát từ trên xuống chéo khi click vào LevelNavigator
+  - Camera follow player với góc nhìn rộng hơn để xác định phương hướng
+
+- Cập nhật camera follow config (constants.ts):
+  - walking: distance 45, height 35, lookAhead 30
+  - cloud: distance 40, height 30, lookAhead 25
+  - sword: distance 55, height 40, lookAhead 35
+  - beast: distance 65, height 50, lookAhead 40
+
+- Fix hướng di chuyển khi bay kiếm/phượng (Player.tsx):
+  - Trước: dựa vào camera direction → bị ngược
+  - Sau: di chuyển theo world space cố định (W=Z âm, S=Z dương, A=X âm, D=X dương)
+
+- Fix phím F toggle flight bị repeat liên tục:
+  - Thêm `if (e.repeat) return` để chỉ toggle 1 lần khi nhấn
+
+- Fix keyboard mapping (constants.ts):
+  - descend: thêm ShiftRight (cả 2 Shift đều hoạt động)
+  - interact: bỏ KeyF (tránh xung đột với toggle flight)
+
+- Files changed: App.tsx, Experience.tsx, Player.tsx, constants.ts
+```
+
+### Session 2026-01-22 - Update 18
 ```
 - Fix góc nhìn ban đầu với X=0 để ở giữa màn hình:
   - Camera position: [0, 76, 94] → [0, 57, 85]

@@ -214,27 +214,23 @@ export function Player() {
       rb.setGravityScale(0, true);
       rb.setLinearDamping(0);
 
-      // Get camera direction for flight
-      camera.getWorldDirection(cameraDirection.current);
-      const camDirHorizontal = new Vector3(cameraDirection.current.x, 0, cameraDirection.current.z).normalize();
-
-      // Calculate target velocity based on input
+      // Di chuyển theo hướng cố định trong world space (không phụ thuộc camera)
+      // Forward = Z âm (đi sâu vào thế giới), Backward = Z dương
+      // Left = X âm, Right = X dương
       const targetVel = new Vector3(0, 0, 0);
       const hasInput = controls.forward || controls.backward || controls.left || controls.right;
 
       if (controls.forward) {
-        targetVel.add(camDirHorizontal.clone().multiplyScalar(-1));
+        targetVel.z -= 1;  // Z âm = tiến về phía trước (vào sâu thế giới)
       }
       if (controls.backward) {
-        targetVel.add(camDirHorizontal);
+        targetVel.z += 1;  // Z dương = lùi về phía sau
       }
       if (controls.left) {
-        const leftDir = new Vector3().crossVectors(new Vector3(0, 1, 0), camDirHorizontal);
-        targetVel.add(leftDir);
+        targetVel.x -= 1;  // X âm = sang trái
       }
       if (controls.right) {
-        const rightDir = new Vector3().crossVectors(camDirHorizontal, new Vector3(0, 1, 0));
-        targetVel.add(rightDir);
+        targetVel.x += 1;  // X dương = sang phải
       }
 
       // Normalize and scale to max speed
@@ -311,27 +307,23 @@ export function Player() {
       rb.setGravityScale(0, true);
       rb.setLinearDamping(0);
 
-      // Get camera direction for flight
-      camera.getWorldDirection(cameraDirection.current);
-      const camDirHorizontal = new Vector3(cameraDirection.current.x, 0, cameraDirection.current.z).normalize();
-
-      // Calculate target velocity based on input
+      // Di chuyển theo hướng cố định trong world space (không phụ thuộc camera)
+      // Forward = Z âm (đi sâu vào thế giới), Backward = Z dương
+      // Left = X âm, Right = X dương
       const targetVel = new Vector3(0, 0, 0);
       const hasInput = controls.forward || controls.backward || controls.left || controls.right;
 
       if (controls.forward) {
-        targetVel.add(camDirHorizontal.clone().multiplyScalar(-1));
+        targetVel.z -= 1;  // Z âm = tiến về phía trước (vào sâu thế giới)
       }
       if (controls.backward) {
-        targetVel.add(camDirHorizontal);
+        targetVel.z += 1;  // Z dương = lùi về phía sau
       }
       if (controls.left) {
-        const leftDir = new Vector3().crossVectors(new Vector3(0, 1, 0), camDirHorizontal);
-        targetVel.add(leftDir);
+        targetVel.x -= 1;  // X âm = sang trái
       }
       if (controls.right) {
-        const rightDir = new Vector3().crossVectors(camDirHorizontal, new Vector3(0, 1, 0));
-        targetVel.add(rightDir);
+        targetVel.x += 1;  // X dương = sang phải
       }
 
       // Normalize and scale to max speed (phoenix is faster!)
@@ -566,6 +558,9 @@ export function Player() {
   // Listen for flight mode toggle (F key)
   useEffect(() => {
     const handleToggleFlight = (e: KeyboardEvent) => {
+      // Bỏ qua nếu phím đang được giữ (repeat) - chỉ toggle 1 lần khi nhấn
+      if (e.repeat) return;
+
       if (e.code === 'KeyF') {
         if (transportMode === 'sword') {
           if (isFlying) {

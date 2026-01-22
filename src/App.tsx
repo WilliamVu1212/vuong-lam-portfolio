@@ -10,14 +10,23 @@ import { useUIStore, useGameStore } from './stores/gameStore';
 import { CAMERA, COLORS } from './utils/constants';
 
 // Section positions for camera navigation
+// Góc nhìn từ trên xuống chéo, X=0 để ở giữa màn hình
+// Pattern: Camera ở phía sau + trên section, nhìn xuống chéo vào section
 const SECTION_CAMERA_POSITIONS: Record<string, { position: [number, number, number]; lookAt: [number, number, number] }> = {
-  intro: { position: [0, 30, 50], lookAt: [0, 0, 0] },
-  about: { position: [0, 60, -50], lookAt: [0, 30, -100] },
-  skills: { position: [0, 100, -150], lookAt: [0, 60, -200] },
-  projects: { position: [0, 150, -250], lookAt: [0, 100, -300] },
-  experience: { position: [0, 200, -400], lookAt: [0, 150, -450] },
-  contact: { position: [0, 250, -500], lookAt: [0, 200, -550] },
-  vandinh: { position: [0, 310, -600], lookAt: [0, 260, -650] },
+  // Luyện Khí (Intro) - Y=0, Camera cao 35, phía sau Z=50
+  intro: { position: [0, 35, 50], lookAt: [0, 0, -20] },
+  // Trúc Cơ (About) - Y=30, Camera cao 65, nhìn xuống section
+  about: { position: [0, 65, -30], lookAt: [0, 25, -100] },
+  // Kết Đan (Skills) - Y=60, Camera cao 100, nhìn xuống section
+  skills: { position: [0, 100, -120], lookAt: [0, 55, -200] },
+  // Nguyên Anh (Projects) - Y=100, Camera cao 145, nhìn xuống section
+  projects: { position: [0, 145, -220], lookAt: [0, 95, -300] },
+  // Hóa Thần (Experience) - Y=150, Camera cao 200, nhìn xuống section
+  experience: { position: [0, 200, -370], lookAt: [0, 145, -450] },
+  // Anh Biến (Contact) - Y=200, Camera cao 255, nhìn xuống section
+  contact: { position: [0, 255, -470], lookAt: [0, 195, -550] },
+  // Vấn Đỉnh - Y=260, Camera cao 315, nhìn xuống section
+  vandinh: { position: [0, 315, -570], lookAt: [0, 255, -650] },
   // Toàn Cảnh - Khớp với góc nhìn ban đầu khi vào game
   overview: { position: [0, 57, 85], lookAt: [0, 6, -156] },
 };

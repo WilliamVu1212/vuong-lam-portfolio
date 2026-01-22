@@ -39,21 +39,42 @@
 
 ### Camera Config (constants.ts):
 - **Initial View**: Position [0, 57, 85], Target [0, 6, -156] - Toàn cảnh (X=0 ở giữa)
-- **Walking**: distance 35, height 25
-- **Sword Flying**: distance 40, height 20
-- **Beast Flying**: distance 50, height 30
+- **Walking**: distance 45, height 35, lookAhead 30
+- **Sword Flying**: distance 55, height 40, lookAhead 35
+- **Beast Flying**: distance 65, height 50, lookAhead 40
+
+### Flight Controls:
+- **W** - Tiến về phía trước (Z âm)
+- **S** - Lùi về phía sau (Z dương)
+- **A** - Sang trái (X âm)
+- **D** - Sang phải (X dương)
+- **Space / Q** - Bay lên
+- **Shift / E** - Bay xuống
+- **F** - Bật/tắt chế độ bay
 
 ---
 
-## Recent Update (2026-01-22) - Session 18
+## Recent Update (2026-01-22) - Session 19
 
 ### Đã hoàn thành:
-- ✅ **Fix góc nhìn ban đầu với X=0**
-  - Camera position: [0, 57, 85] (X=0 để ở giữa màn hình)
-  - Camera lookAt: [0, 6, -156]
+- ✅ **Camera góc nhìn từ trên xuống chéo**
+  - SECTION_CAMERA_POSITIONS với X=0 cho tất cả sections
+  - Camera follow với lookAhead để thấy đường đi phía trước
 
-- ✅ **Nút "Toàn Cảnh" reset về góc nhìn ban đầu**
-  - Khi bấm nút Toàn Cảnh → camera trả về đúng vị trí ban đầu
+- ✅ **Fix hướng di chuyển khi bay**
+  - Di chuyển theo world space cố định (không phụ thuộc camera)
+  - W=tiến (Z âm), S=lùi (Z dương), A/D=trái/phải
+
+- ✅ **Fix phím F toggle flight**
+  - Thêm check `e.repeat` để không bị toggle liên tục
+
+- ✅ **Fix keyboard mapping**
+  - Cả 2 phím Shift đều dùng để bay xuống được
+  - Bỏ KeyF khỏi interact (tránh xung đột)
+
+### Session 18:
+- ✅ Fix góc nhìn ban đầu với X=0
+- ✅ Nút "Toàn Cảnh" reset về góc nhìn ban đầu
 
 ### Session 17:
 - ✅ Camera System cải thiện với góc nhìn toàn cảnh

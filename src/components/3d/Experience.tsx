@@ -242,20 +242,40 @@ function CameraController() {
       camConfig = CAMERA.follow.walking;
     }
 
-    // ===== CAMERA FOLLOW PLAYER =====
-    const idealOffset = camDir.clone().multiplyScalar(camConfig.distance);
-    idealOffset.y = camConfig.height;
+    // ===== CAMERA FOLLOW PLAYER - Góc nhìn từ trên xuống chéo =====
+    // Camera ở phía sau + trên cao, nhìn xuống chéo về phía trước player
 
-    const idealPosition = playerPos.clone().add(idealOffset);
+    // Tính hướng di chuyển của player (dựa trên velocity)
+    const moveDir = new THREE.Vector3(playerVelocity[0], 0, playerVelocity[2]);
+    if (moveDir.length() > 0.1) {
+      moveDir.normalize();
+    } else {
+      // Nếu không di chuyển, dùng hướng camera hiện tại
+      moveDir.copy(camDir).negate();
+    }
+
+    // Camera position: phía sau + trên cao player
+    const idealPosition = new THREE.Vector3(
+      playerPos.x - moveDir.x * camConfig.distance * 0.3, // Offset nhẹ theo hướng di chuyển
+      playerPos.y + camConfig.height,                      // Trên cao
+      playerPos.z + camConfig.distance                     // Phía sau (Z dương)
+    );
+
+    // Camera target: nhìn về phía trước player (lookAhead)
+    const idealTarget = new THREE.Vector3(
+      playerPos.x,
+      playerPos.y - camConfig.height * 0.3,  // Nhìn xuống một chút
+      playerPos.z - camConfig.lookAhead       // Nhìn về phía trước (Z âm)
+    );
 
     // Smoothly interpolate camera position
     camera.position.lerp(idealPosition, camConfig.smoothing);
 
-    // Update OrbitControls target to follow player
+    // Update OrbitControls target
     if (controls) {
       const orbitControls = controls as any;
       if (orbitControls.target) {
-        orbitControls.target.lerp(playerPos, camConfig.smoothing * 2);
+        orbitControls.target.lerp(idealTarget, camConfig.smoothing * 1.5);
       }
     }
 
