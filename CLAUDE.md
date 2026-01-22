@@ -54,7 +54,25 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 29
+## Recent Update (2026-01-22) - Session 30
+
+### Đã hoàn thành:
+- ✅ **Fix Landing Sound Not Playing**
+  - **Bug:** `wasGrounded.current` không được reset khi nhảy → landing detection không trigger
+  - **Fix 1:** Reset `wasGrounded.current = false` khi keyboard jump (Space)
+  - **Fix 2:** Reset `wasGrounded.current = false` khi click-to-jump
+  - **Fix 3:** Reset `wasGrounded.current = false` khi enter flight modes (đã có từ trước)
+  - **Fix 4:** Thêm `html5: false` cho SFX preloading để dùng Web Audio API nhất quán
+  - Thêm debug logging để troubleshoot audio issues
+
+### Files đã sửa:
+- `src/components/3d/Player.tsx` - Reset wasGrounded khi jump
+- `src/hooks/useAudio.ts` - Debug logging cho playSound
+- `src/utils/audioManager.ts` - html5: false, debug logging cho SFX
+
+---
+
+## Session 29
 
 ### Đã hoàn thành:
 - ✅ **Auto-fly khi unlock Ngự Kiếm / Cưỡi Phượng**

@@ -220,7 +220,21 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 29 (Latest)
+### Session 2026-01-22 - Update 30 (Latest)
+```
+- Fix Landing Sound Not Playing:
+  - Bug: wasGrounded.current không được reset khi nhảy
+  - Điều kiện landing detection (grounded && !wasGrounded) không bao giờ true
+  - Fix 1: Reset wasGrounded.current = false khi keyboard jump (Space)
+  - Fix 2: Reset wasGrounded.current = false khi click-to-jump
+  - Fix 3: Thêm html5: false cho SFX preloading (Web Audio API)
+  - Thêm debug logging để troubleshoot audio issues
+
+- Files changed: Player.tsx, useAudio.ts, audioManager.ts
+- Git commit: 19457cf
+```
+
+### Session 2026-01-22 - Update 29
 ```
 - Auto-fly khi unlock Ngự Kiếm / Cưỡi Phượng:
   - Khi unlock Ngự Kiếm → tự động bay kiếm luôn (không cần bấm F)
