@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Preload, KeyboardControls } from '@react-three/drei';
 import Experience from './components/3d/Experience';

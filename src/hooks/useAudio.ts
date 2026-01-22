@@ -19,12 +19,10 @@ import {
   cleanupAudio,
   unlockAudio,
   isAudioUnlocked,
+  stopAllTracks,
   type SFXKey,
   type TrackKey,
 } from '@/utils/audioManager';
-
-// Direct music control (bypasses mute check for force start)
-import { playMusic as directPlayMusic } from '@/utils/audioManager';
 
 /**
  * Main audio hook - provides audio control functions
@@ -140,7 +138,7 @@ export const useSoundEffects = () => {
  * Hook for background music management
  */
 export const useBackgroundMusic = () => {
-  const { playBackgroundMusic, stopBackgroundMusic, pauseMusic, resumeMusic, isMuted } = useAudio();
+  const { playBackgroundMusic, pauseMusic, resumeMusic } = useAudio();
   const ambientPlaying = useRef(false);
   const musicPlaying = useRef(false);
   const hasEverStarted = useRef(false);
@@ -162,11 +160,12 @@ export const useBackgroundMusic = () => {
   }, [playBackgroundMusic]);
 
   const stopAllMusic = useCallback(() => {
-    stopBackgroundMusic('ambient', 1000);
-    stopBackgroundMusic('music', 1000);
+    // Use stopAllTracks from audioManager for clean stop
+    stopAllTracks(1000);
     ambientPlaying.current = false;
     musicPlaying.current = false;
-  }, [stopBackgroundMusic]);
+    console.log('[Audio] Stopped all music');
+  }, []);
 
   // Force start all music - bypasses mute check
   // Used when user clicks sound button (OFF → ON)
@@ -174,13 +173,15 @@ export const useBackgroundMusic = () => {
     // Reset refs to allow restart
     ambientPlaying.current = false;
     musicPlaying.current = false;
-    // Use directPlayMusic to bypass mute check
-    directPlayMusic('ambient', { volume: 0.35, fadeIn: 1500 });
-    directPlayMusic('music', { volume: 0.35, fadeIn: 2000 });
+
+    // Play both tracks - audioManager now supports multiple simultaneous tracks
+    playMusic('ambient', { volume: 0.35, fadeIn: 1500 });
+    playMusic('music', { volume: 0.4, fadeIn: 2000 });
+
     ambientPlaying.current = true;
     musicPlaying.current = true;
     hasEverStarted.current = true;
-    console.log('[Audio] Force started all music');
+    console.log('[Audio] Force started all music (ambient + main theme)');
   }, []);
 
   // Check if music has ever been started

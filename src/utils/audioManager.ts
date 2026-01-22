@@ -14,8 +14,8 @@ export type TrackKey = keyof typeof AUDIO.tracks;
 const sounds: Map<string, Howl> = new Map();
 const music: Map<string, Howl> = new Map();
 
-// Current playing music track
-let currentMusicTrack: string | null = null;
+// Currently playing music tracks (supports multiple simultaneous tracks)
+const playingTracks: Set<string> = new Set();
 
 // ==========================================
 // Sound Effects (SFX)
@@ -100,16 +100,12 @@ export const preloadMusic = (): void => {
 
 /**
  * Play a music track with optional fade-in
+ * Supports multiple simultaneous tracks (ambient + music can layer)
  */
 export const playMusic = (
   key: TrackKey,
   options?: { volume?: number; fadeIn?: number }
 ): void => {
-  // Stop current music if different track
-  if (currentMusicTrack && currentMusicTrack !== key) {
-    stopMusic(currentMusicTrack as TrackKey, { fadeOut: 1000 });
-  }
-
   const track = music.get(key);
   if (!track) {
     console.warn(`[AudioManager] Music track not found: ${key}`);
@@ -118,6 +114,7 @@ export const playMusic = (
 
   // Don't restart if already playing
   if (track.playing()) {
+    console.log(`[AudioManager] Track already playing: ${key}`);
     return;
   }
 
@@ -132,7 +129,8 @@ export const playMusic = (
     track.play();
   }
 
-  currentMusicTrack = key;
+  playingTracks.add(key);
+  console.log(`[AudioManager] Started playing: ${key}, volume: ${targetVolume}`);
 };
 
 /**
@@ -149,35 +147,38 @@ export const stopMusic = (
     track.fade(track.volume(), 0, options.fadeOut);
     track.once('fade', () => {
       track.stop();
+      playingTracks.delete(key);
     });
   } else {
     track.stop();
+    playingTracks.delete(key);
   }
 
-  if (currentMusicTrack === key) {
-    currentMusicTrack = null;
-  }
+  console.log(`[AudioManager] Stopped: ${key}`);
 };
 
 /**
- * Pause/Resume music
+ * Pause all playing music
  */
 export const pauseMusic = (): void => {
-  if (currentMusicTrack) {
-    const track = music.get(currentMusicTrack);
+  playingTracks.forEach((key) => {
+    const track = music.get(key);
     if (track?.playing()) {
       track.pause();
     }
-  }
+  });
 };
 
+/**
+ * Resume all paused music
+ */
 export const resumeMusic = (): void => {
-  if (currentMusicTrack) {
-    const track = music.get(currentMusicTrack);
+  playingTracks.forEach((key) => {
+    const track = music.get(key);
     if (track && !track.playing()) {
       track.play();
     }
-  }
+  });
 };
 
 // ==========================================
@@ -243,14 +244,29 @@ export const cleanupAudio = (): void => {
   });
   music.clear();
 
-  currentMusicTrack = null;
+  playingTracks.clear();
   console.log('[AudioManager] Audio system cleaned up');
 };
 
 /**
- * Get current music track name
+ * Get all currently playing music tracks
  */
-export const getCurrentMusicTrack = (): string | null => currentMusicTrack;
+export const getPlayingTracks = (): string[] => Array.from(playingTracks);
+
+/**
+ * Check if a specific track is playing
+ */
+export const isTrackPlaying = (key: TrackKey): boolean => playingTracks.has(key);
+
+/**
+ * Stop all music tracks
+ */
+export const stopAllTracks = (fadeOut?: number): void => {
+  const keys = Array.from(playingTracks) as TrackKey[];
+  keys.forEach((key) => {
+    stopMusic(key, fadeOut ? { fadeOut } : undefined);
+  });
+};
 
 /**
  * Check if audio context is unlocked (user interaction required)
