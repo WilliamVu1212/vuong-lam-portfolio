@@ -112,7 +112,7 @@ function AudioController() {
 }
 
 // Audio Controls Panel
-function AudioControls() {
+function AudioControls({ isMobileView }: { isMobileView?: boolean }) {
   const isMuted = useAudioStore((state) => state.isMuted);
   const toggleMute = useAudioStore((state) => state.toggleMute);
   const { playUIClick } = useSoundEffects();
@@ -141,12 +141,25 @@ function AudioControls() {
     }
   };
 
+  // Mobile: hiển thị ở góc trên phải, dưới menu button
+  // Desktop: hiển thị ở góc dưới phải
+  const positionClass = isMobileView
+    ? 'fixed top-16 right-4 z-[60]'
+    : 'absolute bottom-4 right-4';
+
+  // Sử dụng onPointerDown thay vì onClick/onTouchStart để tránh double trigger
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    handleToggle();
+  };
+
   return (
     <button
-      onClick={handleToggle}
-      className={`absolute bottom-4 right-4 glass rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:scale-110 transition-all ${
+      onPointerDown={handlePointerDown}
+      className={`${positionClass} glass rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:scale-110 active:scale-95 transition-all ${
         isMuted ? 'opacity-60' : ''
       }`}
+      style={{ touchAction: 'manipulation' }}
       title={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
     >
       {isMuted ? '🔇' : '🔊'}
@@ -154,7 +167,7 @@ function AudioControls() {
   );
 }
 
-function HUD() {
+function HUD({ isMobileView }: { isMobileView?: boolean }) {
   const cultivationLevel = useGameStore((state) => state.cultivationLevel);
   const transportMode = useGameStore((state) => state.transportMode);
   const setTransportMode = useGameStore((state) => state.setTransportMode);
@@ -200,6 +213,38 @@ function HUD() {
     setTransportMode(modes[nextIndex]);
   };
 
+  // Mobile: chỉ hiển thị Tu Vi và Phương Thức (compact)
+  // Desktop: hiển thị đầy đủ
+  if (isMobileView) {
+    return (
+      <div className="absolute top-4 left-4 space-y-2 max-w-[160px]">
+        {/* Cultivation Level - Compact */}
+        <div className="glass rounded-lg px-3 py-1.5">
+          <p className="text-tho-kim text-[10px] font-accent">Tu Vi</p>
+          <p className="text-co-chi font-display text-sm">{levelNames[cultivationLevel]}</p>
+        </div>
+
+        {/* Transport Mode - Compact, Clickable */}
+        <div
+          className={`glass rounded-lg px-3 py-1.5 ${hasMultipleModes ? 'cursor-pointer active:scale-95 transition-all' : ''}`}
+          onClick={hasMultipleModes ? cycleTransportMode : undefined}
+          onTouchStart={hasMultipleModes ? cycleTransportMode : undefined}
+        >
+          <p className="text-tho-kim text-[10px] font-accent">
+            Phương Thức
+            {hasMultipleModes && <span className="ml-1 text-hoa-quang">🔄</span>}
+          </p>
+          <p className="text-co-chi font-body text-sm">
+            {transportMode === 'cloud' && '☁️ Đạp Mây'}
+            {transportMode === 'sword' && '⚔️ Ngự Kiếm'}
+            {transportMode === 'beast' && '🔥 Cưỡi Phượng'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop: full HUD
   return (
     <div className="absolute top-4 left-4 space-y-2">
       {/* Cultivation Level */}
@@ -522,7 +567,7 @@ function App() {
       {/* UI Overlay */}
       {!isLoading && (
         <div className="ui-overlay">
-          <HUD />
+          <HUD isMobileView={isMobile} />
           {/* Show keyboard controls help on desktop, hide on mobile */}
           {!isMobile && <ControlsHelp />}
           <LevelNavigator onNavigate={handleNavigate} />
@@ -530,7 +575,8 @@ function App() {
           <MenuButton />
           {/* Show camera debug panel only when enabled in settings */}
           {!isMobile && <CameraDebugPanel />}
-          <AudioControls />
+          {/* Audio Controls - different position on mobile */}
+          <AudioControls isMobileView={isMobile} />
           {/* FPS Counter */}
           {showFPS && <FPSCounter />}
         </div>

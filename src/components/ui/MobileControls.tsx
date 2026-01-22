@@ -26,7 +26,7 @@ export function MobileControls() {
   const [leftActive, setLeftActive] = useState(false);
   const [rightActive, setRightActive] = useState(false);
 
-  const { setControl } = useGameStore();
+  const { setControl, setPlayerFlying } = useGameStore();
   const {
     transportMode,
     unlockedTransports,
@@ -35,6 +35,11 @@ export function MobileControls() {
   } = useGameStore();
 
   const isFlying = player.isFlying;
+
+  // Debug log để kiểm tra state
+  useEffect(() => {
+    console.log('[MobileControls] isFlying:', isFlying, 'transportMode:', transportMode);
+  }, [isFlying, transportMode]);
 
   const DEADZONE = 0.15;
   const THRESHOLD = 0.3;
@@ -156,16 +161,12 @@ export function MobileControls() {
     }
   }, [setControl, isFlying]);
 
-  // Fly toggle handler
+  // Fly toggle handler - gọi trực tiếp thay vì dispatch keyboard event
   const handleFlyToggle = useCallback(() => {
-    // Dispatch 'F' key event to toggle flight
-    const event = new KeyboardEvent('keydown', {
-      key: 'f',
-      code: 'KeyF',
-      bubbles: true,
-    });
-    window.dispatchEvent(event);
-  }, []);
+    console.log('[MobileControls] Fly toggle pressed, current isFlying:', isFlying);
+    // Toggle flight state directly
+    setPlayerFlying(!isFlying);
+  }, [isFlying, setPlayerFlying]);
 
   // Transport mode cycle handler
   const handleModeChange = useCallback(() => {
@@ -327,22 +328,26 @@ export function MobileControls() {
         )}
       </div>
 
-      {/* Compact Mode indicator - Below HUD */}
-      <div className="absolute top-44 left-4 pointer-events-none">
-        <div
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2"
-          style={{
-            background: 'rgba(0, 0, 0, 0.7)',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
-          }}
-        >
-          <span>{modeInfo.icon}</span>
-          <span className="text-yellow-400">{modeInfo.name}</span>
-          {isFlying && (
-            <span className="text-cyan-400 animate-pulse">• Bay</span>
-          )}
+      {/* Flight status indicator - Hiện khi đang bay */}
+      {isFlying && (
+        <div className="absolute top-24 left-4 pointer-events-none">
+          <div
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 animate-pulse"
+            style={{
+              background: 'rgba(0, 0, 0, 0.8)',
+              border: transportMode === 'beast' ? '2px solid #FF4500' : '2px solid #00CED1',
+              boxShadow: transportMode === 'beast'
+                ? '0 0 15px rgba(255,69,0,0.5)'
+                : '0 0 15px rgba(0,206,209,0.5)',
+            }}
+          >
+            <span>{modeInfo.icon}</span>
+            <span className={transportMode === 'beast' ? 'text-orange-400' : 'text-cyan-400'}>
+              Đang Bay
+            </span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
