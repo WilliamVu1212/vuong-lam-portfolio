@@ -652,10 +652,10 @@ export function Player() {
     wasGrounded.current = false;
 
     // Initialize flight velocity with current velocity + upward boost
-    flightVelocity.current.set(velocity.x, Math.max(velocity.y, 15), velocity.z);
+    flightVelocity.current.set(velocity.x, Math.max(velocity.y, 25), velocity.z);
 
-    // Give initial upward boost (stronger than sword)
-    rb.setLinvel({ x: velocity.x, y: 20, z: velocity.z }, true);
+    // Give initial upward boost (stronger than sword) - high enough to escape colliders
+    rb.setLinvel({ x: velocity.x, y: 40, z: velocity.z }, true);
 
     setPlayerFlying(true);
   };
@@ -719,8 +719,9 @@ export function Player() {
         rb.setLinearDamping(0);
       } else if (transportMode === 'beast') {
         // Initialize beast flight velocity and give stronger upward boost
-        flightVelocity.current.set(velocity.x, Math.max(velocity.y, 15), velocity.z);
-        rb.setLinvel({ x: velocity.x, y: 20, z: velocity.z }, true);
+        // High enough to escape BellPedestal collider when unlocking
+        flightVelocity.current.set(velocity.x, Math.max(velocity.y, 25), velocity.z);
+        rb.setLinvel({ x: velocity.x, y: 40, z: velocity.z }, true);
         rb.setGravityScale(0, true);
         rb.setLinearDamping(0);
       }
