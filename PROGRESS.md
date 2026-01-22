@@ -221,7 +221,21 @@
 
 ## Recent Changes
 
-### Session 2026-01-22 - Update 32 (Latest)
+### Session 2026-01-22 - Update 33 (Latest)
+```
+- Rename William Vu → Vương Lâm:
+  - Thay đổi tên hiển thị từ "William Vu" / "William" thành "Vương Lâm"
+  - index.html: title, og:title, twitter:title, loading-title (4 chỗ)
+  - LoadingScreen.tsx: main title (1 chỗ)
+  - VanDinhSection.tsx: contact panel heading (1 chỗ)
+  - CLAUDE.md: project title, descriptions (3 chỗ)
+  - PROGRESS.md: historical records (4 chỗ)
+
+- Files changed: index.html, LoadingScreen.tsx, VanDinhSection.tsx, CLAUDE.md, PROGRESS.md
+- Git commit: 979925f
+```
+
+### Session 2026-01-22 - Update 32
 ```
 - Menu System (Main, Settings, Help):
   - MainMenu: Dropdown góc trên phải

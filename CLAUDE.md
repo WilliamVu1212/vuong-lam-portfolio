@@ -54,7 +54,26 @@
 
 ---
 
-## Recent Update (2026-01-22) - Session 32
+## Recent Update (2026-01-22) - Session 33
+
+### Đã hoàn thành:
+- ✅ **Rename William Vu → Vương Lâm**
+  - Thay đổi tên hiển thị từ "William Vu" / "William" thành "Vương Lâm"
+  - Cập nhật index.html: title, meta tags, loading screen
+  - Cập nhật LoadingScreen.tsx: main title
+  - Cập nhật VanDinhSection.tsx: contact panel heading
+  - Cập nhật documentation (CLAUDE.md, PROGRESS.md)
+
+### Files đã sửa:
+- `index.html` - 4 chỗ (title, og:title, twitter:title, loading-title)
+- `src/components/ui/LoadingScreen.tsx` - 1 chỗ
+- `src/components/sections/VanDinhSection.tsx` - 1 chỗ
+- `CLAUDE.md` - 3 chỗ
+- `PROGRESS.md` - 4 chỗ
+
+---
+
+## Session 32
 
 ### Đã hoàn thành:
 - ✅ **Menu System (Main, Settings, Help)**
