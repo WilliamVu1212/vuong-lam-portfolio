@@ -142,8 +142,8 @@ export const useSoundEffects = () => {
     console.log('[SFX] Land sound result:', result);
     return result;
   }, [playSound]);
-  const playSwordWhoosh = useCallback(() => playSound('swordWhoosh'), [playSound]);
-  const playPhoenixCry = useCallback(() => playSound('phoenixCry'), [playSound]);
+  const playSwordWhoosh = useCallback(() => playSound('swordWhoosh', { volume: 0.3 }), [playSound]);
+  const playPhoenixCry = useCallback(() => playSound('phoenixCry', { volume: 0.35 }), [playSound]);
   const playUIClick = useCallback(() => playSound('uiClick'), [playSound]);
   const playUnlock = useCallback(() => playSound('unlock'), [playSound]);
 
