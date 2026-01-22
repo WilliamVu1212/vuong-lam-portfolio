@@ -615,7 +615,6 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
   const { playUnlock, playPhoenixCry } = useSoundEffects();
 
   const isIce = type === 'ice';
-  const isFire = type === 'fire';
 
   // Calculate world position of bell
   const worldPosition: [number, number, number] = [
@@ -693,8 +692,8 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
       runeRingRef.current.rotation.y = t * 0.3;
     }
 
-    // ===== UNLOCK TRIGGER - Only Fire Bell can unlock =====
-    if (isFire && !unlockedTransports.includes('beast')) {
+    // ===== UNLOCK TRIGGER - Both bells can unlock =====
+    if (!unlockedTransports.includes('beast')) {
       // Calculate distance to player
       const dx = playerPosition[0] - worldPosition[0];
       const dy = playerPosition[1] - worldPosition[1];
@@ -957,17 +956,19 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
       {/* ===== ĐẾ CHUÔNG (BELL PEDESTAL) ===== */}
       <BellPedestal colors={colors} />
 
-      {/* ===== UNLOCK PROMPT - Only for Fire Bell ===== */}
-      {isFire && showPrompt && (
+      {/* ===== UNLOCK PROMPT - Both bells show prompt ===== */}
+      {showPrompt && (
         <Html position={[0, 50, 0]} center>
           <div
             className="px-4 py-3 rounded-lg text-center whitespace-nowrap animate-fadeIn"
             style={{
               background: isUnlocked
                 ? 'linear-gradient(135deg, rgba(255,140,0,0.95), rgba(255,100,0,0.9))'
-                : 'linear-gradient(135deg, rgba(0,255,136,0.95), rgba(102,255,204,0.9))',
-              border: `2px solid ${isUnlocked ? '#FF8C00' : '#00FF88'}`,
-              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(255,140,0,0.5)' : 'rgba(0,255,136,0.5)'}`,
+                : isIce
+                  ? 'linear-gradient(135deg, rgba(0,255,136,0.95), rgba(102,255,204,0.9))'
+                  : 'linear-gradient(135deg, rgba(68,255,68,0.95), rgba(153,255,102,0.9))',
+              border: `2px solid ${isUnlocked ? '#FF8C00' : isIce ? '#00FF88' : '#44FF44'}`,
+              boxShadow: `0 0 20px ${isUnlocked ? 'rgba(255,140,0,0.5)' : isIce ? 'rgba(0,255,136,0.5)' : 'rgba(68,255,68,0.5)'}`,
             }}
           >
             {isUnlocked ? (
@@ -985,7 +986,7 @@ function AncientDivineBell({ position, type, sectionPosition }: AncientDivineBel
             ) : (
               <>
                 <p className="text-white font-bold text-lg" style={{ fontFamily: '"Cormorant Garamond", Georgia, serif' }}>
-                  🔔 Thượng Cổ Đồng Chung
+                  🔔 {isIce ? 'Thanh Minh Chung' : 'Hoàng Kim Chung'}
                 </p>
                 <p className="text-green-100 text-sm mt-1" style={{ fontFamily: 'system-ui, sans-serif' }}>
                   Đến gần để khai mở Cưỡi Linh Thú
